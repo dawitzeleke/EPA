@@ -1,0 +1,116 @@
+import 'package:dio/dio.dart' as dio;
+import 'package:eprs/app/routes/app_pages.dart';
+import 'package:eprs/core/constants/api_constants.dart';
+import 'package:eprs/core/network/dio_client.dart';
+import 'package:eprs/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class ReportEmailController extends GetxController {
+  final emailController = TextEditingController();
+  final isSubmitting = false.obs;
+
+  String? reportId;
+  DateTime? dateTime;
+  String? region;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments;
+    if (args is Map) {
+      reportId = args['reportId']?.toString();
+      dateTime = args['dateTime'] as DateTime?;
+      region = args['region']?.toString();
+    }
+  }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    super.onClose();
+  }
+
+  Future<void> sendOtp() async {
+    final email = emailController.text.trim();
+    if (email.isEmpty || !GetUtils.isEmail(email)) {
+      Get.snackbar(
+        'Invalid email',
+        'Please enter a valid email address to receive the code.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    isSubmitting.value = true;
+    try {
+      // Ensure guest OTP request is sent without any existing auth header
+      final headers = Map<String, dynamic>.from(
+        DioClient.instance.dio.options.headers,
+      )..remove('Authorization');
+
+      final response = await DioClient.instance.dio.post(
+        ApiConstants.requestReportOtpEndpoint,
+        data: {
+          'email': email,
+          'isGuest': true,
+        },
+        options: dio.Options(
+          followRedirects: true,
+          headers: headers,
+        ),
+      );
+      final status = response.statusCode ?? 0;
+      final success = status >= 200 && status < 300;
+      if (!success) {
+        throw Exception(_extractMessage(response.data) ?? 'Failed to send OTP');
+      }
+
+      final message = _extractMessage(response.data) ?? 'OTP sent to $email';
+      Get.snackbar(
+        'OTP sent',
+        message,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.primary,
+        colorText: Colors.white,
+      );
+
+      final idToPass = (reportId != null && reportId!.isNotEmpty)
+          ? reportId!
+          : 'REP-${DateTime.now().millisecondsSinceEpoch}';
+      final dt = dateTime ?? DateTime.now();
+
+      Get.toNamed(
+        Routes.Report_Otp,
+        arguments: {
+          'email': email,
+          'reportId': idToPass,
+          'dateTime': dt,
+          'region': region,
+        },
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Failed to send OTP',
+        e.toString().replaceAll('Exception: ', ''),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  String? _extractMessage(dynamic data) {
+    if (data is Map) {
+      for (final key in ['message', 'msg', 'detail']) {
+        final value = data[key];
+        if (value is String && value.trim().isNotEmpty) return value;
+      }
+    } else if (data is String && data.trim().isNotEmpty) {
+      return data.trim();
+    }
+    return null;
+  }
+}
