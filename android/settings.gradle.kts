@@ -8,12 +8,25 @@ pluginManagement {
             flutterSdkPath
         }
 
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "org.gradle.kotlin.kotlin-dsl") {
+                useModule("org.gradle.kotlin:gradle-kotlin-dsl-plugins:4.4.0")
+            }
+            if (requested.id.id == "org.jetbrains.kotlin.jvm" ||
+                requested.id.id == "org.jetbrains.kotlin.android" ||
+                requested.id.id == "org.jetbrains.kotlin.kapt") {
+                useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:${requested.version}")
+            }
+        }
+    }
+
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
         google()
         mavenCentral()
-        gradlePluginPortal()
+        maven { url = uri("https://repo1.maven.org/maven2") }
     }
 }
 
