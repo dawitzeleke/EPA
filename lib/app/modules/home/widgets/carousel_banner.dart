@@ -67,7 +67,6 @@ class CarouselBanner extends StatelessWidget {
             items: controller.imageUrls.map((url) {
               final caption = controller.imageCaptions[url] ?? '';
               final date = controller.imageDates[url] ?? '';
-              final city = controller.imageCities[url] ?? '';
 
               return Container(
                 width: double.infinity,
