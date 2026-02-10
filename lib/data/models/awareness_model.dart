@@ -67,9 +67,24 @@ class AwarenessModel {
     if (filePath.trim().isEmpty) return '';
     final rawPath = filePath.trim();
 
-    // If API returns a full URL, use it directly
+    // If API returns a full URL, normalize it to a path
     if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
-      return rawPath;
+      final uri = Uri.tryParse(rawPath);
+      if (uri != null && uri.path.isNotEmpty) {
+        final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+        var urlPath = uri.path.replaceAll('\\', '/').replaceAll('//', '/');
+        if (urlPath.startsWith('/')) {
+          urlPath = urlPath.substring(1);
+        }
+        if (urlPath.startsWith('public/')) {
+          urlPath = urlPath.substring('public/'.length);
+        }
+        final encodedPath = urlPath
+            .split('/')
+            .map(Uri.encodeComponent)
+            .join('/');
+        return '$normalizedBase$encodedPath';
+      }
     }
 
     // Normalize Windows-style path separators and redundant slashes
@@ -77,6 +92,11 @@ class AwarenessModel {
     // Remove leading slash to avoid // in final URL
     if (urlPath.startsWith('/')) {
       urlPath = urlPath.substring(1);
+    }
+
+    // Remove leading public/ if present
+    if (urlPath.startsWith('public/')) {
+      urlPath = urlPath.substring('public/'.length);
     }
 
     // Encode path segments to handle spaces/special characters

@@ -66,10 +66,23 @@ class NewsModel {
   String getImageUrl(String baseUrl) {
     if (filePath.trim().isEmpty) return '';
 
-    // Use absolute URL as-is
+    // Use absolute URL by extracting path and rebuilding with baseUrl
     final raw = filePath.trim();
     if (raw.startsWith('http://') || raw.startsWith('https://')) {
-      return raw;
+      final uri = Uri.tryParse(raw);
+      if (uri != null && uri.path.isNotEmpty) {
+        final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+        var path = uri.path.replaceAll('\\', '/').replaceAll('//', '/');
+        if (path.startsWith('/')) path = path.substring(1);
+        if (path.startsWith('public/')) {
+          path = path.substring('public/'.length);
+        }
+        final encodedPath = path
+            .split('/')
+            .map(Uri.encodeComponent)
+            .join('/');
+        return '$normalizedBase$encodedPath';
+      }
     }
 
     // Normalize separators and strip leading slash
