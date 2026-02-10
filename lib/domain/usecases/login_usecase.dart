@@ -12,12 +12,12 @@ class LoginUseCase {
   /// Returns LoginResponseEntity on success
   /// Throws exception on failure
   Future<LoginResponseEntity> execute({
-    required String email,
+    required String phone_number,
     required String password,
   }) async {
     // Validate input
-    if (email.trim().isEmpty) {
-      throw Exception('Email cannot be empty');
+    if (phone_number.trim().isEmpty) {
+      throw Exception('Phone number cannot be empty');
     }
 
     if (password.trim().isEmpty) {
@@ -25,16 +25,16 @@ class LoginUseCase {
     }
 
     // Validate Ethiopian phone number format
-    final isValidEmail = RegExp(
-      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-    ).hasMatch(email);
-    if (!isValidEmail) {
-      throw Exception('Please enter a valid email address');
+    final isValidPhoneNumber = RegExp(
+      r'^[\+]?(251|0)?9\d{8}$',
+    ).hasMatch(phone_number.trim());
+    if (!isValidPhoneNumber) {
+      throw Exception('Please enter a valid phone number');
     }
 
     // Create login entity
     final loginEntity = LoginEntity(
-      email: email.trim(),
+      phone_number: phone_number.trim(),
       password: password.trim(),
     );
 

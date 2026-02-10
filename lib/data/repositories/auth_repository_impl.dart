@@ -25,6 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
       // Convert entity to model
       final loginModel = LoginModel(
         email: loginEntity.email,
+        phone_number: loginEntity.phone_number,
         password: loginEntity.password,
         username: loginEntity.username,
       );
@@ -33,6 +34,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await remoteDataSource.login(loginModel);
 
       // Save to local storage if login is successful
+      final resolvedPhoneNumber =
+          response.phone_number ?? loginEntity.phone_number;
+
       if (response.success && response.token != null) {
         await localDataSource.saveToken(response.token!);
         if (response.userId != null) {
@@ -41,12 +45,24 @@ class AuthRepositoryImpl implements AuthRepository {
         if (response.username != null) {
           await localDataSource.saveUsername(response.username!);
         }
-        if (response.phoneNumber != null) {
-          await localDataSource.savePhoneNumber(response.phoneNumber!);
+        if (resolvedPhoneNumber != null && resolvedPhoneNumber.isNotEmpty) {
+          await localDataSource.savePhoneNumber(resolvedPhoneNumber);
         }
       }
 
       // Convert model to entity and return
+      if (response.phone_number == null && resolvedPhoneNumber != null) {
+        return LoginResponseEntity(
+          success: response.success,
+          token: response.token,
+          userId: response.userId,
+          username: response.username,
+          phone_number: resolvedPhoneNumber,
+          message: response.message,
+          email: response.email,
+        );
+      }
+
       return response.toEntity();
     } catch (e) {
       rethrow;

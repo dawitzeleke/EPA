@@ -17,15 +17,15 @@ class LoginOverlay extends StatefulWidget {
 }
 
 class _LoginOverlayState extends State<LoginOverlay> {
-  final _emailCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   final _reportIdCtrl = TextEditingController();
   bool _remember = false;
   bool _isSearching = false;
 
   @override
-  void dispose() {
-    _emailCtrl.dispose();
+  void dispose() {    
+    _phoneCtrl.dispose();
     _passCtrl.dispose();
     _reportIdCtrl.dispose();
     super.dispose();
@@ -254,18 +254,18 @@ class _LoginOverlayState extends State<LoginOverlay> {
                             ),
                           ),
                           child: TextField(
-                            controller: _emailCtrl,
-                            keyboardType: TextInputType.emailAddress,
+                            controller: _phoneCtrl,
+                            keyboardType: TextInputType.phone,
                             style: GoogleFonts.poppins(
                               fontSize: isSmall ? 14 : 15,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               prefixIcon: const Icon(
-                                Icons.email_outlined,
+                                Icons.phone_outlined,
                                 color: darkText,
                               ),
-                              hintText: 'Email',
+                              hintText: 'Phone number',
                               hintStyle: GoogleFonts.poppins(
                                 color: hintText,
                                 fontSize: isSmall ? 13 : 15,
@@ -276,7 +276,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                               ),
                             ),
                             onChanged: (v) =>
-                                controller.email.value = v,
+                                controller.phoneNumber.value = v,
                           ),
                         ),
 
