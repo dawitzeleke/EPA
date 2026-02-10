@@ -1,15 +1,15 @@
 /// Domain entity representing a user login
 class LoginEntity {
-  final String? phoneNumber;
+  final String? phone_number;
   final String password;
   final String? username;
   final String? token;
   final String? userId;
-  final String email;
+  final String? email;
 
   LoginEntity({
-    this.phoneNumber,
-    required this.email,
+    this.phone_number,
+    this.email,
     required this.password,
     this.username,
     this.token,
@@ -23,7 +23,7 @@ class LoginResponseEntity {
   final String? token;
   final String? userId;
   final String? username;
-  final String? phoneNumber;
+  final String? phone_number;
   final String? message;
   final String email;
 
@@ -32,7 +32,7 @@ class LoginResponseEntity {
     this.token,
     this.userId,
     this.username,
-    this.phoneNumber,
+    this.phone_number,
     this.message,
     required this.email,
   });

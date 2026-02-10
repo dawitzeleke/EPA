@@ -3,7 +3,7 @@ import '../../domain/entities/login_entity.dart';
 /// Data model for login request
 class LoginModel extends LoginEntity {
   LoginModel({
-    super.phoneNumber,
+    super.phone_number,
     required super.password,
     super.username,
     super.token,
@@ -14,7 +14,7 @@ class LoginModel extends LoginEntity {
   /// Convert to JSON for API request
   Map<String, dynamic> toJson() {
     return {
-      'phone_number': phoneNumber,
+      'phone_number': phone_number,
       'password': password,
       if (username != null) 'username': username,
       'email': email,
@@ -24,7 +24,7 @@ class LoginModel extends LoginEntity {
   /// Create from JSON
   factory LoginModel.fromJson(Map<String, dynamic> json) {
     return LoginModel(
-      phoneNumber: json['phone_number'] ?? json['phoneNumber'] ?? '',
+      phone_number: json['phone_number'] ?? json['phoneNumber'] ?? '',
       password: json['password'] ?? '',
       username: json['username'],
       token: json['token'],
@@ -41,7 +41,7 @@ class LoginResponseModel extends LoginResponseEntity {
     super.token,
     super.userId,
     super.username,
-    super.phoneNumber,
+    super.phone_number,
     super.message,
     required super.email,
   });
@@ -61,13 +61,13 @@ class LoginResponseModel extends LoginResponseEntity {
 
     String? userId;
     String? username;
-    String? phoneNumber;
+    String? phone_number;
     String email = '';
 
     if (customer is Map<String, dynamic>) {
       userId = customer['customer_id'] ?? customer['user_id'] ?? customer['id'];
       username = customer['full_name'] ?? customer['username'] ?? customer['name'];
-      phoneNumber = customer['phone_number'] ?? customer['phoneNumber'];
+      phone_number = customer['phone_number'] ?? customer['phoneNumber'];
       email = customer['email'] ?? '';
     }
 
@@ -77,7 +77,7 @@ class LoginResponseModel extends LoginResponseEntity {
       token: token,
       userId: userId ?? json['user_id'] ?? json['userId'] ?? json['data']?['user_id'] ?? json['data']?['userId'],
       username: username ?? json['username'] ?? json['data']?['username'],
-      phoneNumber: phoneNumber ?? json['phone_number'] ?? json['phoneNumber'] ?? json['data']?['phone_number'] ?? json['data']?['phoneNumber'],
+      phone_number: phone_number ?? json['phone_number'] ?? json['phoneNumber'] ?? json['data']?['phone_number'] ?? json['data']?['phoneNumber'],
       message: json['message'] ?? json['error'] ?? json['data']?['message'],
       email: email.isNotEmpty ? email : (json['email'] ?? json['data']?['email'] ?? ''),
     );
@@ -90,7 +90,7 @@ class LoginResponseModel extends LoginResponseEntity {
       token: token,
       userId: userId,
       username: username,
-      phoneNumber: phoneNumber,
+      phone_number: phone_number,
       message: message,
       email: email,
     );

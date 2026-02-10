@@ -14,6 +14,7 @@ class LoginController extends GetxController {
   var password = ''.obs;
   var isLoading = false.obs;
   var obscurePassword = true.obs;
+  var phoneNumber = ''.obs;
 
   /// Toggle password visibility
   void togglePasswordVisibility() {
@@ -23,10 +24,10 @@ class LoginController extends GetxController {
   /// Handle login submission
   Future<void> submitLogin() async {
     // Validate inputs
-    if (email.value.trim().isEmpty) {
+    if (phoneNumber.value.trim().isEmpty) {
       _showErrorDialog(
-        'Missing Email',
-        'Please enter your email to continue',
+        'Missing Phone Number',
+        'Please enter your phone number to continue',
       );
       return;
     }
@@ -44,8 +45,9 @@ class LoginController extends GetxController {
 
     try {
       // Call use case
+      print("Phone: ${phoneNumber.value}, Password: ${password.value}");
       final response = await loginUseCase.execute(
-        email : email.value,
+        phone_number: phoneNumber.value,
         password: password.value,
       );
 
@@ -58,7 +60,7 @@ class LoginController extends GetxController {
         if (response.username != null) {
           storage.write('username', response.username);
         }
-        final phoneResp = response.phoneNumber;
+        final phoneResp = response.phone_number;
         print("Phoneee $phoneResp");
         if (phoneResp != null && phoneResp.trim().isNotEmpty) {
           storage.write('phone', phoneResp.trim());
@@ -73,8 +75,8 @@ class LoginController extends GetxController {
           Routes.HOME,
           arguments: {
             'username': response.username ?? 'Guest',
-            'phone': response.phoneNumber ?? '',
-            'email': email.value,
+            'phone': response.phone_number ?? '',
+            'phone_number': phoneNumber.value,
           },
         );
 
