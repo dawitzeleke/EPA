@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eprs/app/modules/home/controllers/home_controller.dart';
 import 'package:eprs/core/theme/app_colors.dart';
+import 'package:eprs/core/constants/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 class CarouselBanner extends StatelessWidget {
@@ -65,6 +66,7 @@ class CarouselBanner extends StatelessWidget {
               },
             ),
             items: controller.imageUrls.map((url) {
+              final resolvedUrl = _resolveImageUrl(url);
               final caption = controller.imageCaptions[url] ?? '';
               final date = controller.imageDates[url] ?? '';
 
@@ -76,10 +78,9 @@ class CarouselBanner extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      /// ✅ Network vs Asset handling
-                      url.startsWith('http')
+                      resolvedUrl.startsWith('http')
                           ? Image.network(
-                              url,
+                              resolvedUrl,
                               fit: BoxFit.cover,
                               loadingBuilder: (context, child, progress) {
                                 if (progress == null) return child;
@@ -98,7 +99,7 @@ class CarouselBanner extends StatelessWidget {
                               ),
                             )
                           : Image.asset(
-                              url,
+                              resolvedUrl,
                               fit: BoxFit.cover,
                             ),
 
@@ -185,5 +186,19 @@ class CarouselBanner extends StatelessWidget {
         ],
       );
     });
+  }
+
+  String _resolveImageUrl(String url) {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    if (url.startsWith('assets/')) {
+      return url;
+    }
+
+    final base = ApiConstants.fileBaseUrl.endsWith('/');
+    final normalizedBase = base ? ApiConstants.fileBaseUrl : '${ApiConstants.fileBaseUrl}/';
+    final trimmed = url.startsWith('/') ? url.substring(1) : url;
+    return '$normalizedBase$trimmed';
   }
 }

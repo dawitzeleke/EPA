@@ -2,7 +2,7 @@
 class ApiConstants {
   // Base URL - Update this with your actual backend URL
   static const String baseUrl = 'https://cleanethiopia.epa.gov.et/api/';
-  static const String fileBaseUrl = '/';
+  static const String fileBaseUrl = 'https://eprs.epa.gov.et/';
   // static const String baseUrl = 'http://10.179.217.61:5000/api/';
   
   // Authentication endpoints
