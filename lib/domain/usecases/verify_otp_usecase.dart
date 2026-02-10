@@ -12,12 +12,12 @@ class VerifyOtpUseCase {
   /// Returns OtpVerificationResponseEntity on success
   /// Throws exception on failure
   Future<OtpVerificationResponseEntity> execute({
-    required String email,
+    required String phoneNumber,
     required String otp,
   }) async {
     // Validate input
-    if (email.trim().isEmpty) {
-      throw Exception('Email cannot be empty');
+    if (phoneNumber.trim().isEmpty) {
+      throw Exception('Phone number cannot be empty');
     }
 
     if (otp.trim().isEmpty) {
@@ -30,7 +30,7 @@ class VerifyOtpUseCase {
 
     // Create OTP verification entity
     final otpEntity = OtpVerificationEntity(
-      email: email.trim(),
+      phoneNumber: phoneNumber.trim(),
       otp: otp.trim(),
     );
 

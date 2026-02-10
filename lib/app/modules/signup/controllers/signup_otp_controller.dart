@@ -25,6 +25,8 @@ class SignupOtpController extends GetxController {
   var showKeypad = false.obs;
   var isLoading = false.obs;
   Timer? _timer;
+  final TextEditingController otpTextController = TextEditingController();
+  final FocusNode otpFocusNode = FocusNode();
 
   @override
   void onInit() {
@@ -35,6 +37,8 @@ class SignupOtpController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
+    otpTextController.dispose();
+    otpFocusNode.dispose();
     super.onClose();
   }
 
@@ -81,7 +85,7 @@ class SignupOtpController extends GetxController {
     try {
       // Call use case
       final response = await verifyOtpUseCase.execute(
-        email: email,
+        phoneNumber: phone,
         otp: code.value,
       );
 
@@ -91,8 +95,8 @@ class SignupOtpController extends GetxController {
       if (response.username != null) {
         storage.write('username', response.username);
       }
-      if (response.email != null) {
-        storage.write('email', response.email);
+      if (response.phoneNumber != null) {
+        storage.write('phoneNumber', response.phoneNumber);
       }
       if (phone.isNotEmpty) {
         storage.write('phone', phone);
@@ -101,6 +105,11 @@ class SignupOtpController extends GetxController {
       if (response.userId != null) {
         storage.write('userId', response.userId);
       }
+
+      // Important: OTP verification should not auto-login users.
+      // Clear auth token so splash routes to login on app restart.
+      storage.remove('auth_token');
+      storage.remove('user_id');
 
       // Show success message first
       Get.snackbar(
@@ -140,7 +149,7 @@ class SignupOtpController extends GetxController {
 
     try {
       // Call use case
-      final success = await resendOtpUseCase.execute(email);
+      final success = await resendOtpUseCase.execute(phone);
 
       if (success) {
         // Reset timer
@@ -151,7 +160,7 @@ class SignupOtpController extends GetxController {
         // Show success message
         Get.snackbar(
           'Success',
-          'OTP has been resent to your email',
+          'OTP has been resent to your Phone Number',
           backgroundColor: AppColors.primary,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,

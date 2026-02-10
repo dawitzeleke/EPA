@@ -75,14 +75,14 @@ class SignupResponseModel extends SignupResponseEntity {
 /// Data model for OTP verification request
 class OtpVerificationModel extends OtpVerificationEntity {
   OtpVerificationModel({
-    required super.email,
+    required super.phoneNumber,
     required super.otp,
   });
 
   /// Convert to JSON for API request
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
+      'phone_number': phoneNumber,
       'otp': otp,
     };
   }
@@ -95,7 +95,7 @@ class OtpVerificationResponseModel extends OtpVerificationResponseEntity {
     super.token,
     super.userId,
     super.username,
-    super.email,
+    super.phoneNumber,
     super.message,
   });
 
@@ -115,7 +115,7 @@ class OtpVerificationResponseModel extends OtpVerificationResponseEntity {
       token: json['token'] ?? json['data']?['token'],
       userId: json['user_id'] ?? json['userId'] ?? json['data']?['user_id'] ?? json['data']?['userId'],
       username: json['username'] ?? json['full_name'] ?? json['fullName'] ?? json['data']?['username'] ?? json['data']?['full_name'],
-      email: json['email'] ?? json['data']?['email'],
+      phoneNumber: json['phone_number'] ?? json['phoneNumber'] ?? json['data']?['phone_number'] ?? json['data']?['phoneNumber'],
       message: message.toString().isEmpty ? null : message.toString(),
     );
   }
@@ -127,7 +127,7 @@ class OtpVerificationResponseModel extends OtpVerificationResponseEntity {
       token: token,
       userId: userId,
       username: username,
-      email: email,
+      phoneNumber: phoneNumber,
       message: message,
     );
   }
