@@ -22,9 +22,12 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     // Ensure HomeController is available (defensive in case route bindings weren't set)
     if (!Get.isRegistered<HomeController>()) {
-      Get.put(HomeController( 
-        getNewsUseCase: Get.find(),
-      ));
+      Get.put(
+        HomeController(
+          getNewsUseCase: Get.find(),
+        ),
+        permanent: true,
+      );
     }
     // If username is passed from auth flow or stored, sync into controller
     try {

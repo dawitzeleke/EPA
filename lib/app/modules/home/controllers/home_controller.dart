@@ -328,7 +328,6 @@ String _monthName(int month) {
 
   @override
   void onClose() {
-    reportIdController.dispose();
     super.onClose();
   }
 }

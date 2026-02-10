@@ -5,10 +5,13 @@ import '../controllers/home_controller.dart';
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HomeController>(
-      () => HomeController( 
-        getNewsUseCase: Get.find(),
-      ),
-    );
+    if (!Get.isRegistered<HomeController>()) {
+      Get.put<HomeController>(
+        HomeController(
+          getNewsUseCase: Get.find(),
+        ),
+        permanent: true,
+      );
+    }
   }
 }
