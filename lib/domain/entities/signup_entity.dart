@@ -32,11 +32,11 @@ class SignupResponseEntity {
 
 /// Domain entity representing OTP verification
 class OtpVerificationEntity {
-  final String email;
+  final String phoneNumber;
   final String otp;
 
   OtpVerificationEntity({
-    required this.email,
+    required this.phoneNumber,
     required this.otp,
   });
 }
@@ -47,7 +47,7 @@ class OtpVerificationResponseEntity {
   final String? token;
   final String? userId;
   final String? username;
-  final String? email;
+  final String? phoneNumber;
   final String? message;
 
   OtpVerificationResponseEntity({
@@ -55,7 +55,7 @@ class OtpVerificationResponseEntity {
     this.token,
     this.userId,
     this.username,
-    this.email,
+    this.phoneNumber,
     this.message,
   });
 }

@@ -117,7 +117,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       // Convert entity to model
       final otpModel = OtpVerificationModel(
-        email: otpEntity.email,
+        phoneNumber: otpEntity.phoneNumber, // Using phone number as email for OTP verification
         otp: otpEntity.otp,
       );
 
