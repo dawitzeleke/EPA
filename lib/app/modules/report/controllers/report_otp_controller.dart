@@ -17,7 +17,7 @@ class ReportOtpController extends GetxController {
   var isResending = false.obs;
   Timer? _timer;
 
-  late final String email;
+  late final String phone;
   String? reportId;
   DateTime? dateTime;
   String? region;
@@ -32,8 +32,8 @@ class ReportOtpController extends GetxController {
 
   void _captureArgs() {
     final args = Get.arguments;
-    final resolvedEmail = (args is Map) ? args['email']?.toString() ?? '' : '';
-    email = resolvedEmail;
+    final resolvedPhone = (args is Map) ? args['phone']?.toString() ?? '' : '';
+    phone = resolvedPhone;
     if (args is Map) {
       reportId = args['reportId']?.toString();
       dateTime = args['dateTime'] as DateTime?;
@@ -75,10 +75,10 @@ class ReportOtpController extends GetxController {
   }
 
   Future<void> resendOtp() async {
-    if (email.isEmpty) {
+    if (phone.isEmpty) {
       Get.snackbar(
-        'Email required',
-        'Please enter your email again to request a code.',
+        'Phone number required',
+        'Please enter your phone number again to request a code.',
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -94,7 +94,7 @@ class ReportOtpController extends GetxController {
       final response = await DioClient.instance.dio.post(
         ApiConstants.requestReportOtpEndpoint,
         data: {
-          'email': email,
+          'phone_number': phone,
           'isGuest': true,
         },
         options: dio.Options(
@@ -111,7 +111,7 @@ class ReportOtpController extends GetxController {
       startTimer();
       Get.snackbar(
         'OTP resent',
-        _extractMessage(response.data) ?? 'A new code was sent to $email',
+        _extractMessage(response.data) ?? 'A new code was sent to $phone',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.primary,
         colorText: AppColors.onPrimary,
@@ -130,10 +130,10 @@ class ReportOtpController extends GetxController {
   }
 
   Future<void> verifyOtp() async {
-    if (email.isEmpty) {
+    if (phone.isEmpty) {
       Get.snackbar(
-        'Email required',
-        'Please enter your email again to verify.',
+        'Phone number required',
+        'Please enter your phone number again to verify.',
         snackPosition: SnackPosition.BOTTOM,
       );
       Get.offNamed(
@@ -166,7 +166,7 @@ class ReportOtpController extends GetxController {
       final response = await DioClient.instance.dio.post(
         ApiConstants.verifyReportOtpEndpoint,
         data: {
-          'email': email,
+          'phone_number': phone,
           'otp': code.value,
         },
         options: dio.Options(
@@ -203,7 +203,7 @@ class ReportOtpController extends GetxController {
           final reportController = Get.find<ReportController>();
           if (reportController.hasPendingReport) {
             await reportController.submitPendingReportAfterOtp(
-              email: email,
+              phone: phone,
               token: authToken,
             );
             return;

@@ -18,7 +18,7 @@ class ReportEmailView extends GetView<ReportEmailController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6FA),
       appBar: const CustomAppBar(
-        title: 'Verify Email',
+        title: 'Verify Phone',
         showBack: true,
       ),
       body: SingleChildScrollView(
@@ -37,7 +37,7 @@ class ReportEmailView extends GetView<ReportEmailController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Enter your email',
+                      'Enter your phone number',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -46,7 +46,7 @@ class ReportEmailView extends GetView<ReportEmailController> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'We will send a one-time code to this email to confirm your report.',
+                      'We will send a one-time code to this phone number to confirm your report.',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black54,
@@ -55,10 +55,10 @@ class ReportEmailView extends GetView<ReportEmailController> {
                     ),
                     const SizedBox(height: 20),
                     TextField(
-                      controller: controller.emailController,
-                      keyboardType: TextInputType.emailAddress,
+                      controller: controller.phoneController,
+                      keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                        hintText: 'you@example.com',
+                        hintText: '+251 9xx xxx xxx',
                         filled: true,
                         fillColor: const Color(0xFFF9FBFF),
                         contentPadding: const EdgeInsets.symmetric(

@@ -14,9 +14,9 @@ class ReportOtpView extends GetView<ReportOtpController> {
       Get.lazyPut<ReportOtpController>(() => ReportOtpController());
     }
 
-    final emailText = controller.email.isNotEmpty
-        ? controller.email
-        : 'your email';
+    final phoneText = controller.phone.isNotEmpty
+      ? controller.phone
+      : 'your phone number';
     final size = MediaQuery.of(context).size;
     final boxSize = ((size.width - 80) / 6).clamp(48.0, 64.0);
 
@@ -43,7 +43,7 @@ class ReportOtpView extends GetView<ReportOtpController> {
                       children: [
                         const SizedBox(height: 8),
                         Text(
-                          'We sent a one-time code to $emailText. Check your email and enter the code below.',
+                          'We sent a one-time code to $phoneText. Check your phone and enter the code below.',
                           style: const TextStyle(
                             fontSize: 16,
                             height: 1.5,
@@ -148,6 +148,7 @@ class ReportOtpView extends GetView<ReportOtpController> {
                                       'CONFIRM',
                                       style: TextStyle(
                                         fontSize: 16,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),

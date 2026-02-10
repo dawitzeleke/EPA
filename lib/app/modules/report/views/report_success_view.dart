@@ -1,4 +1,5 @@
 import 'package:eprs/app/modules/report/controllers/report_controller.dart';
+import 'package:eprs/app/routes/app_pages.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -271,7 +272,7 @@ class ReportSuccessView extends StatelessWidget {
                       height: 52,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Get.offAllNamed(Routes.HOME);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,

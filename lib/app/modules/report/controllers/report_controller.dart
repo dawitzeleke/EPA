@@ -93,7 +93,7 @@ final isLoadingPollutionCategories = false.obs;
 
   /// Submit any pending guest report after OTP verification.
   Future<void> submitPendingReportAfterOtp({
-    required String email,
+    required String phone,
     String? token,
   }) async {
     if (_pendingFormData == null) {
@@ -105,10 +105,10 @@ final isLoadingPollutionCategories = false.obs;
       return;
     }
 
-    // Ensure email is attached once
-    final hasEmail = _pendingFormData!.fields.any((f) => f.key == 'email');
-    if (!hasEmail) {
-      _pendingFormData!.fields.add(MapEntry('email', email));
+    // Ensure phone is attached once
+    final hasPhone = _pendingFormData!.fields.any((f) => f.key == 'phone');
+    if (!hasPhone) {
+      _pendingFormData!.fields.add(MapEntry('phone', phone));
     }
 
     isSubmitting.value = true;
@@ -2272,7 +2272,7 @@ Future<void> pickTime(BuildContext context) async {
         print('  ${field.key}: ${field.value}');
       }
 
-      // If user is a guest, store form data and route to email/OTP before submission
+      // If user is a guest, store form data and route to phone/OTP before submission
       final isLoggedIn = token != null && token.toString().isNotEmpty;
       if (!isLoggedIn) {
         _pendingFormData = formData;

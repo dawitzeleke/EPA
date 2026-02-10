@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReportEmailController extends GetxController {
-  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
   final isSubmitting = false.obs;
 
   String? reportId;
@@ -27,16 +27,16 @@ class ReportEmailController extends GetxController {
 
   @override
   void onClose() {
-    emailController.dispose();
+    phoneController.dispose();
     super.onClose();
   }
 
   Future<void> sendOtp() async {
-    final email = emailController.text.trim();
-    if (email.isEmpty || !GetUtils.isEmail(email)) {
+    final phone = phoneController.text.trim();
+    if (phone.isEmpty || !GetUtils.isPhoneNumber(phone)) {
       Get.snackbar(
-        'Invalid email',
-        'Please enter a valid email address to receive the code.',
+        'Invalid phone number',
+        'Please enter a valid phone number to receive the code.',
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -52,7 +52,7 @@ class ReportEmailController extends GetxController {
       final response = await DioClient.instance.dio.post(
         ApiConstants.requestReportOtpEndpoint,
         data: {
-          'email': email,
+          'phone_number': phone,
           'isGuest': true,
         },
         options: dio.Options(
@@ -66,7 +66,7 @@ class ReportEmailController extends GetxController {
         throw Exception(_extractMessage(response.data) ?? 'Failed to send OTP');
       }
 
-      final message = _extractMessage(response.data) ?? 'OTP sent to $email';
+      final message = _extractMessage(response.data) ?? 'OTP sent to $phone';
       Get.snackbar(
         'OTP sent',
         message,
@@ -83,7 +83,7 @@ class ReportEmailController extends GetxController {
       Get.toNamed(
         Routes.Report_Otp,
         arguments: {
-          'email': email,
+          'phone': phone,
           'reportId': idToPass,
           'dateTime': dt,
           'region': region,
