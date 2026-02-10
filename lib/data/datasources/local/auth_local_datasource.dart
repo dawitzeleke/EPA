@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get_storage/get_storage.dart';
 
 /// Local data source for authentication
@@ -85,12 +87,49 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     await storage.remove(_usernameKey);
     await storage.remove(_phoneNumberKey);
     await storage.remove(_emailKey);  
+    await storage.remove('userId');
+    await storage.remove('phone');
+    await storage.remove('full_name');
   }
 
   @override
   Future<bool> isLoggedIn() async {
     final token = await getToken();
-    return token != null && token.isNotEmpty;
+    if (token == null || token.isEmpty) {
+      return false;
+    }
+
+    if (_isTokenExpired(token)) {
+      await clearAll();
+      return false;
+    }
+
+    return true;
+  }
+
+  bool _isTokenExpired(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return false;
+
+      final payload = parts[1];
+      final normalized = base64Url.normalize(payload);
+      final payloadMap = json.decode(utf8.decode(base64Url.decode(normalized)));
+
+      if (payloadMap is! Map<String, dynamic>) return false;
+      final expValue = payloadMap['exp'];
+      if (expValue == null) return false;
+
+      final expSeconds = expValue is int
+          ? expValue
+          : int.tryParse(expValue.toString());
+      if (expSeconds == null) return false;
+
+      final nowSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      return nowSeconds >= expSeconds;
+    } catch (_) {
+      return false;
+    }
   }
 }
 
