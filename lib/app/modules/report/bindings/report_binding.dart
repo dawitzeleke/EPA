@@ -8,7 +8,11 @@ class ReportBinding extends Bindings {
   @override
   void dependencies() {
     if (Get.isRegistered<ReportController>()) {
-      return;
+      final existing = Get.find<ReportController>();
+      if (!existing.isClosed) {
+        return;
+      }
+      Get.delete<ReportController>(force: true);
     }
 
     // Keep the controller alive while tabs are in use to avoid disposing
