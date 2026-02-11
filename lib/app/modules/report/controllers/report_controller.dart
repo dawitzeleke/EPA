@@ -2272,18 +2272,76 @@ Future<void> pickTime(BuildContext context) async {
         print('  ${field.key}: ${field.value}');
       }
 
-      // If user is a guest, store form data and route to phone/OTP before submission
+      // If user is a guest, request OTP using the phone on this page
       final isLoggedIn = token != null && token.toString().isNotEmpty;
       if (!isLoggedIn) {
-        _pendingFormData = formData;
-        _pendingRegionForSuccess = selectedRegion.value;
-        isSubmitting.value = false;
-        Get.toNamed(
-          Routes.Report_Email,
-          arguments: {
-            'region': selectedRegion.value,
-          },
-        );
+        final phone = phoneController.text.trim();
+        final isValidPhone = phone.length == 10 &&
+            (phone.startsWith('09') || phone.startsWith('07'));
+        if (!isValidPhone) {
+          phoneError.value = 'Phone number must start with 09 or 07';
+          Get.snackbar(
+            'Invalid phone number',
+            'Please enter a valid phone number to receive the code.',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          isSubmitting.value = false;
+          return;
+        }
+
+        try {
+          // Ensure guest OTP request is sent without any existing auth header
+          final headers = Map<String, dynamic>.from(
+            DioClient.instance.dio.options.headers,
+          )..remove('Authorization');
+
+          final response = await DioClient.instance.dio.post(
+            ApiConstants.requestReportOtpEndpoint,
+            data: {
+              'phone_number': phone,
+              'isGuest': true,
+            },
+            options: dio.Options(
+              followRedirects: true,
+              headers: headers,
+            ),
+          );
+
+          final status = response.statusCode ?? 0;
+          final success = status >= 200 && status < 300;
+          if (!success) {
+            throw Exception('Failed to send OTP');
+          }
+
+          _pendingFormData = formData;
+          _pendingRegionForSuccess = selectedRegion.value;
+          isSubmitting.value = false;
+
+          Get.snackbar(
+            'OTP sent',
+            'A code was sent to $phone',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.primary,
+            colorText: AppColors.onPrimary,
+          );
+
+          Get.toNamed(
+            Routes.Report_Otp,
+            arguments: {
+              'phone': phone,
+              'region': selectedRegion.value,
+            },
+          );
+        } catch (e) {
+          isSubmitting.value = false;
+          Get.snackbar(
+            'Failed to send OTP',
+            e.toString().replaceAll('Exception: ', ''),
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+        }
         return;
       }
 

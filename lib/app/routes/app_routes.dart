@@ -20,7 +20,6 @@ abstract class Routes {
   static const REPORT = _Paths.REPORT;
   static const REPORT_ISSUE = _Paths.REPORT_ISSUE;
   static const Report_Success = _Paths.Report_Success;
-  static const Report_Email = _Paths.Report_Email;
   static const Report_Otp = _Paths.Report_Otp;
   static const SIGNUP = _Paths.SIGNUP;
   static const SIGNUP_OTP = _Paths.SIGNUP_OTP;
@@ -45,7 +44,6 @@ abstract class _Paths {
   static const REPORT = '/report';
   static const REPORT_ISSUE = '/report-issue';
   static const Report_Success = '/report-success';
-  static const Report_Email = '/report-email';
   static const Report_Otp = '/report-otp';
   static const SIGNUP = '/signup';
   static const SIGNUP_OTP = '/signup-otp';

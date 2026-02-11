@@ -1,9 +1,7 @@
 import 'package:eprs/app/modules/report/views/report_issue_view.dart';
 import 'package:eprs/app/modules/report/views/report_otp_view.dart';
 import 'package:eprs/app/modules/report/views/report_success_view.dart';
-import 'package:eprs/app/modules/report/views/report_email_view.dart';
 import '../modules/report/controllers/report_otp_controller.dart';
-import '../modules/report/controllers/report_email_controller.dart';
 import 'package:get/get.dart';
 
 import '../modules/about/bindings/about_binding.dart';
@@ -196,14 +194,6 @@ class AppPages {
         
         return ReportSuccessView(reportId: reportId, dateTime: dateTime, region: region);
       },
-    ),
-
-    GetPage(
-      name: _Paths.Report_Email,
-      page: () => const ReportEmailView(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut<ReportEmailController>(() => ReportEmailController());
-      }),
     ),
 
     GetPage(

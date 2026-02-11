@@ -61,13 +61,13 @@ class LoginResponseModel extends LoginResponseEntity {
 
     String? userId;
     String? username;
-    String? phone_number;
+    String? phoneNumber;
     String email = '';
 
     if (customer is Map<String, dynamic>) {
       userId = customer['customer_id'] ?? customer['user_id'] ?? customer['id'];
       username = customer['full_name'] ?? customer['username'] ?? customer['name'];
-      phone_number = customer['phone_number'] ?? customer['phoneNumber'];
+      phoneNumber = customer['phone_number'] ?? customer['phoneNumber'];
       email = customer['email'] ?? '';
     }
 
@@ -77,7 +77,7 @@ class LoginResponseModel extends LoginResponseEntity {
       token: token,
       userId: userId ?? json['user_id'] ?? json['userId'] ?? json['data']?['user_id'] ?? json['data']?['userId'],
       username: username ?? json['username'] ?? json['data']?['username'],
-      phone_number: phone_number ?? json['phone_number'] ?? json['phoneNumber'] ?? json['data']?['phone_number'] ?? json['data']?['phoneNumber'],
+      phone_number: phoneNumber ?? json['phone_number'] ?? json['phoneNumber'] ?? json['data']?['phone_number'] ?? json['data']?['phoneNumber'],
       message: json['message'] ?? json['error'] ?? json['data']?['message'],
       email: email.isNotEmpty ? email : (json['email'] ?? json['data']?['email'] ?? ''),
     );

@@ -326,10 +326,6 @@ String _monthName(int month) {
     }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }
 
 // === MODELS ===

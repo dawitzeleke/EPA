@@ -133,17 +133,10 @@ class ReportOtpController extends GetxController {
     if (phone.isEmpty) {
       Get.snackbar(
         'Phone number required',
-        'Please enter your phone number again to verify.',
+        'Please return to the report page and enter your phone number.',
         snackPosition: SnackPosition.BOTTOM,
       );
-      Get.offNamed(
-        Routes.Report_Email,
-        arguments: {
-          'reportId': reportId,
-          'dateTime': dateTime ?? DateTime.now(),
-          'region': region,
-        },
-      );
+      Get.back();
       return;
     }
 
