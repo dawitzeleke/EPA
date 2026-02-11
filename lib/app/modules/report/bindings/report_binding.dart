@@ -7,14 +7,18 @@ import 'package:eprs/domain/usecases/get_cities_usecase.dart';
 class ReportBinding extends Bindings {
   @override
   void dependencies() {
-    // Use put instead of lazyPut to ensure controller is created fresh each time
-    // This helps avoid type issues with hot reload
+    if (Get.isRegistered<ReportController>()) {
+      return;
+    }
+
+    // Keep the controller alive while tabs are in use to avoid disposing
+    // TextEditingControllers that are still referenced by the report view.
     Get.put<ReportController>(
       ReportController(
         getSoundAreasUseCase: Get.find<GetSoundAreasUseCase>(),
         getCitiesUseCase: Get.find<GetCitiesUseCase>(),
       ),
-      permanent: false,
+      permanent: true,
     );
   }
 }

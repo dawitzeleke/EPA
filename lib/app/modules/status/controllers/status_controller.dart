@@ -427,8 +427,8 @@ class StatusController extends GetxController {
           }
         }
 
-        if (complaint == null || complaint.isEmpty) return null;
-        return ReportItem.fromJson(complaint);
+        if (complaint?.isEmpty ?? true) return null;
+        return ReportItem.fromJson(complaint!);
       }
       return null;
     } on DioException catch (e) {
