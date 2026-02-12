@@ -26,10 +26,10 @@ class AwarenessController extends GetxController {
       final awarenessItems = await getAwarenessUseCase.execute();
       awarenessList.assignAll(awarenessItems);
     } catch (e) {
-      errorMessage.value = e.toString();
+      errorMessage.value = _cleanErrorMessage(e);
       Get.snackbar(
         'Error',
-        'Failed to load awareness items: ${e.toString()}',
+        'Failed to load awareness items: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -51,6 +51,15 @@ String getImageUrl(AwarenessModel awareness) {
 
   return imageUrl;
 }
+
+  String _cleanErrorMessage(Object error) {
+    final text = error.toString();
+    final cleaned = text
+        .replaceAll('Exception: ', '')
+        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
+        .trim();
+    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
+  }
 
 
 }
