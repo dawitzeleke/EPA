@@ -119,7 +119,7 @@ class ReportOtpController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Resend failed',
-        e.toString().replaceAll('Exception: ', ''),
+        _cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: AppColors.onPrimary,
@@ -222,7 +222,7 @@ class ReportOtpController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Verification failed',
-        e.toString().replaceAll('Exception: ', ''),
+        _cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
@@ -262,5 +262,24 @@ class ReportOtpController extends GetxController {
       if (headerToken != null && headerToken.isNotEmpty) return headerToken;
     } catch (_) {}
     return null;
+  }
+
+  String _cleanErrorMessage(Object error) {
+    if (error is dio.DioException) {
+      final extracted = _extractMessage(error.response?.data);
+      if (extracted != null && extracted.trim().isNotEmpty) {
+        return extracted.trim();
+      }
+      final msg = error.message;
+      if (msg != null && msg.trim().isNotEmpty) {
+        return msg.trim();
+      }
+    }
+    final text = error.toString();
+    final cleaned = text
+        .replaceAll('Exception: ', '')
+        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
+        .trim();
+    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
   }
 }

@@ -439,7 +439,7 @@ final isLoadingPollutionCategories = false.obs;
         selectedSoundAreaId.value = null;
       }
     } catch (e) {
-      soundAreasError.value = e.toString();
+      soundAreasError.value = _cleanErrorMessage(e);
     } finally {
       isLoadingSoundAreas.value = false;
     }
@@ -532,7 +532,7 @@ final isLoadingPollutionCategories = false.obs;
     } catch (e, stackTrace) {
       print('❌ Error fetching pollution categories: $e');
       print('Stack trace: $stackTrace');
-      pollutionCategoriesError.value = 'Failed to load pollution categories';
+      pollutionCategoriesError.value = _cleanErrorMessage(e);
     }
     isLoadingPollutionCategories.value = false;
   }
@@ -1009,7 +1009,7 @@ Future<void> pickTime(BuildContext context) async {
       print('Error fetching regions: $e');
       Get.snackbar(
         'Error',
-        'Failed to load regions: ${e.toString()}',
+        'Failed to load regions: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1049,7 +1049,7 @@ Future<void> pickTime(BuildContext context) async {
       print('Stack trace: $stackTrace');
       Get.snackbar(
         'Error',
-        'Failed to load cities: ${e.toString()}',
+        'Failed to load cities: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1219,7 +1219,7 @@ Future<void> pickTime(BuildContext context) async {
       print('Error fetching zones: $e');
       Get.snackbar(
         'Error',
-        'Failed to load zones: ${e.toString()}',
+        'Failed to load zones: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1289,7 +1289,7 @@ Future<void> pickTime(BuildContext context) async {
       print('Error fetching woredas: $e');
       Get.snackbar(
         'Error',
-        'Failed to load woredas: ${e.toString()}',
+        'Failed to load woredas: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -2336,7 +2336,7 @@ Future<void> pickTime(BuildContext context) async {
           isSubmitting.value = false;
           Get.snackbar(
             'Failed to send OTP',
-            e.toString().replaceAll('Exception: ', ''),
+            _cleanErrorMessage(e),
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.redAccent,
             colorText: Colors.white,
@@ -2357,7 +2357,7 @@ Future<void> pickTime(BuildContext context) async {
       print('Error submitting report: $e');
       Get.snackbar(
         'Error',
-        'Failed to submit report: ${e.toString()}',
+        'Failed to submit report: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -2453,9 +2453,40 @@ Future<void> pickTime(BuildContext context) async {
       print('Error submitting report: $e');
       Get.snackbar(
         'Error',
-        'Failed to submit report: ${e.toString()}',
+        'Failed to submit report: ${_cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+  }
+
+  String _cleanErrorMessage(Object error) {
+    if (error is dio.DioException) {
+      final extracted = _extractMessage(error.response?.data);
+      if (extracted != null && extracted.trim().isNotEmpty) {
+        return extracted.trim();
+      }
+      final msg = error.message;
+      if (msg != null && msg.trim().isNotEmpty) {
+        return msg.trim();
+      }
+    }
+    final text = error.toString();
+    final cleaned = text
+        .replaceAll('Exception: ', '')
+        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
+        .trim();
+    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
+  }
+
+  String? _extractMessage(dynamic data) {
+    if (data is Map) {
+      for (final key in ['message', 'msg', 'detail', 'error']) {
+        final value = data[key];
+        if (value is String && value.trim().isNotEmpty) return value.trim();
+      }
+    } else if (data is String && data.trim().isNotEmpty) {
+      return data.trim();
+    }
+    return null;
   }
 }

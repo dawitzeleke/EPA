@@ -92,7 +92,7 @@ class ReportEmailController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Failed to send OTP',
-        e.toString().replaceAll('Exception: ', ''),
+        _cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
@@ -112,5 +112,24 @@ class ReportEmailController extends GetxController {
       return data.trim();
     }
     return null;
+  }
+
+  String _cleanErrorMessage(Object error) {
+    if (error is dio.DioException) {
+      final extracted = _extractMessage(error.response?.data);
+      if (extracted != null && extracted.trim().isNotEmpty) {
+        return extracted.trim();
+      }
+      final msg = error.message;
+      if (msg != null && msg.trim().isNotEmpty) {
+        return msg.trim();
+      }
+    }
+    final text = error.toString();
+    final cleaned = text
+        .replaceAll('Exception: ', '')
+        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
+        .trim();
+    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
   }
 }
