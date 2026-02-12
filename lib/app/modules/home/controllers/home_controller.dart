@@ -115,6 +115,13 @@ String _monthName(int month) {
   } catch (e, stackTrace) {
     print('❌ Error fetching news: $e');
     print('Stack trace: $stackTrace');
+    Get.snackbar(
+      'Error',
+      _cleanErrorMessage(e),
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
   } finally {
     isNewsLoading.value = false;
   }
@@ -307,8 +314,7 @@ String _monthName(int month) {
     } on dio.DioException catch (e) {
       Get.snackbar(
         'Error',
-        e.response?.data?['message']?.toString() ?? 
-        'Failed to search for report. Please check your connection.',
+        _cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -316,7 +322,7 @@ String _monthName(int month) {
     } catch (e) {
       Get.snackbar(
         'Error',
-        'An error occurred: ${e.toString()}',
+        _cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -324,6 +330,31 @@ String _monthName(int month) {
     } finally {
       isSearchingReport.value = false;
     }
+  }
+
+  String _cleanErrorMessage(Object error) {
+    if (error is dio.DioException) {
+      final data = error.response?.data;
+      if (data is Map) {
+        for (final key in ['message', 'msg', 'detail', 'error']) {
+          final value = data[key];
+          if (value is String && value.trim().isNotEmpty) {
+            return value.trim();
+          }
+        }
+      } else if (data is String && data.trim().isNotEmpty) {
+        return data.trim();
+      }
+      final msg = error.message;
+      if (msg != null && msg.trim().isNotEmpty) return msg.trim();
+    }
+
+    final text = error.toString();
+    final cleaned = text
+        .replaceAll('Exception: ', '')
+        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
+        .trim();
+    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
   }
 
 }
