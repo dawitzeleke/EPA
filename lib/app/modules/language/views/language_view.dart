@@ -1,3 +1,4 @@
+import 'package:eprs/app/modules/bottom_nav/controllers/bottom_nav_controller.dart';
 import 'package:eprs/app/modules/bottom_nav/widgets/bottom_nav_footer.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +12,9 @@ class LanguageView extends GetView<LanguageController> {
 
   @override
   Widget build(BuildContext context) {
-    final languages = [
-      'English',
-      'Amharic',
-      'Afaan Oromo',
-      'Tigrigna',
-      'Somali',
-    ];
-
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomAppBar(title: 'Language'),
+      appBar: CustomAppBar(title: 'Language'.tr),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -31,22 +24,30 @@ class LanguageView extends GetView<LanguageController> {
             borderRadius: BorderRadius.circular(12),
             child: ListView.separated(
               shrinkWrap: true,
-              itemCount: languages.length,
+              itemCount: controller.availableLanguages.length,
               separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(languages[index]),
-                  onTap: () {
-                    // TODO: save language selection
-                    Get.back();
-                  },
-                );
+                final option = controller.availableLanguages[index];
+                return Obx(() {
+                  final selected = controller.isSelected(option.locale);
+                  return ListTile(
+                    title: Text(option.key.tr),
+                    trailing: selected
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : null,
+                    onTap: () {
+                      controller.changeLocale(option.locale);
+                      Get.back();
+                    },
+                  );
+                });
               },
             ),
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavBarFooter(),
+      bottomNavigationBar:
+          Get.isRegistered<BottomNavController>() ? const BottomNavBarFooter() : null,
     );
   }
 }

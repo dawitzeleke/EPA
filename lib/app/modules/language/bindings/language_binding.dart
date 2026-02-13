@@ -5,8 +5,11 @@ import '../controllers/language_controller.dart';
 class LanguageBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LanguageController>(
-      () => LanguageController(),
-    );
+    if (!Get.isRegistered<LanguageController>()) {
+      Get.put<LanguageController>(
+        LanguageController(),
+        permanent: true,
+      );
+    }
   }
 }
