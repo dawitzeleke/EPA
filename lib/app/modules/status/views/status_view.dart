@@ -13,8 +13,8 @@ class StatusView extends GetView<StatusController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: const CustomAppBar(
-        title: 'Report Status',
+      appBar: CustomAppBar(
+        title: 'Report Status'.tr,
         showBack: true,
         forceHomeOnBack: true,
       ),
@@ -205,7 +205,7 @@ class StatusView extends GetView<StatusController> {
           //     : null,
         ),
         child: Text(
-          label,
+          label.tr,
           style: TextStyle(
             color: isActive ? Colors.white : const Color(0xFF333333),
             fontWeight: FontWeight.w600,
