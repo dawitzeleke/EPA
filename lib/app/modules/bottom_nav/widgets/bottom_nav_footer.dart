@@ -82,7 +82,7 @@ class _BottomNavItemButton extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                data.label,
+                data.label.tr,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: isSelected ? bottomNavInactiveColor : AppColors.onPrimary,
