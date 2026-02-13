@@ -1,4 +1,5 @@
 import 'package:eprs/app/routes/app_pages.dart';
+import 'package:eprs/app/widgets/language_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -80,13 +81,9 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                 children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: Text(
-                      'Eng',
-                      style: GoogleFonts.poppins(
-                        fontSize: isSmall ? 12 : 13,
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: LanguageSelector(
+                      fontSize: isSmall ? 12 : 13,
+                      iconSize: isSmall ? 16 : 18,
                     ),
                   ),
                   SizedBox(height: height * 0.02),
@@ -97,7 +94,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                   ),
                   SizedBox(height: height * 0.03),
                   Text(
-                    'Create EPA PASS Account',
+                    'Create EPA PASS Account'.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: isSmall ? 20 : 24,
@@ -114,7 +111,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                         // Full Name Input
                         _buildTextField(
                           controller: _nameCtrl,
-                          hint: 'Full Name',
+                          hint: 'Full Name'.tr,
                           icon: Icons.person_outline,
                           isSmall: isSmall,
                           onChanged: (v) => controller.fullName.value = v,
@@ -124,7 +121,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                         // Email Input
                         _buildTextField(
                           controller: _emailCtrl,
-                          hint: 'Email',
+                          hint: 'Email'.tr,
                           icon: Icons.email_outlined,
                           isSmall: isSmall,
                           inputType: TextInputType.emailAddress,
@@ -135,7 +132,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                         // Phone Number Input
                         _buildTextField(
                           controller: _phoneCtrl,
-                          hint: 'Phone number',
+                          hint: 'Phone Number'.tr,
                           icon: Icons.phone_outlined,
                           isSmall: isSmall,
                           inputType: TextInputType.phone,
@@ -146,7 +143,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                         // Password Input
                         Obx(() => _buildTextField(
                           controller: _passCtrl,
-                          hint: 'Password',
+                          hint: 'Password'.tr,
                           icon: Icons.lock_outline,
                           isSmall: isSmall,
                           isPassword: true,
@@ -159,7 +156,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                         // Confirm Password Input
                         Obx(() => _buildTextField(
                           controller: _confirmPassCtrl,
-                          hint: 'Password Confirmation',
+                          hint: 'Password Confirmation'.tr,
                           icon: Icons.lock_outline,
                           isSmall: isSmall,
                           isPassword: true,
@@ -200,7 +197,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                                     ),
                                   )
                                 : Text(
-                                    'Continue',
+                                    'Continue'.tr,
                                     style: GoogleFonts.poppins(
                                       fontSize: isSmall ? 16 : 18,
                                       fontWeight: FontWeight.w600,
@@ -216,7 +213,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Already have an account? ',
+                              'Already have an account?'.tr,
                               style: GoogleFonts.poppins(
                                 fontSize: isSmall ? 13 : 14,
                                 color: hintText,
@@ -226,7 +223,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                             GestureDetector(
                               onTap: () => Get.toNamed(Routes.LOGIN),
                               child: Text(
-                                'Sign In',
+                                'Sign In'.tr,
                                 style: GoogleFonts.poppins(
                                   fontSize: isSmall ? 13 : 14,
                                   color: greenColor,

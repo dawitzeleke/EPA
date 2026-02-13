@@ -24,9 +24,9 @@ class SignupOtpView extends GetView<SignupOtpController> {
 
     return Scaffold(
       backgroundColor: AppColors.onPrimary,
-      appBar: const CustomAppBar(
-        title: 'OTP Verification',
-        subtitle: 'Verify your Phone Number',
+      appBar: CustomAppBar(
+        title: 'OTP Verification'.tr,
+        subtitle: 'Verify your Phone Number'.tr,
         showBack: true,
       ),
       body: GestureDetector(
@@ -77,7 +77,7 @@ class SignupOtpView extends GetView<SignupOtpController> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              'Verify OTP',
+                              'Verify OTP'.tr,
                               style: TextStyle(
                                 fontSize: isSmall ? 22 : 26,
                                 fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class SignupOtpView extends GetView<SignupOtpController> {
                             ),
                             SizedBox(height: spacingSm),
                             Text(
-                              'Enter the 6-digit code sent to ${controller.phone}.',
+                              '${'Enter the 6-digit code sent to'.tr} ${controller.phone}.',
                               style: TextStyle(
                                 fontSize: titleFontSize,
                                 height: 1.5,
@@ -122,15 +122,15 @@ class SignupOtpView extends GetView<SignupOtpController> {
                               () => Center(
                                 child: Column(
                                   children: [
-                                    const Text(
-                                      "Didn't receive code?",
+                                    Text(
+                                      "Didn't receive code?".tr,
                                       style: TextStyle(color: Colors.black87),
                                     ),
                                     SizedBox(height: spacingSm),
                                     controller.seconds.value > 0
                                         ? RichText(
                                             text: TextSpan(
-                                              text: 'You can resend code in ',
+                                              text: 'You can resend code in '.tr,
                                               style: const TextStyle(
                                                 color: Colors.black54,
                                               ),
@@ -150,8 +150,8 @@ class SignupOtpView extends GetView<SignupOtpController> {
                                             onPressed: controller.isLoading.value
                                                 ? null
                                                 : controller.resendOtp,
-                                            child: const Text(
-                                              'Resend code',
+                                            child: Text(
+                                              'Resend Code'.tr,
                                               style: TextStyle(
                                                 color: Color(0xFF3B82F6),
                                               ),
@@ -191,8 +191,8 @@ class SignupOtpView extends GetView<SignupOtpController> {
                                             ),
                                           ),
                                         )
-                                      : const Text(
-                                          'Verify OTP',
+                                        : Text(
+                                          'Verify OTP'.tr,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
