@@ -74,7 +74,7 @@ class LanguageSelector extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                   );
-                }).toList(),
+                }),
                 const SizedBox(height: 8),
               ],
             ),

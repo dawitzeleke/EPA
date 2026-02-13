@@ -1,4 +1,5 @@
 import 'package:eprs/app/routes/app_pages.dart';
+import 'package:eprs/app/widgets/language_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
   final _passCtrl = TextEditingController();
   final _reportIdCtrl = TextEditingController();
   bool _remember = false;
-  bool _isSearching = false;
+  final bool _isSearching = false;
 
   @override
   void dispose() {    
@@ -43,7 +44,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
 
     final args = Get.arguments;
     final isFirstLogin = args is Map && args['firstTimeLogin'] == true;
-    final welcomeTitle = isFirstLogin ? 'Welcome!' : 'Welcome Back!';
+    final welcomeTitle = isFirstLogin ? 'Welcome'.tr : 'Welcome Back'.tr;
     
     // Responsive calculations
     final isSmall = height < 700;
@@ -88,138 +89,9 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   // Top right language
                   Align(
                     alignment: Alignment.topRight,
-                    child: Text(
-                      'Eng',
-                      style: GoogleFonts.poppins(
-                        fontSize: isSmall ? 12 : 13,
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  Image.asset(
-                    'assets/logo.png',
-                    height: logoHeight,
-                  ),
-                  
-                  // Track Report Status card
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(isSmall ? 10 : 12),
-                      margin: EdgeInsets.only(top: height * 0.01),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                        border: Border.all(color: borderColor, width: 1),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Track Report Status',
-                            style: GoogleFonts.poppins(
-                              fontSize: isSmall ? 10 : 12,
-                              fontWeight: FontWeight.w600,
-                              color: darkText,
-                            ),
-                          ),
-                          SizedBox(height: isSmall ? 8 : 10),
-                          IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _reportIdCtrl,
-                                    style: GoogleFonts.poppins(fontSize: isSmall ? 12 : 13),
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      hintText: 'Enter Report ID',
-                                      hintStyle: TextStyle(
-                                        fontSize: isSmall ? 10 : 11,
-                                        color: hintText,
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: isSmall ? 5 : 9,
-                                        horizontal: 12,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: borderColor, width: 1.1),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: greenColor, width: 1.3),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                ElevatedButton(
-                                  onPressed: _isSearching
-                                      ? null
-                                      : () async {
-                                          final id = _reportIdCtrl.text.trim();
-                                          if (id.isEmpty) {
-                                            Get.snackbar(
-                                              'Report ID',
-                                              'Please enter a Report ID',
-                                              snackPosition: SnackPosition.BOTTOM,
-                                            );
-                                            return;
-                                          }
-                                          setState(() => _isSearching = true);
-                                          final statusController = Get.isRegistered<StatusController>()
-                                              ? Get.find<StatusController>()
-                                              : Get.put(StatusController());
-                                          final result = await statusController.fetchComplaintByReportId(id);
-                                          setState(() => _isSearching = false);
-                                          if (result == null) {
-                                            Get.snackbar(
-                                              'Not found',
-                                              'No complaint found for $id',
-                                              snackPosition: SnackPosition.BOTTOM,
-                                            );
-                                            return;
-                                          }
-
-                                          _showStatusDialog(context, result);
-                                        },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: greenColor,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: isSmall ? 12 : 16,
-                                    ),
-                                    minimumSize: Size.zero, // Remove default minimum size constraints
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Remove extra margins
-                                  ),
-                                  child: Text(
-                                    _isSearching ? '...' : 'Search',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: isSmall ? 11 : 13,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: LanguageSelector(
+                      fontSize: isSmall ? 12 : 13,
+                      iconSize: isSmall ? 16 : 18,
                     ),
                   ),
 
@@ -265,7 +137,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                 Icons.phone_outlined,
                                 color: darkText,
                               ),
-                              hintText: 'Phone number',
+                              hintText: 'Phone Number'.tr,
                               hintStyle: GoogleFonts.poppins(
                                 color: hintText,
                                 fontSize: isSmall ? 13 : 15,
@@ -304,7 +176,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                 Icons.lock_outline,
                                 color: darkText,
                               ),
-                              hintText: 'Password',
+                              hintText: 'Password'.tr,
                               hintStyle: GoogleFonts.poppins(
                                 color: hintText,
                                 fontSize: isSmall ? 13 : 15,
@@ -365,7 +237,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                     SizedBox(width: 8),
                                     Flexible(
                                       child: Text(
-                                        'Remember Me',
+                                        'Remember Me'.tr,
                                         overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.poppins(
                                           fontSize: isSmall ? 13 : 14,
@@ -387,7 +259,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                     MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Forget Password?',
+                                'Forgot Password'.tr,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.poppins(
                                   fontSize: isSmall ? 13 : 14,
@@ -431,7 +303,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                         ),
                                       )
                                     : Text(
-                                        'Sign In',
+                                        'Sign In'.tr,
                                         style: GoogleFonts.poppins(
                                           fontSize: isSmall ? 16 : 18,
                                           fontWeight: FontWeight.w600,
@@ -465,7 +337,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: Text(
-                              'Continue as Guest',
+                              'Continue as Guest'.tr,
                               style: GoogleFonts.poppins(
                                 fontSize: isSmall ? 14 : 15,
                                 fontWeight: FontWeight.w600,
@@ -479,7 +351,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
 
                         RichText(
                           text: TextSpan(
-                            text: 'Don\'t have an account? ',
+                            text: "Don't have an account?".tr,
                             style: GoogleFonts.poppins(
                               fontSize: isSmall ? 14 : 15,
                               color: hintText,
@@ -487,7 +359,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                             ),
                             children: [
                               TextSpan(
-                                text: 'Sign up',
+                                text: 'Sign Up'.tr,
                                 style: GoogleFonts.poppins(
                                   fontSize: isSmall ? 14 : 15,
                                   color: AppColors.primary,
@@ -537,7 +409,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Complaint Status',
+                        'Complaint Status'.tr,
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -552,7 +424,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Status history timeline',
+                    'Status history timeline'.tr,
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       color: const Color(0xFF5C6B7A),
@@ -562,7 +434,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   Row(
                     children: [
                       Text(
-                        'Current: ',
+                        '${'Current:'.tr} ',
                         style: GoogleFonts.poppins(
                           fontSize: 13,
                           color: const Color(0xFF5C6B7A),
