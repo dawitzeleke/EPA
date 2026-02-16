@@ -13,6 +13,7 @@ import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1208,7 +1209,7 @@ class _ReportViewState extends State<ReportView> {
                   onPressed: () {
                     if (controller.isCanceling.value) return;
                     controller.cancelRecording().catchError((error) {
-                      print('Error canceling recording: $error');
+                      secureLog('Error canceling recording: $error');
                       Get.snackbar(
                         'Error',
                         'Failed to cancel recording: ${error.toString()}',
@@ -1251,7 +1252,7 @@ class _ReportViewState extends State<ReportView> {
                   onPressed: () {
                     if (controller.isStopping.value) return;
                     controller.stopRecording().catchError((error) {
-                      print('Error stopping recording: $error');
+                      secureLog('Error stopping recording: $error');
                       Get.snackbar(
                         'Error',
                         'Failed to stop recording: ${error.toString()}',
@@ -1309,7 +1310,7 @@ class _ReportViewState extends State<ReportView> {
                     try {
                       onPressed();
                     } catch (e) {
-                      print('Error in recording button callback: $e');
+                      secureLog('Error in recording button callback: $e');
                     }
                   }
                 : null,

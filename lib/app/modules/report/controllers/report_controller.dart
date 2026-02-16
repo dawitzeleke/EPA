@@ -22,6 +22,7 @@ import 'package:eprs/data/models/sound_area_model.dart';
 import 'package:eprs/domain/usecases/get_sound_areas_usecase.dart';
 import 'package:eprs/domain/usecases/get_cities_usecase.dart';
 import 'package:eprs/core/enums/report_type_enum.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 
 class ReportController extends GetxController {
   final GetSoundAreasUseCase getSoundAreasUseCase;
@@ -86,7 +87,7 @@ final isLoadingPollutionCategories = false.obs;
     pickedImagesX.add(file);
     // Force update - RxList should auto-update but ensure it does
     pickedImagesX.refresh();
-    print(
+    secureLog(
       '📁 File added to list. Total: ${pickedImagesX.length}, Name: ${file.name}',
     );
   }
@@ -306,11 +307,11 @@ final isLoadingPollutionCategories = false.obs;
       }
       if (args['pollutionCategoryId'] is String) {
         pollutionCategoryId = args['pollutionCategoryId'];
-        print(
+        secureLog(
           'Received pollution category ID from route: $pollutionCategoryId',
         );
       } else {
-        print(
+        secureLog(
           'No pollution category ID in route arguments. Available keys: ${args.keys.toList()}',
         );
       }
@@ -424,7 +425,7 @@ final isLoadingPollutionCategories = false.obs;
     pollutionCategoryId = null;
     selectedPollutionCategoryId.value = null;
 
-    print('Form reset completed');
+    secureLog('Form reset completed');
   }
 
   /// Load sound areas from API
@@ -447,7 +448,7 @@ final isLoadingPollutionCategories = false.obs;
 
   // Fetch pollution categories from API
   Future<void> fetchPollutionCategories() async {
-    print('Starting to fetch pollution categories...');
+    secureLog('Starting to fetch pollution categories...');
     isLoadingPollutionCategories.value = true;
     pollutionCategoriesError.value = null;
     try {
@@ -460,23 +461,23 @@ final isLoadingPollutionCategories = false.obs;
         }),
       );
       
-      print('📡 Pollution Categories API Response: ${res.data}');
-      print('📡 Response Status Code: ${res.statusCode}');
+      secureLog('📡 Pollution Categories API Response: ${res.data}');
+      secureLog('📡 Response Status Code: ${res.statusCode}');
       
       final data = res.data;
       List items = [];
       if (data is List) {
         items = data;
-        print('✓ Categories data is a direct List with ${items.length} items');
+        secureLog('✓ Categories data is a direct List with ${items.length} items');
       } else if (data is Map) {
         if (data['data'] is List) {
           items = data['data'];
-          print('✓ Categories data found in "data" key with ${items.length} items');
+          secureLog('✓ Categories data found in "data" key with ${items.length} items');
         } else if (data['categories'] is List) {
           items = data['categories'];
-          print('✓ Categories data found in "categories" key with ${items.length} items');
+          secureLog('✓ Categories data found in "categories" key with ${items.length} items');
         } else {
-          print('⚠️ Could not find categories array. Available keys: ${data.keys.toList()}');
+          secureLog('⚠️ Could not find categories array. Available keys: ${data.keys.toList()}');
         }
       }
       
@@ -521,17 +522,17 @@ final isLoadingPollutionCategories = false.obs;
               pollutionCategories['air pollution'] = id;
             }
             
-            print('📋 Loaded category: "$name" (ID: $id)');
-            print('   - Stored as: "$normalizedName", "${name.trim()}"');
+            secureLog('📋 Loaded category: "$name" (ID: $id)');
+            secureLog('   - Stored as: "$normalizedName", "${name.trim()}"');
           }
         }
       }
       
-      print('✅ Loaded ${pollutionCategories.length} pollution category mappings');
-      print('   Available keys: ${pollutionCategories.keys.toList()}');
+      secureLog('✅ Loaded ${pollutionCategories.length} pollution category mappings');
+      secureLog('   Available keys: ${pollutionCategories.keys.toList()}');
     } catch (e, stackTrace) {
-      print('❌ Error fetching pollution categories: $e');
-      print('Stack trace: $stackTrace');
+      secureLog('❌ Error fetching pollution categories: $e');
+      secureLog('Stack trace: $stackTrace');
       pollutionCategoriesError.value = _cleanErrorMessage(e);
     }
     isLoadingPollutionCategories.value = false;
@@ -954,27 +955,27 @@ Future<void> pickTime(BuildContext context) async {
         ),
       );
 
-      print('Regions API Response: ${res.data}');
-      print('Response Type: ${res.data.runtimeType}');
+      secureLog('Regions API Response: ${res.data}');
+      secureLog('Response Type: ${res.data.runtimeType}');
 
       final data = res.data;
       List items = [];
       if (data is List) {
         items = data;
-        print('Data is a List with ${items.length} items');
+        secureLog('Data is a List with ${items.length} items');
       } else if (data is Map) {
         // Try multiple possible keys for the data array
         if (data['data'] is List) {
           items = data['data'];
-          print('Data found in data key: ${items.length} items');
+          secureLog('Data found in data key: ${items.length} items');
         } else if (data['regions'] is List) {
           items = data['regions'];
-          print('Data found in regions key: ${items.length} items');
+          secureLog('Data found in regions key: ${items.length} items');
         } else if (data['results'] is List) {
           items = data['results'];
-          print('Data found in results key: ${items.length} items');
+          secureLog('Data found in results key: ${items.length} items');
         } else {
-          print(
+          secureLog(
             'Warning: Could not find data array in response. Available keys: ${data.keys.toList()}',
           );
         }
@@ -1000,13 +1001,13 @@ Future<void> pickTime(BuildContext context) async {
 
       regions.addAll(mappedRegions);
       // Debug: print mapped regions so we can verify UI data
-      print('Mapped regions for UI: ${regions.map((r) => r['name']).toList()}');
-      print('Total regions loaded: ${regions.length}');
+      secureLog('Mapped regions for UI: ${regions.map((r) => r['name']).toList()}');
+      secureLog('Total regions loaded: ${regions.length}');
 
       // Update combined list
       _updateRegionsAndCities();
     } catch (e) {
-      print('Error fetching regions: $e');
+      secureLog('Error fetching regions: $e');
       Get.snackbar(
         'Error',
         'Failed to load regions: ${_cleanErrorMessage(e)}',
@@ -1018,12 +1019,12 @@ Future<void> pickTime(BuildContext context) async {
   }
 
   Future<void> fetchCities() async {
-    print('🔄 Starting to fetch cities...');
+    secureLog('🔄 Starting to fetch cities...');
     isLoadingCities.value = true;
     try {
-      print('📡 Calling getCitiesUseCase.execute()...');
+      secureLog('📡 Calling getCitiesUseCase.execute()...');
       final citiesList = await getCitiesUseCase.execute();
-      print('✅ Received ${citiesList.length} cities from usecase');
+      secureLog('✅ Received ${citiesList.length} cities from usecase');
 
       cities.clear();
       final mappedCities = citiesList.map<Map<String, String>>((city) {
@@ -1035,18 +1036,18 @@ Future<void> pickTime(BuildContext context) async {
       }).toList();
 
       cities.addAll(mappedCities);
-      print('📋 Mapped cities for UI:');
+      secureLog('📋 Mapped cities for UI:');
       for (var i = 0; i < cities.length; i++) {
-        print('   City $i: ${cities[i]['name']} (id: ${cities[i]['id']})');
+        secureLog('   City $i: ${cities[i]['name']} (id: ${cities[i]['id']})');
       }
-      print('✅ Total cities loaded: ${cities.length}');
+      secureLog('✅ Total cities loaded: ${cities.length}');
 
       // Update combined list
       _updateRegionsAndCities();
-      print('✅ Cities successfully added to regionsAndCities list');
+      secureLog('✅ Cities successfully added to regionsAndCities list');
     } catch (e, stackTrace) {
-      print('❌ Error fetching cities: $e');
-      print('Stack trace: $stackTrace');
+      secureLog('❌ Error fetching cities: $e');
+      secureLog('Stack trace: $stackTrace');
       Get.snackbar(
         'Error',
         'Failed to load cities: ${_cleanErrorMessage(e)}',
@@ -1054,7 +1055,7 @@ Future<void> pickTime(BuildContext context) async {
       );
     } finally {
       isLoadingCities.value = false;
-      print('🏁 Finished fetching cities (isLoadingCities = false)');
+      secureLog('🏁 Finished fetching cities (isLoadingCities = false)');
     }
   }
 
@@ -1132,7 +1133,7 @@ Future<void> pickTime(BuildContext context) async {
   //   }
 
   void _updateRegionsAndCities() {
-    print('🔄 Updating combined regionsAndCities list...');
+    secureLog('🔄 Updating combined regionsAndCities list...');
     regionsAndCities.clear();
     // Add regions with type marker
     final mappedRegions = regions
@@ -1145,12 +1146,12 @@ Future<void> pickTime(BuildContext context) async {
         )
         .toList();
     regionsAndCities.addAll(mappedRegions);
-    print('   Added ${mappedRegions.length} regions');
+    secureLog('   Added ${mappedRegions.length} regions');
     // Add cities
     regionsAndCities.addAll(cities);
-    print('   Added ${cities.length} cities');
-    print('✅ Total regions and cities combined: ${regionsAndCities.length}');
-    print(
+    secureLog('   Added ${cities.length} cities');
+    secureLog('✅ Total regions and cities combined: ${regionsAndCities.length}');
+    secureLog(
       '   Combined list: ${regionsAndCities.map((e) => '${e['name']} (${e['type']})').toList()}',
     );
   }
@@ -1169,25 +1170,25 @@ Future<void> pickTime(BuildContext context) async {
       );
 
       final data = res.data;
-      print('Zones API Response for region $regionId: ${res.data}');
+      secureLog('Zones API Response for region $regionId: ${res.data}');
 
       List items = [];
       if (data is List) {
         items = data;
-        print('Data is a List with ${items.length} items');
+        secureLog('Data is a List with ${items.length} items');
       } else if (data is Map) {
         // Try multiple possible keys for the data array
         if (data['data'] is List) {
           items = data['data'];
-          print('Data found in data key: ${items.length} items');
+          secureLog('Data found in data key: ${items.length} items');
         } else if (data['zones'] is List) {
           items = data['zones'];
-          print('Data found in zones key: ${items.length} items');
+          secureLog('Data found in zones key: ${items.length} items');
         } else if (data['results'] is List) {
           items = data['results'];
-          print('Data found in results key: ${items.length} items');
+          secureLog('Data found in results key: ${items.length} items');
         } else {
-          print(
+          secureLog(
             'Warning: Could not find data array in response. Available keys: ${data.keys.toList()}',
           );
         }
@@ -1213,10 +1214,10 @@ Future<void> pickTime(BuildContext context) async {
           .toList();
 
       zones.addAll(mappedZones);
-      print('Mapped zones for UI: ${zones.map((r) => r['name']).toList()}');
-      print('Total zones loaded: ${zones.length}');
+      secureLog('Mapped zones for UI: ${zones.map((r) => r['name']).toList()}');
+      secureLog('Total zones loaded: ${zones.length}');
     } catch (e) {
-      print('Error fetching zones: $e');
+      secureLog('Error fetching zones: $e');
       Get.snackbar(
         'Error',
         'Failed to load zones: ${_cleanErrorMessage(e)}',
@@ -1241,25 +1242,25 @@ Future<void> pickTime(BuildContext context) async {
       );
 
       final data = res.data;
-      print('Woredas API Response for zone $zoneId: ${res.data}');
+      secureLog('Woredas API Response for zone $zoneId: ${res.data}');
 
       List items = [];
       if (data is List) {
         items = data;
-        print('Data is a List with ${items.length} items');
+        secureLog('Data is a List with ${items.length} items');
       } else if (data is Map) {
         // Try multiple possible keys for the data array
         if (data['data'] is List) {
           items = data['data'];
-          print('Data found in data key: ${items.length} items');
+          secureLog('Data found in data key: ${items.length} items');
         } else if (data['woredas'] is List) {
           items = data['woredas'];
-          print('Data found in woredas key: ${items.length} items');
+          secureLog('Data found in woredas key: ${items.length} items');
         } else if (data['results'] is List) {
           items = data['results'];
-          print('Data found in results key: ${items.length} items');
+          secureLog('Data found in results key: ${items.length} items');
         } else {
-          print(
+          secureLog(
             'Warning: Could not find data array in response. Available keys: ${data.keys.toList()}',
           );
         }
@@ -1283,10 +1284,10 @@ Future<void> pickTime(BuildContext context) async {
           .toList();
 
       woredas.addAll(mappedWoredas);
-      print('Mapped woredas for UI: ${woredas.map((r) => r['name']).toList()}');
-      print('Total woredas loaded: ${woredas.length}');
+      secureLog('Mapped woredas for UI: ${woredas.map((r) => r['name']).toList()}');
+      secureLog('Total woredas loaded: ${woredas.length}');
     } catch (e) {
-      print('Error fetching woredas: $e');
+      secureLog('Error fetching woredas: $e');
       Get.snackbar(
         'Error',
         'Failed to load woredas: ${_cleanErrorMessage(e)}',
@@ -1300,15 +1301,15 @@ Future<void> pickTime(BuildContext context) async {
   String? findIdByName(List<Map<String, String>> list, String name) {
     try {
       if (list.isEmpty) {
-        print('findIdByName: List is empty for name: $name');
+        secureLog('findIdByName: List is empty for name: $name');
         return null;
       }
       final found = list.firstWhere((e) => e['name'] == name);
       final id = found['id'];
-      print('findIdByName: Found "$name" → ID: $id');
+      secureLog('findIdByName: Found "$name" → ID: $id');
       return id;
     } catch (e) {
-      print(
+      secureLog(
         'findIdByName: Not found "$name" in list. Available names: ${list.map((e) => e['name']).toList()}',
       );
       return null;
@@ -1567,7 +1568,7 @@ Future<void> pickTime(BuildContext context) async {
         recorderSettings: recorderSettings,
       );
 
-      print('✅ Recording started, waveform should be active');
+      secureLog('✅ Recording started, waveform should be active');
 
       audioFilePath.value = filePath;
       isRecording.value = true;
@@ -1685,7 +1686,7 @@ Future<void> pickTime(BuildContext context) async {
             finalPath = stoppedPath;
           }
         } catch (e) {
-          print('⚠️ Error stopping recorder: $e');
+          secureLog('⚠️ Error stopping recorder: $e');
           // Try alternative stop method
           try {
             recorderController.stop();
@@ -1781,7 +1782,7 @@ Future<void> pickTime(BuildContext context) async {
         recorderController.reset();
       } catch (_) {}
     } catch (e) {
-      print('❌ Error in stopRecording: $e');
+      secureLog('❌ Error in stopRecording: $e');
       Get.snackbar(
         'Error',
         'Failed to stop recording',
@@ -1877,7 +1878,7 @@ Future<void> pickTime(BuildContext context) async {
     try {
       // Noise meter doesn't work on web, skip it
       if (kIsWeb) {
-        print('Noise meter not supported on web platform');
+        secureLog('Noise meter not supported on web platform');
         return;
       }
 
@@ -1902,13 +1903,13 @@ Future<void> pickTime(BuildContext context) async {
             }
           },
           onError: (error) {
-            print('Noise meter error: $error');
+            secureLog('Noise meter error: $error');
             // Don't stop recording if noise meter fails
           },
         );
       }
     } catch (e) {
-      print('Failed to start noise meter: $e');
+      secureLog('Failed to start noise meter: $e');
       // Don't stop recording if noise meter fails
     }
   }
@@ -1998,16 +1999,16 @@ Future<void> pickTime(BuildContext context) async {
               name.contains(normalizedType) ||
               normalizedType.contains(name);
           if (id.isNotEmpty && matches) {
-            print('Found pollution category ID for "$reportType": $id');
+            secureLog('Found pollution category ID for "$reportType": $id');
             return id;
           }
         }
       }
-      print('Sound pollution category search: isSoundReportType=$isSoundReportType');
-      print('Warning: Could not find pollution category for "$reportType"');
+      secureLog('Sound pollution category search: isSoundReportType=$isSoundReportType');
+      secureLog('Warning: Could not find pollution category for "$reportType"');
       return null;
     } catch (e) {
-      print('Error fetching pollution category: $e');
+      secureLog('Error fetching pollution category: $e');
       return null;
     }
   }
@@ -2147,12 +2148,12 @@ Future<void> pickTime(BuildContext context) async {
       final woredaId = findIdByName(woredas, selectedWoreda.value) ?? '';
 
       // Debug logging for location IDs
-      print('📍 Location IDs for submission:');
-      print('   Selected Region: ${selectedRegion.value} → ID: $regionId');
-      print('   Selected Zone: ${selectedZone.value} → ID: $zoneId');
-      print('   Selected Woreda: ${selectedWoreda.value} → ID: $woredaId');
-      print('   Available zones: ${zones.map((z) => z['name']).toList()}');
-      print('   Available woredas: ${woredas.map((w) => w['name']).toList()}');
+      secureLog('📍 Location IDs for submission:');
+      secureLog('   Selected Region: ${selectedRegion.value} → ID: $regionId');
+      secureLog('   Selected Zone: ${selectedZone.value} → ID: $zoneId');
+      secureLog('   Selected Woreda: ${selectedWoreda.value} → ID: $woredaId');
+      secureLog('   Available zones: ${zones.map((z) => z['name']).toList()}');
+      secureLog('   Available woredas: ${woredas.map((w) => w['name']).toList()}');
 
       // Get location coordinates
       String locationUrl = '';
@@ -2167,25 +2168,25 @@ Future<void> pickTime(BuildContext context) async {
       // Add text fields
       if (regionId.isNotEmpty) {
         formData.fields.add(MapEntry('region_id', regionId));
-        print('✅ Added region_id: $regionId');
+        secureLog('✅ Added region_id: $regionId');
       } else {
-        print('⚠️ Region ID is empty');
+        secureLog('⚠️ Region ID is empty');
       }
 
       if (zoneId.isNotEmpty) {
         formData.fields.add(MapEntry('zone_id', zoneId));
-        print('✅ Added zone_id: $zoneId');
+        secureLog('✅ Added zone_id: $zoneId');
       } else {
-        print(
+        secureLog(
           '⚠️ Zone ID is empty - selectedZone: ${selectedZone.value}, zones count: ${zones.length}',
         );
       }
 
       if (woredaId.isNotEmpty) {
         formData.fields.add(MapEntry('Woreda_id', woredaId));
-        print('Added Woreda_id: $woredaId');
+        secureLog('Added Woreda_id: $woredaId');
       } else {
-        print('⚠️ Woreda ID is empty');
+        secureLog('⚠️ Woreda ID is empty');
       }
       if (locationUrl.isNotEmpty) {
         formData.fields.add(MapEntry('location_url', locationUrl));
@@ -2214,17 +2215,17 @@ Future<void> pickTime(BuildContext context) async {
 
         formData.fields.add(MapEntry('actDate', dateStr));
         formData.fields.add(MapEntry('actTime', timeStr));
-        print('Added actDate: $dateStr, actTime: $timeStr');
+        secureLog('Added actDate: $dateStr, actTime: $timeStr');
       }
 
       // Add pollution category ID (use from route if available, otherwise fetch from API)
       String? categoryId = selectedPollutionCategoryId.value;
       if (categoryId?.isEmpty ?? true) {
-        print('Pollution category ID not in route, fetching from API...');
+        secureLog('Pollution category ID not in route, fetching from API...');
         categoryId = await _fetchPollutionCategoryId(reportType);
       }
 
-      print(
+      secureLog(
         'Using pollution category ID: $categoryId (from route: ${pollutionCategoryId != null})',
       );
       if (categoryId != null && categoryId.isNotEmpty) {
@@ -2245,13 +2246,11 @@ Future<void> pickTime(BuildContext context) async {
       }
 
       // Add files
-      print('Adding ${pickedImagesX.length} files to form data...');
+      secureLog('Adding ${pickedImagesX.length} files to form data...');
       for (var xFile in pickedImagesX) {
         try {
           final fileName = xFile.name;
-          print('Reading file: $fileName');
           final bytes = await xFile.readAsBytes();
-          print('File size: ${bytes.length} bytes');
 
           formData.files.add(
             MapEntry(
@@ -2259,18 +2258,12 @@ Future<void> pickTime(BuildContext context) async {
               dio.MultipartFile.fromBytes(bytes, filename: fileName),
             ),
           );
-          print('Added file: $fileName');
+          secureLog('Added file: $fileName');
         } catch (e) {
-          print('Error adding file ${xFile.name}: $e');
+          secureLog('Error adding file ${xFile.name}: $e');
         }
       }
-      print('Total files in form data: ${formData.files.length}');
-
-      // Debug: Print form data fields
-      print('Form data fields:');
-      for (var field in formData.fields) {
-        print('  ${field.key}: ${field.value}');
-      }
+      secureLog('Total files in form data: ${formData.files.length}');
 
       // If user is a guest, request OTP using the phone on this page
       final isLoggedIn = token != null && token.toString().isNotEmpty;
@@ -2354,7 +2347,7 @@ Future<void> pickTime(BuildContext context) async {
       );
     } catch (e) {
       isSubmitting.value = false;
-      print('Error submitting report: $e');
+      secureLog('Error submitting report: $e');
       Get.snackbar(
         'Error',
         'Failed to submit report: ${_cleanErrorMessage(e)}',
@@ -2371,8 +2364,8 @@ Future<void> pickTime(BuildContext context) async {
     required bool isLoggedIn,
   }) async {
     try {
-      print('Submitting to: ${ApiConstants.complaintsEndpoint}');
-      print('Total files: ${formData.files.length}');
+      secureLog('Submitting to: ${ApiConstants.complaintsEndpoint}');
+      secureLog('Total files: ${formData.files.length}');
 
       final response = await httpClient.post(
         ApiConstants.complaintsEndpoint,
@@ -2394,7 +2387,7 @@ Future<void> pickTime(BuildContext context) async {
         String reportId = '';
         try {
           final responseData = response.data;
-          print('Response data: $responseData');
+          secureLog('Response data: $responseData');
 
           if (responseData is Map) {
             // Check if data is nested
@@ -2417,9 +2410,9 @@ Future<void> pickTime(BuildContext context) async {
             }
           }
 
-          print('Extracted report ID: $reportId');
+          secureLog('Extracted report ID: $reportId');
         } catch (e) {
-          print('Error extracting report ID: $e');
+          secureLog('Error extracting report ID: $e');
         }
 
         // If no report ID found, generate a temporary one
@@ -2430,7 +2423,7 @@ Future<void> pickTime(BuildContext context) async {
         // Clear form data before navigating
         _resetForm();
 
-        print(
+        secureLog(
           'Navigating to success page with report ID: $reportId (logged in: $isLoggedIn)',
         );
         Get.offNamed(
@@ -2450,7 +2443,7 @@ Future<void> pickTime(BuildContext context) async {
       }
     } catch (e) {
       isSubmitting.value = false;
-      print('Error submitting report: $e');
+      secureLog('Error submitting report: $e');
       Get.snackbar(
         'Error',
         'Failed to submit report: ${_cleanErrorMessage(e)}',

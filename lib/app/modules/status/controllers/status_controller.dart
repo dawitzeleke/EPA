@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/constants/api_constants.dart';
 
@@ -266,10 +267,10 @@ class StatusController extends GetxController {
           },
         ),
       );
-      print('Complaints API Response: ${response.data}');
+      secureLog('Complaints API Response: ${response.data}');
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
-        print('Complaints Data: $data');
+        secureLog('Complaints Data: $data');
         // Handle different response formats
         List<dynamic> complaintsList = [];
         
@@ -378,10 +379,10 @@ class StatusController extends GetxController {
       }
       return null;
     } on DioException catch (e) {
-      print('Error fetching complaint by ID: ${e.message}');
+      secureLog('Error fetching complaint by ID: ${e.message}');
       return null;
     } catch (e) {
-      print('Error fetching complaint by ID: ${e.toString()}');
+      secureLog('Error fetching complaint by ID: ${e.toString()}');
       return null;
     }
   }
@@ -405,7 +406,7 @@ class StatusController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
-        print('Complaint by reportId response: $data');
+        secureLog('Complaint by reportId response: $data');
 
         // Normalize possible shapes: {data: {...}}, {complaint: {...}}, list, or direct object
         Map<String, dynamic>? complaint;
@@ -432,10 +433,10 @@ class StatusController extends GetxController {
       }
       return null;
     } on DioException catch (e) {
-      print('Error fetching complaint by Report ID: ${e.response?.statusCode} ${e.message}');
+      secureLog('Error fetching complaint by Report ID: ${e.response?.statusCode} ${e.message}');
       return null;
     } catch (e) {
-      print('Error fetching complaint by Report ID: ${e.toString()}');
+      secureLog('Error fetching complaint by Report ID: ${e.toString()}');
       return null;
     }
   }

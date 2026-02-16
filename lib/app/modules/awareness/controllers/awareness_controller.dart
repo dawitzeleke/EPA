@@ -1,6 +1,7 @@
 import 'package:eprs/core/constants/api_constants.dart';
 import 'package:eprs/data/models/awareness_model.dart';
 import 'package:eprs/domain/usecases/get_awareness_usecase.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 import 'package:get/get.dart';
 
 class AwarenessController extends GetxController {
@@ -46,8 +47,8 @@ String getImageUrl(AwarenessModel awareness) {
   // Delegate to model helper to build a proper URL
   final imageUrl = awareness.getImageUrl(baseUrl);
 
-  print('Awareness image URL: $imageUrl');
-  print('Original file path: ${awareness.filePath}');
+  secureLog('Awareness image URL: $imageUrl');
+  secureLog('Original file path: ${awareness.filePath}');
 
   return imageUrl;
 }

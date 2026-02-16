@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:eprs/core/network/dio_client.dart';
 import 'package:eprs/core/constants/api_constants.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:eprs/core/utils/secure_log.dart';
 import '../../status/controllers/status_controller.dart';
 import '../../status/views/status_detail_view.dart';
 
@@ -95,13 +96,13 @@ String _monthName(int month) {
     imageCaptions.clear();
     imageDates.clear();
 
-    print("🔄 Here comes imageUrls: $imageUrls");
+    secureLog("🔄 Here comes imageUrls: $imageUrls");
     for (final news in newsList) {
       final imageUrl = news.getImageUrl(ApiConstants.fileBaseUrl);
       if (imageUrl.isEmpty) continue;
 
       imageUrls.add(imageUrl);
-      print("Here comes imageUrls: $imageUrls");
+      secureLog("Here comes imageUrls: $imageUrls");
       imageCaptions[imageUrl] = news.title.isNotEmpty ? news.title : 'No title';
       final date = news.createdAt;
       final localDate = date.toLocal();
@@ -111,10 +112,10 @@ String _monthName(int month) {
 
     currentCarouselIndex.value = 0;
 
-    print('✅ Loaded ${imageUrls.length} news items');
+    secureLog('✅ Loaded ${imageUrls.length} news items');
   } catch (e, stackTrace) {
-    print('❌ Error fetching news: $e');
-    print('Stack trace: $stackTrace');
+    secureLog('❌ Error fetching news: $e');
+    secureLog('Stack trace: $stackTrace');
     Get.snackbar(
       'Error',
       _cleanErrorMessage(e),
@@ -130,7 +131,7 @@ String _monthName(int month) {
 
   // Get pollution category ID by name (handles various formats)
   String? getPollutionCategoryId(String categoryName) {
-    print('🔍 Looking up pollution category for: "$categoryName"');
+    secureLog('🔍 Looking up pollution category for: "$categoryName"');
     
     // Normalize the input
     final normalized = categoryName.toLowerCase().trim();
@@ -154,8 +155,8 @@ String _monthName(int month) {
       }
     }
     
-    print('   Result: ${id != null ? "✅ Found ID: $id" : "❌ Not found"}');
-    print('   Available categories: ${pollutionCategories.keys.toList()}');
+    secureLog('   Result: ${id != null ? "✅ Found ID: $id" : "❌ Not found"}');
+    secureLog('   Available categories: ${pollutionCategories.keys.toList()}');
     
     return id;
   }

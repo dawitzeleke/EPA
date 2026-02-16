@@ -45,7 +45,6 @@ class LoginController extends GetxController {
 
     try {
       // Call use case
-      print("Phone: ${phoneNumber.value}, Password: ${password.value}");
       final response = await loginUseCase.execute(
         phone_number: phoneNumber.value,
         password: password.value,
@@ -61,7 +60,6 @@ class LoginController extends GetxController {
           storage.write('username', response.username);
         }
         final phoneResp = response.phone_number;
-        print("Phoneee $phoneResp");
         if (phoneResp != null && phoneResp.trim().isNotEmpty) {
           storage.write('phone', phoneResp.trim());
           storage.write('phone_number', phoneResp.trim());

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:eprs/core/constants/api_constants.dart';
 import 'package:eprs/data/models/city_model.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 
 abstract class CityRemoteDataSource {
   Future<List<CityModel>> fetchCities();
@@ -30,9 +31,9 @@ class CityRemoteDataSourceImpl implements CityRemoteDataSource {
           },
         ),
       );
-      print('Cities API Response: ${response.data}');
-      print('Cities API Response Status Code: ${response.statusCode}');
-      print('Cities API Response Type: ${response.data.runtimeType}');
+      secureLog('Cities API Response: ${response.data}');
+      secureLog('Cities API Response Status Code: ${response.statusCode}');
+      secureLog('Cities API Response Type: ${response.data.runtimeType}');
       
       if (response.statusCode == 200 || response.statusCode == 201) {
         List<dynamic> data;
@@ -44,15 +45,15 @@ class CityRemoteDataSourceImpl implements CityRemoteDataSource {
           throw Exception('Unexpected response format');
         }
         
-        print('Raw cities data: $data');
+        secureLog('Raw cities data: $data');
         
         final citiesList = data.map((e) => CityModel.fromJson(e)).toList();
 
-        print('new citiesList length: ${citiesList.length}');
+        secureLog('new citiesList length: ${citiesList.length}');
         
-        print('=== PARSED CITIES (${citiesList.length} total) ===');
+        secureLog('=== PARSED CITIES (${citiesList.length} total) ===');
         
-        print('=== END CITIES LIST ===');
+        secureLog('=== END CITIES LIST ===');
         
         return citiesList;
       } else {

@@ -12,6 +12,7 @@ import 'package:eprs/app/widgets/language_selector.dart';
 // this view to match the requested layout; keep their files intact in the
 // project in case other screens use them.
 import 'package:flutter/material.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 import 'package:get/get.dart';
 import 'package:eprs/app/routes/app_pages.dart';
 
@@ -131,13 +132,13 @@ class _ReportTile extends StatelessWidget {
           final homeController = Get.find<HomeController>();
           final categoryId = homeController.getPollutionCategoryId(reportType);
           
-          print('📤 Navigating to report:');
-          print('   - Report Type: $reportType');
-          print('   - Category ID: ${categoryId ?? "NOT FOUND"}');
+          secureLog('📤 Navigating to report:');
+          secureLog('   - Report Type: $reportType');
+          secureLog('   - Category ID: ${categoryId ?? "NOT FOUND"}');
           
           if (categoryId == null) {
-            print('⚠️ Warning: No category ID found for "$reportType"');
-            print('   Available categories: ${homeController.pollutionCategories.keys.toList()}');
+            secureLog('⚠️ Warning: No category ID found for "$reportType"');
+            secureLog('   Available categories: ${homeController.pollutionCategories.keys.toList()}');
           }
           
           // Push onto the nearest Navigator (the nested navigator created by the shell)

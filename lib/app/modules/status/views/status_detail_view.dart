@@ -1,5 +1,6 @@
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:eprs/core/utils/secure_log.dart';
 import '../controllers/status_controller.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:eprs/core/theme/app_fonts.dart';
@@ -369,12 +370,12 @@ class _StatusDetailViewState extends State<StatusDetailView> {
     }
 
     // Debug
-    print('🔍 Status Debug: report=$normalizedStatus, logs=$achieved, highest=$highestAchieved, activeStage=$activeStageIndex, completed=$completedStages');
+    secureLog('🔍 Status Debug: report=$normalizedStatus, logs=$achieved, highest=$highestAchieved, activeStage=$activeStageIndex, completed=$completedStages');
 
     // Debug output
-    print('🔍 Timeline Debug:');
-    print('  - Completed stages: $completedStages');
-    print('  - Active stage index: $activeStageIndex');
+    secureLog('🔍 Timeline Debug:');
+    secureLog('  - Completed stages: $completedStages');
+    secureLog('  - Active stage index: $activeStageIndex');
     
     return Column(
       children: List.generate(stages.length, (index) {
@@ -388,7 +389,7 @@ class _StatusDetailViewState extends State<StatusDetailView> {
         
         // Debug for each stage
         if (stage['name'] == 'Under Review' || stage['name'] == 'Verified') {
-          print('  - ${stage['name']}: isCompleted=$isCompleted, isCurrent=$isCurrent, index=$index');
+          secureLog('  - ${stage['name']}: isCompleted=$isCompleted, isCurrent=$isCurrent, index=$index');
         }
 
         return Row(
