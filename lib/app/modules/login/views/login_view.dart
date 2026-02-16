@@ -22,7 +22,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
   final _passCtrl = TextEditingController();
   final _reportIdCtrl = TextEditingController();
   bool _remember = false;
-  final bool _isSearching = false;
+  bool _isSearching = false;
 
   @override
   void dispose() {    
@@ -98,7 +98,143 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   SizedBox(height: height * 0.02),
 
                   // Title
-                  
+                   Image.asset(
+                    'assets/logo.png',
+                    height: logoHeight,
+                  ),
+
+                  // Track Report Status card
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(isSmall ? 10 : 12),
+                      margin: EdgeInsets.only(top: height * 0.01),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                        border: Border.all(color: borderColor, width: 1),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Track Report Status'.tr,
+                            style: GoogleFonts.poppins(
+                              fontSize: isSmall ? 10 : 12,
+                              fontWeight: FontWeight.w600,
+                              color: darkText,
+                            ),
+                          ),
+                          SizedBox(height: isSmall ? 8 : 10),
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _reportIdCtrl,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: isSmall ? 12 : 13,
+                                    ),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      hintText: 'Enter Report ID'.tr,
+                                      hintStyle: TextStyle(
+                                        fontSize: isSmall ? 10 : 11,
+                                        color: hintText,
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: isSmall ? 5 : 9,
+                                        horizontal: 12,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: borderColor,
+                                          width: 1.1,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: greenColor,
+                                          width: 1.3,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: _isSearching
+                                      ? null
+                                      : () async {
+                                          final id = _reportIdCtrl.text.trim();
+                                          if (id.isEmpty) {
+                                            Get.snackbar(
+                                              'Report ID'.tr,
+                                              'Please enter a Report ID'.tr,
+                                              snackPosition: SnackPosition.BOTTOM,
+                                            );
+                                            return;
+                                          }
+                                          setState(() => _isSearching = true);
+                                          final statusController =
+                                              Get.isRegistered<StatusController>()
+                                                  ? Get.find<StatusController>()
+                                                  : Get.put(StatusController());
+                                          final result = await statusController
+                                              .fetchComplaintByReportId(id);
+                                          setState(() => _isSearching = false);
+                                          if (result == null) {
+                                            Get.snackbar(
+                                              'Not found'.tr,
+                                              '${'No complaint found for'.tr} $id',
+                                              snackPosition: SnackPosition.BOTTOM,
+                                            );
+                                            return;
+                                          }
+
+                                          _showStatusDialog(context, result);
+                                        },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: greenColor,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isSmall ? 12 : 16,
+                                    ),
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Text(
+                                    _isSearching ? '...' : 'Search'.tr,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: isSmall ? 11 : 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                   SizedBox(height: height * 0.04),
+
                   Text(
                     welcomeTitle,
                     style: GoogleFonts.poppins(
@@ -108,6 +244,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                     ),
                   ),
 
+                 
                   SizedBox(height: height * 0.04),
 
                   // Inputs and actions
