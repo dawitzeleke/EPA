@@ -216,40 +216,13 @@ final isLoadingPollutionCategories = false.obs;
     return null;
   }
 
-  double? _resolveMinDecibelForAreaName(String name, {required bool isNight}) {
-    final n = name.toLowerCase();
-
-    if (n.contains('residential')) return isNight ? 45 : 55;
-    if (n.contains('commercial')) return isNight ? 55 : 65;
-    if (n.contains('industrial')) return isNight ? 70 : 75;
-
-    final isPreschool = n.contains('pre') && n.contains('school');
-    final isSchoolIndoor =
-        n.contains('school') && (n.contains('indoor') || n.contains('class'));
-    if (isPreschool || isSchoolIndoor) return isNight ? 30 : 35;
-
-    final isSchoolOutdoor =
-        n.contains('school') && (n.contains('outdoor') || n.contains('play'));
-    if (isSchoolOutdoor) return 80;
-
-    if (n.contains('hospital') || n.contains('ward')) return 30;
-
-    if (n.contains('ceremony') ||
-        n.contains('festival') ||
-        n.contains('entertainment') ||
-        n.contains('event')) {
-      return 100;
-    }
-
-    return null;
-  }
-
   double? get minRequiredDecibel {
     if (reportType != ReportTypeEnum.sound.name) return null;
     final area = _getSelectedSoundArea();
     if (area == null) return null;
     final isNight = soundPeriod.value.toLowerCase() == 'night';
-    return _resolveMinDecibelForAreaName(area.name, isNight: isNight);
+    print("here the standard: ${area.standardNoiselevelDay} ${area.standardNoiselevelNight}");
+    return isNight ? area.standardNoiselevelNight : area.standardNoiselevelDay;
   }
 
   bool get isBelowMinDecibel {
