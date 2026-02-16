@@ -203,6 +203,8 @@ final isLoadingPollutionCategories = false.obs;
   final currentDecibel = 0.0.obs; // Current decibel reading
   final maxDecibel = 0.0.obs; // Maximum decibel reading during recording
   final showMinDecibelWarning = false.obs;
+  final minRequiredDecibelRx = RxnDouble();
+  final hasNoiseReading = false.obs;
 
   // ----------------------------
   // SOUND AREA DECIBEL RULES
@@ -216,14 +218,20 @@ final isLoadingPollutionCategories = false.obs;
     return null;
   }
 
-  double? get minRequiredDecibel {
+  double? _computeMinRequiredDecibel() {
     if (reportType != ReportTypeEnum.sound.name) return null;
     final area = _getSelectedSoundArea();
     if (area == null) return null;
     final isNight = soundPeriod.value.toLowerCase() == 'night';
-    print("here the standard: ${area.standardNoiselevelDay} ${area.standardNoiselevelNight}");
     return isNight ? area.standardNoiselevelNight : area.standardNoiselevelDay;
   }
+
+  void _updateMinRequiredDecibel() {
+    minRequiredDecibelRx.value = _computeMinRequiredDecibel();
+  }
+
+  double? get minRequiredDecibel =>
+      minRequiredDecibelRx.value ?? _computeMinRequiredDecibel();
 
   bool get isBelowMinDecibel {
     final minDb = minRequiredDecibel;
@@ -236,6 +244,9 @@ final isLoadingPollutionCategories = false.obs;
     super.onInit();
     // Initialize recorder controller
     recorderController = RecorderController();
+
+    everAll([selectedSoundAreaId, soundPeriod], (_) => _updateMinRequiredDecibel());
+    ever<List<SoundAreaModel>>(soundAreas, (_) => _updateMinRequiredDecibel());
 
     // Enforce max 10 digits on phone input even if pasted
     phoneController.addListener(() {
@@ -408,10 +419,16 @@ final isLoadingPollutionCategories = false.obs;
     try {
       final areas = await getSoundAreasUseCase.execute();
       soundAreas.assignAll(areas);
-      // Reset selection if list is available
+      // Preserve selection if still valid
       if (areas.isNotEmpty) {
-        selectedSoundAreaId.value = null;
+        final currentId = selectedSoundAreaId.value;
+        final stillExists = currentId != null &&
+            areas.any((area) => area.id == currentId);
+        if (!stillExists) {
+          selectedSoundAreaId.value = null;
+        }
       }
+      _updateMinRequiredDecibel();
     } catch (e) {
       soundAreasError.value = _cleanErrorMessage(e);
     } finally {
@@ -515,6 +532,7 @@ final isLoadingPollutionCategories = false.obs;
   /// Update selected sound area
   void selectSoundArea(String? id) {
     selectedSoundAreaId.value = id;
+    _updateMinRequiredDecibel();
   }
 
   void selectPollutionCategory(String? id) {
@@ -1553,6 +1571,7 @@ Future<void> pickTime(BuildContext context) async {
       currentDecibel.value = 0.0;
       maxDecibel.value = 0.0;
       showMinDecibelWarning.value = false;
+      hasNoiseReading.value = false;
 
       // Start noise meter
       _startNoiseMeter();
@@ -1861,14 +1880,20 @@ Future<void> pickTime(BuildContext context) async {
       }
 
       if (await Permission.microphone.isGranted) {
-        // Create noise meter if not already created
-        _noiseMeter ??= noise_meter.NoiseMeter();
+        // Ensure any previous subscription is cleared
+        await _noiseSubscription?.cancel();
+        _noiseSubscription = null;
+        _noiseMeter = null;
+
+        // Recreate the noise meter each time to avoid stale streams
+        _noiseMeter = noise_meter.NoiseMeter();
 
         // Listen to noise readings
         _noiseSubscription = _noiseMeter!.noise.listen(
           (noise_meter.NoiseReading reading) {
             // Update current decibel (using meanDecibel)
             currentDecibel.value = reading.meanDecibel;
+            hasNoiseReading.value = true;
 
             // Update max decibel if current is higher
             if (reading.meanDecibel > maxDecibel.value) {
@@ -1877,7 +1902,9 @@ Future<void> pickTime(BuildContext context) async {
           },
           onError: (error) {
             secureLog('Noise meter error: $error');
-            // Don't stop recording if noise meter fails
+            _noiseSubscription?.cancel();
+            _noiseSubscription = null;
+            _noiseMeter = null;
           },
         );
       }
@@ -1890,6 +1917,7 @@ Future<void> pickTime(BuildContext context) async {
   void _stopNoiseMeter() {
     _noiseSubscription?.cancel();
     _noiseSubscription = null;
+    _noiseMeter = null;
   }
 
   // ----------------------------
@@ -2017,6 +2045,17 @@ Future<void> pickTime(BuildContext context) async {
     }
 
     if (isSound) {
+      // Ensure land use type is selected
+      final soundArea = _getSelectedSoundArea();
+      if (soundArea == null) {
+        Get.snackbar(
+          'Error',
+          'Please select land use type',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
       // Ensure at least one audio file is attached
       final hasAudio = pickedImagesX.any((f) {
         final name = f.name.toLowerCase();
@@ -2036,6 +2075,22 @@ Future<void> pickTime(BuildContext context) async {
 
       showMinDecibelWarning.value = true;
       final minDb = minRequiredDecibel;
+      if (minDb == null) {
+        Get.snackbar(
+          'Error',
+          'Unable to determine minimum required dB. Please reselect land use type.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+      if (!hasNoiseReading.value) {
+        Get.snackbar(
+          'Error',
+          'No sound level reading detected. Please record again.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
       if (minDb != null && maxDecibel.value < minDb) {
         Get.snackbar(
           'Error',
