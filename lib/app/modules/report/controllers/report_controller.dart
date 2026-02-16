@@ -2168,17 +2168,17 @@ Future<void> pickTime(BuildContext context) async {
       // Add text fields
       if (regionId.isNotEmpty) {
         formData.fields.add(MapEntry('region_id', regionId));
-        secureLog('✅ Added region_id: $regionId');
+        secureLog('Added region_id: $regionId');
       } else {
-        secureLog('⚠️ Region ID is empty');
+        secureLog('Region ID is empty');
       }
 
       if (zoneId.isNotEmpty) {
         formData.fields.add(MapEntry('zone_id', zoneId));
-        secureLog('✅ Added zone_id: $zoneId');
+        secureLog('Added zone_id: $zoneId');
       } else {
         secureLog(
-          '⚠️ Zone ID is empty - selectedZone: ${selectedZone.value}, zones count: ${zones.length}',
+          'Zone ID is empty - selectedZone: ${selectedZone.value}, zones count: ${zones.length}',
         );
       }
 
@@ -2186,7 +2186,7 @@ Future<void> pickTime(BuildContext context) async {
         formData.fields.add(MapEntry('Woreda_id', woredaId));
         secureLog('Added Woreda_id: $woredaId');
       } else {
-        secureLog('⚠️ Woreda ID is empty');
+        secureLog('Woreda ID is empty');
       }
       if (locationUrl.isNotEmpty) {
         formData.fields.add(MapEntry('location_url', locationUrl));
@@ -2194,6 +2194,21 @@ Future<void> pickTime(BuildContext context) async {
       formData.fields.add(
         MapEntry('detail', descriptionController.text.trim()),
       );
+
+      if (isSound) {
+        final soundAreaId = selectedSoundAreaId.value;
+        if (soundAreaId != null && soundAreaId.isNotEmpty) {
+          formData.fields.add(MapEntry('sound_area_id', soundAreaId));
+          secureLog('Added sound_area_id: $soundAreaId');
+        } else {
+          secureLog('sound_area_id is empty');
+        }
+
+        formData.fields.add(
+          MapEntry('max_freq_measured', maxDecibel.value.toStringAsFixed(2)),
+        );
+        secureLog('Added max_freq_measured: ${maxDecibel.value.toStringAsFixed(2)}');
+      }
 
       // Activity date & time (from user selection)
       final pickedDate = selectedDate.value;
