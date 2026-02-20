@@ -1,3 +1,4 @@
+import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +15,7 @@ class TermAndConditionsView extends GetView<TermAndConditionsController> {
     final paragraphStyle = TextStyle(fontSize: 14, color: Colors.grey[700], height: 1.4);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F1F8),
+      backgroundColor: AppColors.onPrimary,
       appBar: const CustomAppBar(
         title: 'Term and Conditions',
         showBack: true,
