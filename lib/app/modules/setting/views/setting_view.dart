@@ -41,7 +41,7 @@ class SettingView extends GetView<SettingController> {
   }
 
   // Build user profile section (when logged in)
-  Widget _buildUserProfileSection() {
+  Widget _buildUserProfileSection(BuildContext context) {
     return Column(
       children: [
         // Profile picture
@@ -105,111 +105,140 @@ class SettingView extends GetView<SettingController> {
                   final nameController =
                       TextEditingController(text: controller.userName.value);
 
-                  Get.defaultDialog(
-                    title: 'Edit Profile',
-                    backgroundColor: Colors.white,
-                    radius: 12,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Name',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  final size = MediaQuery.of(context).size;
+                  final maxDialogHeight =
+                      (size.height * 0.55).clamp(280.0, 520.0);
+                  final maxDialogWidth =
+                      (size.width * 0.9).clamp(260.0, 520.0);
+                  Get.dialog(
+                    Dialog(
+                      backgroundColor: Colors.white,
+                      insetPadding:
+                          const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: maxDialogHeight,
+                          maxWidth: maxDialogWidth,
                         ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: nameController,
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            hintText: 'Enter your name',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
                           ),
-                        ),
-                        const SizedBox(height: 18),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () => Get.back(),
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(color: AppColors.primary),
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Name',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: nameController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter your name',
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 12,
+                                  ),
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final newName = nameController.text.trim();
-                                  if (newName.isEmpty) {
-                                    Get.snackbar(
-                                      'Name required',
-                                      'Please enter a valid name to continue.',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                    return;
-                                  }
+                              const SizedBox(height: 18),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () => Get.back(closeOverlays: true),
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(color: AppColors.primary),
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        final newName = nameController.text.trim();
+                                        if (newName.isEmpty) {
+                                          Get.snackbar(
+                                            'Name required',
+                                            'Please enter a valid name to continue.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                          return;
+                                        }
 
-                                  try {
-                                    await controller.updateUserName(newName);
-                                    Get.back();
-                                    Get.snackbar(
-                                      'Profile updated',
-                                      'Your name has been saved.',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                  } catch (e) {
-                                    Get.snackbar(
-                                      'Update failed',
-                                      e.toString().replaceFirst('Exception: ', ''),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primary,
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                        try {
+                                          await controller.updateUserName(newName);
+                                          Get.back();
+                                          Get.snackbar(
+                                            'Profile updated',
+                                            'Your name has been saved.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                        } catch (e) {
+                                          Get.snackbar(
+                                            'Update failed',
+                                            e.toString().replaceFirst('Exception: ', ''),
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary,
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
+                    barrierDismissible: true,
                   );
                 },
                 style: OutlinedButton.styleFrom(
@@ -250,178 +279,209 @@ class SettingView extends GetView<SettingController> {
                   final newController = TextEditingController();
                   final confirmController = TextEditingController();
 
-                  Get.defaultDialog(
-                    title: 'Update Password',
-                    backgroundColor: Colors.white,
-                    radius: 12,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Current Password',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  final size = MediaQuery.of(context).size;
+                  final maxDialogHeight =
+                      (size.height * 0.55).clamp(300.0, 560.0);
+                  final maxDialogWidth =
+                      (size.width * 0.9).clamp(260.0, 520.0);
+                  Get.dialog(
+                    Dialog(
+                      backgroundColor: Colors.white,
+                      insetPadding:
+                          const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: maxDialogHeight,
+                          maxWidth: maxDialogWidth,
                         ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: currentController,
-                          autofocus: true,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Enter current password',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
                           ),
-                        ),
-                        const SizedBox(height: 14),
-                        const Text(
-                          'New Password',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: newController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Enter new password',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        const Text(
-                          'Confirm Password',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: confirmController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Confirm new password',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 18),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () => Get.back(),
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(color: AppColors.primary),
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Update Password',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Current Password',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: currentController,
+                                autofocus: true,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter current password',
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 12,
+                                  ),
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              ),
+                              const SizedBox(height: 14),
+                              const Text(
+                                'New Password',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final currentPwd = currentController.text.trim();
-                                  final newPwd = newController.text.trim();
-                                  final confirmPwd = confirmController.text.trim();
-
-                                  if (currentPwd.isEmpty ||
-                                      newPwd.isEmpty ||
-                                      confirmPwd.isEmpty) {
-                                    Get.snackbar(
-                                      'Password required',
-                                      'All password fields are required.',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                    return;
-                                  }
-
-                                  if (newPwd != confirmPwd) {
-                                    Get.snackbar(
-                                      'Mismatch',
-                                      'New password and confirmation must match.',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                    return;
-                                  }
-
-                                  try {
-                                    await controller.updatePassword(
-                                      currentPwd,
-                                      newPwd,
-                                      confirmPwd,
-                                    );
-                                    Get.back();
-                                    Get.snackbar(
-                                      'Password updated',
-                                      'Your password has been changed successfully.',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                  } catch (e) {
-                                    Get.snackbar(
-                                      'Update failed',
-                                      e.toString().replaceFirst('Exception: ', ''),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primary,
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: newController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter new password',
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 12,
+                                  ),
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
+                              ),
+                              const SizedBox(height: 14),
+                              const Text(
+                                'Confirm Password',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: confirmController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Confirm new password',
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 12,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 18),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () => Get.back(closeOverlays: true),
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(color: AppColors.primary),
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        final currentPwd =
+                                            currentController.text.trim();
+                                        final newPwd = newController.text.trim();
+                                        final confirmPwd =
+                                            confirmController.text.trim();
+
+                                        if (currentPwd.isEmpty ||
+                                            newPwd.isEmpty ||
+                                            confirmPwd.isEmpty) {
+                                          Get.snackbar(
+                                            'Password required',
+                                            'All password fields are required.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                          return;
+                                        }
+
+                                        if (newPwd != confirmPwd) {
+                                          Get.snackbar(
+                                            'Mismatch',
+                                            'New password and confirmation must match.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                          return;
+                                        }
+
+                                        try {
+                                          await controller.updatePassword(
+                                            currentPwd,
+                                            newPwd,
+                                            confirmPwd,
+                                          );
+                                          Get.back();
+                                          Get.snackbar(
+                                            'Password updated',
+                                            'Your password has been changed successfully.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                        } catch (e) {
+                                          Get.snackbar(
+                                            'Update failed',
+                                            e.toString().replaceFirst('Exception: ', ''),
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary,
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
+                    barrierDismissible: true,
                   );
                 },
                 style: OutlinedButton.styleFrom(
@@ -516,7 +576,7 @@ class SettingView extends GetView<SettingController> {
               // User profile section (only if logged in)
               Obx(() {
                 if (controller.isLoggedIn.value) {
-                  return _buildUserProfileSection();
+                  return _buildUserProfileSection(context);
                 } else {
                   return _buildGuestCard();
                 }
