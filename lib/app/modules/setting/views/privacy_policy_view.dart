@@ -2,6 +2,7 @@
 
 import 'package:eprs/app/modules/bottom_nav/widgets/bottom_nav_footer.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
+import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class PrivacyPolicyView extends StatelessWidget {
@@ -10,7 +11,7 @@ class PrivacyPolicyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F1F8), // subtle purple background
+      backgroundColor: AppColors.onPrimary, 
       appBar: const CustomAppBar(title: 'Privacy Policy'),
       body: SafeArea(
         child: SingleChildScrollView(
