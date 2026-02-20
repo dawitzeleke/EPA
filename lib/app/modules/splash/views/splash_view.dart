@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:upgrader/upgrader.dart';
 import '../controllers/splash_controller.dart';
 
 class SplashView extends StatefulWidget {
@@ -46,32 +47,33 @@ class _SplashViewState extends State<SplashView> {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBody: true,
-      body: SafeArea(
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 700),
-          opacity: showContent ? 1.0 : 0.0,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedScale(
-                  scale: showContent ? 1.0 : 0.85,
-                  duration: const Duration(milliseconds: 700),
-                  curve: Curves.easeInOut,
-                  child: Image.asset(
-                    'assets/logo.png',
-                    width: screenWidth * 0.9,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.error,
-                      size: 50,
-                      color: Colors.red,
+      body: UpgradeAlert(
+        child: SafeArea(
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 700),
+            opacity: showContent ? 1.0 : 0.0,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedScale(
+                    scale: showContent ? 1.0 : 0.85,
+                    duration: const Duration(milliseconds: 700),
+                    curve: Curves.easeInOut,
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: screenWidth * 0.9,
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.error,
+                        size: 50,
+                        color: Colors.red,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 40),
-                
-                SizedBox(height: screenHeight * 0.1),
-              ],
+                  const SizedBox(height: 40),
+                  SizedBox(height: screenHeight * 0.1),
+                ],
+              ),
             ),
           ),
         ),
