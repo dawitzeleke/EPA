@@ -12,31 +12,32 @@ class BottomNavBarFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<BottomNavController>();
 
-    return SafeArea(
-      top: false,
-      child: Container(
-        height: 70,
-        decoration: const BoxDecoration(
-          color: bottomNavActiveColor,
-          borderRadius: BorderRadius.only(
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(0, -2),
-            ),
-          ],
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+
+    return Container(
+      height: 70 + bottomInset,
+      padding: EdgeInsets.only(bottom: bottomInset),
+      decoration: const BoxDecoration(
+        color: bottomNavActiveColor,
+        borderRadius: BorderRadius.only(
+          // topLeft: Radius.circular(16),
+          // topRight: Radius.circular(16),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(
-            bottomNavItems.length,
-            (index) => Expanded(
-              child: _BottomNavItemButton(
-                index: index,
-                controller: controller,
-              ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 6,
+            offset: Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: List.generate(
+          bottomNavItems.length,
+          (index) => Expanded(
+            child: _BottomNavItemButton(
+              index: index,
+              controller: controller,
             ),
           ),
         ),

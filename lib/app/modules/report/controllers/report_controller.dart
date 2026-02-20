@@ -2091,7 +2091,7 @@ Future<void> pickTime(BuildContext context) async {
         );
         return;
       }
-      if (minDb != null && maxDecibel.value < minDb) {
+      if (maxDecibel.value < minDb) {
         Get.snackbar(
           'Error',
           'Recorded sound level is below the minimum required (${minDb.toStringAsFixed(0)} dB) for the selected land use type',
