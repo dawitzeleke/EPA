@@ -1,5 +1,6 @@
 import 'package:eprs/app/modules/bottom_nav/widgets/bottom_nav_footer.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
+import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -30,6 +31,7 @@ class FaqView extends GetView<FaqController> {
     ];
 
     return Scaffold(
+      backgroundColor: AppColors.onPrimary,
       appBar: const CustomAppBar(title: 'FAQ'),
       body: SafeArea(
         child: RefreshIndicator(
