@@ -71,10 +71,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
       () => SettingView(),
     ];
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
         final shouldExit = await controller.onWillPop();
-        return shouldExit;
+        if (!context.mounted) return;
+        if (shouldExit) {
+          Navigator.of(context).maybePop();
+        }
       },
       child: Obx(() {
         final currentIndex = controller.currentIndex.value;
