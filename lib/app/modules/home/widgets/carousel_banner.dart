@@ -113,7 +113,7 @@ class CarouselBanner extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.5),
+                                color: Colors.black.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
@@ -141,8 +141,8 @@ class CarouselBanner extends StatelessWidget {
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                               colors: [
-                                AppColors.primary.withOpacity(0.85),
-                                AppColors.primary.withOpacity(0.0),
+                                AppColors.primary.withValues(alpha: 0.85),
+                                AppColors.primary.withValues(alpha: 0.0),
                               ],
                             ),
                           ),
