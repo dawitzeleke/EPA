@@ -49,7 +49,6 @@ class _LoginOverlayState extends State<LoginOverlay> {
     // Responsive calculations
     final isSmall = height < 700;
     final logoHeight = height * 0.22; // 22% of screen height
-    final topPadding = MediaQuery.of(context).padding.top + (height * 0.01);
     final betweenFields = height * 0.02; // 2% of screen height
     
     const greenColor = AppColors.primary;
@@ -115,7 +114,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -421,7 +420,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primary,
                                   foregroundColor: Colors.white,
-                                  disabledBackgroundColor: AppColors.primary.withOpacity(0.6),
+                                  disabledBackgroundColor: AppColors.primary.withValues(alpha:0.6),
                                   disabledForegroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
