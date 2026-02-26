@@ -48,9 +48,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
     final betweenFields = height * 0.015; // Slightly tighter spacing
 
     const greenColor = AppColors.primary;
-    const darkText = Color(0xFF0F3B52);
     const hintText = Color(0xFF9BA5B1);
-    const borderColor = Color(0xFFE0E6ED);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -178,7 +176,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: greenColor,
                               foregroundColor: Colors.white,
-                              disabledBackgroundColor: greenColor.withOpacity(0.6),
+                              disabledBackgroundColor: greenColor.withValues(alpha: 0.6),
                               disabledForegroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -261,7 +259,6 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
     const darkText = Color(0xFF0F3B52);
     const hintText = Color(0xFF9BA5B1);
     const borderColor = Color(0xFFE0E6ED);
-    const greenColor = AppColors.primary;
 
     return Container(
       decoration: BoxDecoration(

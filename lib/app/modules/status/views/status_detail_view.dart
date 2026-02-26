@@ -83,7 +83,7 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFE8F1FF).withOpacity(0.8),
+                      color: const Color(0xFFE8F1FF).withValues(alpha: 0.8),
                       blurRadius: 18,
                       spreadRadius: 1,
                       offset: const Offset(0, 4),

@@ -1044,8 +1044,6 @@ class _ReportViewState extends State<ReportView> {
       final isPaused = controller.isPaused.value;
       final isRecording = controller.isRecording.value;
       final isWeb = kIsWeb;
-      final isCompact = MediaQuery.of(context).size.width < 360;
-
       // Idle state: show start prompt instead of auto-starting
       return Container(
         padding: const EdgeInsets.all(16.0),

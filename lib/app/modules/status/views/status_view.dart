@@ -317,7 +317,7 @@ class StatusView extends GetView<StatusController> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: outerGlow.withOpacity(0.8),
+            color: outerGlow.withValues(alpha: 0.8),
             blurRadius: 18,
             spreadRadius: 1,
             offset: const Offset(0, 4),
