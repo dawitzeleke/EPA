@@ -549,7 +549,7 @@ class SettingView extends GetView<SettingController> {
     );
   }
 
-  // ── Build UI ───────────────────────────────────────────────────────────────
+  // Build UI
   @override
   Widget build(BuildContext context) {
     // Refresh user data when view is built
