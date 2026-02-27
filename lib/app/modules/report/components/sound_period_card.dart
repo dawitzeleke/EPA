@@ -47,7 +47,7 @@ class SoundPeriodCard extends StatelessWidget {
                           width: current == 'Day' ? 1.1 : 1,
                         ),
                         backgroundColor: current == 'Day'
-                            ? AppColors.primary.withOpacity(0.08)
+                          ? AppColors.primary.withValues(alpha: 0.08)
                             : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -79,7 +79,7 @@ class SoundPeriodCard extends StatelessWidget {
                           width: current == 'Night' ? 1.1 : 1,
                         ),
                         backgroundColor: current == 'Night'
-                            ? AppColors.primary.withOpacity(0.08)
+                          ? AppColors.primary.withValues(alpha: 0.08)
                             : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

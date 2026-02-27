@@ -95,7 +95,7 @@ class LocationCard extends StatelessWidget {
                           width: isInSpot ? 1.1 : 1,
                         ),
                         backgroundColor: isInSpot
-                            ? AppColors.primary.withOpacity(0.08)
+                          ? AppColors.primary.withValues(alpha: 0.08)
                             : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -130,7 +130,7 @@ class LocationCard extends StatelessWidget {
                           width: isNotInSpot ? 1.1 : 1,
                         ),
                         backgroundColor: isNotInSpot
-                            ? AppColors.primary.withOpacity(0.08)
+                          ? AppColors.primary.withValues(alpha: 0.08)
                             : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
