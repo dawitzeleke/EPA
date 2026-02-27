@@ -192,6 +192,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                                   : Get.put(StatusController());
                                           final result = await statusController
                                               .fetchComplaintByReportId(id);
+                                          if (!mounted) return;
                                           setState(() => _isSearching = false);
                                           if (result == null) {
                                             Get.snackbar(

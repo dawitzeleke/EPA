@@ -917,6 +917,7 @@ class _ReportViewState extends State<ReportView> {
             },
           );
 
+          if (!ctx.mounted) return;
           if (choice == 1 || choice == 2) {
             showDialog(
               context: ctx,
@@ -929,12 +930,14 @@ class _ReportViewState extends State<ReportView> {
               } else {
                 await controller.pickVideoFromGallery();
               }
+              if (!ctx.mounted) return;
               Get.snackbar(
                 'Upload',
                 'Video added',
                 snackPosition: SnackPosition.BOTTOM,
               );
             } catch (e) {
+              if (!ctx.mounted) return;
               Get.snackbar(
                 'Upload failed',
                 e.toString(),
@@ -942,6 +945,7 @@ class _ReportViewState extends State<ReportView> {
               );
             } finally {
               try {
+                if (!ctx.mounted) return;
                 Navigator.of(ctx, rootNavigator: true).pop();
               } catch (_) {}
             }
@@ -974,6 +978,7 @@ class _ReportViewState extends State<ReportView> {
           },
         );
 
+        if (!ctx.mounted) return;
         if (choice == 1 || choice == 2) {
           // show a small progress indicator while the picker runs
           showDialog(
@@ -988,12 +993,14 @@ class _ReportViewState extends State<ReportView> {
               await controller.pickFromGallery();
             }
             // optional: brief success feedback
+            if (!ctx.mounted) return;
             Get.snackbar(
               'Upload',
               'File added',
               snackPosition: SnackPosition.BOTTOM,
             );
           } catch (e) {
+            if (!ctx.mounted) return;
             Get.snackbar(
               'Upload failed',
               e.toString(),
@@ -1002,6 +1009,7 @@ class _ReportViewState extends State<ReportView> {
           } finally {
             // close the progress dialog
             try {
+              if (!ctx.mounted) return;
               Navigator.of(ctx, rootNavigator: true).pop();
             } catch (_) {}
           }
