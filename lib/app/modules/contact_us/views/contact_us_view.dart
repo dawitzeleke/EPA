@@ -108,7 +108,6 @@ class ContactUsView extends GetView<ContactUsController> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // TODO: hook into controller to send message
                             final name = nameController.text.trim();
                             final phone = phoneController.text.trim();
                             final address = addressController.text.trim();
