@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import '../entities/login_entity.dart';
 import '../repositories/auth_repository.dart';
 

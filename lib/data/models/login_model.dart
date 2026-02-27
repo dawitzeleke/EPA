@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import '../../domain/entities/login_entity.dart';
 
 /// Data model for login request
