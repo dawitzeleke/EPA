@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:eprs/app/modules/report/views/report_issue_view.dart';
 import 'package:eprs/app/modules/report/views/report_otp_view.dart';
 import 'package:eprs/app/modules/report/views/report_success_view.dart';
@@ -131,9 +133,6 @@ class AppPages {
       name: _Paths.SIGNUP_OTP,
       page: () {
         final arg = Get.arguments;
-        final email = (arg is Map && arg['email'] is String)
-            ? arg['email'] as String
-            : '';
         return SignupOtpView();
       },
       binding: BindingsBuilder(() {
