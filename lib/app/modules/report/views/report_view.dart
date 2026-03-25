@@ -605,6 +605,7 @@ class _ReportViewState extends State<ReportView> {
               LabeledTextFieldCard(
                 title: 'Specific Location',
                 maxLines: 1,
+                controller: controller.specificLocationController,
               ),
               const SizedBox(height: 12),
               LabeledTextFieldCard(

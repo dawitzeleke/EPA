@@ -151,6 +151,7 @@ final isLoadingPollutionCategories = false.obs;
   final ImagePicker _picker = ImagePicker();
 
   // Form controllers
+  final specificLocationController = TextEditingController();
   final descriptionController = TextEditingController();
   final phoneController = TextEditingController();
   final obscurePhoneNumber = false.obs;
@@ -343,6 +344,7 @@ final isLoadingPollutionCategories = false.obs;
   // Reset form to initial state (made public so it can be called from view)
   void resetForm() {
     // Clear text fields
+    specificLocationController.clear();
     descriptionController.clear();
     phoneController.clear();
     phoneError.value = '';
@@ -557,6 +559,7 @@ final isLoadingPollutionCategories = false.obs;
     _noiseSubscription?.cancel();
     _noiseSubscription = null;
     recorderController.dispose();
+    specificLocationController.dispose();
     descriptionController.dispose();
     phoneController.dispose();
     super.onClose();
@@ -2016,6 +2019,16 @@ Future<void> pickTime(BuildContext context) async {
 
   Future<void> submitReport(bool isSound) async {
     // Validation
+    final specificAddress = specificLocationController.text.trim();
+    if (specificAddress.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please provide a specific location',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
     final desc = descriptionController.text.trim();
     if (desc.isEmpty) {
       Get.snackbar(
@@ -2219,6 +2232,7 @@ Future<void> pickTime(BuildContext context) async {
       if (locationUrl.isNotEmpty) {
         formData.fields.add(MapEntry('location_url', locationUrl));
       }
+      formData.fields.add(MapEntry('specific_address', specificAddress));
       formData.fields.add(
         MapEntry('detail', descriptionController.text.trim()),
       );
