@@ -3,11 +3,9 @@ import 'package:dio/dio.dart' as dio;
 import 'package:eprs/app/routes/app_pages.dart';
 import 'package:eprs/core/constants/api_constants.dart';
 import 'report_controller.dart';
-import 'package:eprs/core/network/dio_client.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class ReportOtpController extends GetxController {
   var code = ''.obs;
@@ -86,21 +84,27 @@ class ReportOtpController extends GetxController {
 
     isResending.value = true;
     try {
-      // Ensure guest OTP request is sent without any existing auth header
-      final headers = Map<String, dynamic>.from(
-        DioClient.instance.dio.options.headers,
-      )..remove('Authorization');
+      // Use a clean Dio instance without the auth error interceptor
+      // to prevent 401/403 from redirecting the guest to login.
+      final guestDio = dio.Dio(
+        dio.BaseOptions(
+          baseUrl: ApiConstants.baseUrl,
+          connectTimeout: ApiConstants.connectTimeout,
+          receiveTimeout: ApiConstants.receiveTimeout,
+          sendTimeout: ApiConstants.sendTimeout,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
 
-      final response = await DioClient.instance.dio.post(
+      final response = await guestDio.post(
         ApiConstants.requestReportOtpEndpoint,
         data: {
           'phone_number': phone,
           'isGuest': true,
         },
-        options: dio.Options(
-          followRedirects: true,
-          headers: headers,
-        ),
       );
       final status = response.statusCode ?? 0;
       final success = status >= 200 && status < 300;
@@ -151,21 +155,27 @@ class ReportOtpController extends GetxController {
 
     isLoading.value = true;
     try {
-      // Ensure verification call does not include a prior user token
-      final headers = Map<String, dynamic>.from(
-        DioClient.instance.dio.options.headers,
-      )..remove('Authorization');
+      // Use a clean Dio instance without the auth error interceptor
+      // to prevent 401/403 from redirecting the guest to login.
+      final guestDio = dio.Dio(
+        dio.BaseOptions(
+          baseUrl: ApiConstants.baseUrl,
+          connectTimeout: ApiConstants.connectTimeout,
+          receiveTimeout: ApiConstants.receiveTimeout,
+          sendTimeout: ApiConstants.sendTimeout,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
 
-      final response = await DioClient.instance.dio.post(
+      final response = await guestDio.post(
         ApiConstants.verifyReportOtpEndpoint,
         data: {
           'phone_number': phone,
           'otp': code.value,
         },
-        options: dio.Options(
-          followRedirects: true,
-          headers: headers,
-        ),
       );
 
       final status = response.statusCode ?? 0;
@@ -176,9 +186,8 @@ class ReportOtpController extends GetxController {
 
       authToken = _extractToken(response);
       if (authToken != null && authToken!.isNotEmpty) {
-        // Persist for later calls if desired
-        Get.find<GetStorage>().write('auth_token', authToken);
-        DioClient.instance.setAuthToken(authToken!);
+        // Keep token only for the current guest-report submission flow.
+        // Do not persist as a logged-in session token.
       }
 
       final message = _extractMessage(response.data) ?? 'Code verified successfully';

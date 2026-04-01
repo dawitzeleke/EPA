@@ -458,6 +458,11 @@ class _LoginOverlayState extends State<LoginOverlay> {
                               box.write('username', 'Guest');
                               box.remove('userId');
                               box.remove('phone');
+                              // Ensure guest flow does not reuse a previous authenticated session
+                              box.remove('auth_token');
+                              box.remove('access_token');
+                              box.remove('token');
+                              box.remove('refresh_token');
 
                               Get.offNamed(
                                 Routes.HOME,

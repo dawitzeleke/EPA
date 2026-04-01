@@ -317,8 +317,15 @@ final isLoadingPollutionCategories = false.obs;
   }
 
   void loadAuthState() {
-    final token = box.read('auth_token');
-    isLoggedIn.value = token != null && token.toString().isNotEmpty;
+    final token = box.read('auth_token')?.toString();
+    final storedUsername = box.read('username')?.toString().trim().toLowerCase();
+
+    // Treat user as logged-in when we have a token and user is not explicitly Guest.
+    // Some auth responses may not persist userId reliably.
+    isLoggedIn.value =
+        token != null &&
+        token.isNotEmpty &&
+        storedUsername != 'guest';
 
     // Pre-fill phone if available
     final storedPhone = box.read('phone')?.toString();
@@ -343,6 +350,11 @@ final isLoadingPollutionCategories = false.obs;
 
   // Reset form to initial state (made public so it can be called from view)
   void resetForm() {
+    // Always reset transient submission state when entering report flow
+    isSubmitting.value = false;
+    _pendingFormData = null;
+    _pendingRegionForSuccess = null;
+
     // Clear text fields
     specificLocationController.clear();
     descriptionController.clear();
@@ -1951,109 +1963,66 @@ Future<void> pickTime(BuildContext context) async {
   // ----------------------------
   // FORM SUBMISSION
   // ----------------------------
-  // Fetch pollution category ID from API
-  Future<String?> _fetchPollutionCategoryId(String reportType) async {
+  void _showSubmitFeedback(
+    String title,
+    String message, {
+    bool isError = false,
+  }) {
+    final bg = isError ? Colors.redAccent : AppColors.primary;
     try {
-      final httpClient = Get.find<DioClient>().dio;
-      final token = Get.find<GetStorage>().read('auth_token');
-      final res = await httpClient.get(
-        ApiConstants.pollutionCategoriesEndpoint,
-        options: dio.Options(
-          headers: {if (token != null) 'Authorization': 'Bearer $token'},
+      Get.snackbar(
+        title,
+        message,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: bg,
+        colorText: Colors.white,
+      );
+    } catch (_) {}
+
+    final context = Get.context;
+    if (context != null) {
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: bg,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
         ),
       );
-
-      final data = res.data;
-      List items = [];
-      if (data is List) {
-        items = data;
-      } else if (data is Map) {
-        if (data['data'] is List) {
-          items = data['data'];
-        } else if (data['categories'] is List) {
-          items = data['categories'];
-        }
-      }
-
-      // Try to find matching category
-      String normalize(String v) => v.toLowerCase().trim();
-      // Route uses "pollution", backend now returns "Air Pollution"
-      final normalizedType = normalize(
-        reportType == 'pollution' ? 'air pollution' : reportType,
-      );
-      final isSoundReportType = reportType == ReportTypeEnum.sound.name;
-      for (var item in items) {
-        if (item is Map) {
-          final id =
-              item['pollution_category_id']?.toString() ??
-              item['id']?.toString() ??
-              '';
-          final isSoundCategory = _parseIsSoundFlag(item['is_sound']);
-          if (isSoundCategory != isSoundReportType) {
-            continue; // enforce sound-only categories visibility rule
-          }
-          
-          final name = normalize(
-            item['pollution_category']?.toString() ??
-                item['name']?.toString() ??
-                '',
-          );
-          final matches =
-              name == normalizedType ||
-              name.contains(normalizedType) ||
-              normalizedType.contains(name);
-          if (id.isNotEmpty && matches) {
-            secureLog('Found pollution category ID for "$reportType": $id');
-            return id;
-          }
-        }
-      }
-      secureLog('Sound pollution category search: isSoundReportType=$isSoundReportType');
-      secureLog('Warning: Could not find pollution category for "$reportType"');
-      return null;
-    } catch (e) {
-      secureLog('Error fetching pollution category: $e');
-      return null;
     }
   }
 
   Future<void> submitReport(bool isSound) async {
+    if (isSubmitting.value) {
+      _showSubmitFeedback(
+        'Please wait',
+        'Your report is being processed.',
+      );
+      return;
+    }
+
     // Validation
     final specificAddress = specificLocationController.text.trim();
     if (specificAddress.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please provide a specific location',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Please provide a specific location', isError: true);
       return;
     }
 
     final desc = descriptionController.text.trim();
     if (desc.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please provide a description',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Please provide a description', isError: true);
       return;
     }
 
     if (desc.length < 30) {
-      Get.snackbar(
-        'Error',
-        'Description must be at least 30 characters',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Description must be at least 30 characters', isError: true);
       return;
     }
 
     if (pickedImagesX.isEmpty && !isSound) {
-      Get.snackbar(
-        'Error',
-        'Please add at least one photo or video or audio',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Please add at least one photo or video or audio', isError: true);
       return;
     }
 
@@ -2061,11 +2030,7 @@ Future<void> pickTime(BuildContext context) async {
       // Ensure land use type is selected
       final soundArea = _getSelectedSoundArea();
       if (soundArea == null) {
-        Get.snackbar(
-          'Error',
-          'Please select land use type',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'Please select land use type', isError: true);
         return;
       }
 
@@ -2078,68 +2043,40 @@ Future<void> pickTime(BuildContext context) async {
             name.contains('voice_note');
       });
       if (!hasAudio) {
-        Get.snackbar(
-          'Error',
-          'Please add an audio recording',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'Please add an audio recording', isError: true);
         return;
       }
 
       showMinDecibelWarning.value = true;
       final minDb = minRequiredDecibel;
       if (minDb == null) {
-        Get.snackbar(
-          'Error',
-          'Unable to determine minimum required dB. Please reselect land use type.',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'Unable to determine minimum required dB. Please reselect land use type.', isError: true);
         return;
       }
       if (!hasNoiseReading.value) {
-        Get.snackbar(
-          'Error',
-          'No sound level reading detected. Please record again.',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'No sound level reading detected. Please record again.', isError: true);
         return;
       }
       if (maxDecibel.value < minDb) {
-        Get.snackbar(
-          'Error',
-          'Recorded sound level is below the minimum required (${minDb.toStringAsFixed(0)} dB) for the selected land use type',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'Recorded sound level is below the minimum required (${minDb.toStringAsFixed(0)} dB) for the selected land use type', isError: true);
         return;
       }
       showMinDecibelWarning.value = false;
     }
 
     if (!termsAccepted.value) {
-      Get.snackbar(
-        'Error',
-        'Please accept the terms and conditions',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Please accept the terms and conditions', isError: true);
       return;
     }
 
     if (selectedDate.value == null || selectedTime.value == null) {
-      Get.snackbar(
-        'Error',
-        'Please select date and time',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Please select date and time', isError: true);
       return;
     }
 
     // Validate "Are you in the spot" is selected
     if (!hasSelectedLocationOption.value || isInTheSpot.value == null) {
-      Get.snackbar(
-        'Error',
-        'Please select "Are you in the spot"',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Please select "Are you in the spot"', isError: true);
       return;
     }
 
@@ -2147,21 +2084,43 @@ Future<void> pickTime(BuildContext context) async {
     if (isInTheSpot.value == true) {
       // If "Yes", location should be detected or manually entered
       if (!autoDetectLocation.value && detectedPosition.value == null) {
-        Get.snackbar(
-          'Error',
-          'Please enable location detection or provide location details',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'Please enable location detection or provide location details', isError: true);
         return;
       }
     } else {
       // If "No", region/zone/woreda should be selected
       if (selectedRegion.value == 'Select Region / City Administration') {
-        Get.snackbar(
-          'Error',
-          'Please select a region/city',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        _showSubmitFeedback('Error', 'Please select a region/city', isError: true);
+        return;
+      }
+    }
+
+    // Validate pollution category is selected
+    if (selectedPollutionCategoryId.value == null ||
+        selectedPollutionCategoryId.value!.isEmpty) {
+      _showSubmitFeedback('Error', 'Please select a pollution category', isError: true);
+      return;
+    }
+
+    // Validate phone number BEFORE heavy form building (guest only)
+    final token = box.read('auth_token')?.toString();
+    final storedUsername = box.read('username')?.toString().trim().toLowerCase();
+    final isUserLoggedIn =
+      token != null &&
+      token.isNotEmpty &&
+      storedUsername != 'guest';
+    if (!isUserLoggedIn) {
+      final phone = phoneController.text.trim();
+      if (phone.isEmpty) {
+        phoneError.value = 'Phone number is required';
+        _showSubmitFeedback('Phone number required', 'Please enter your phone number to submit a report as a guest.', isError: true);
+        return;
+      }
+      final isValidPhone = phone.length == 10 &&
+          (phone.startsWith('09') || phone.startsWith('07'));
+      if (!isValidPhone) {
+        phoneError.value = 'Enter a valid 10-digit phone (09… or 07…)';
+        _showSubmitFeedback('Invalid phone number', 'Please enter a valid 10-digit phone number starting with 09 or 07.', isError: true);
         return;
       }
     }
@@ -2170,7 +2129,7 @@ Future<void> pickTime(BuildContext context) async {
 
     try {
       final httpClient = Get.find<DioClient>().dio;
-      final token = Get.find<GetStorage>().read('auth_token');
+      final token = Get.find<GetStorage>().read('auth_token')?.toString();
 
       // if (token == null) {
       //   Get.snackbar(
@@ -2189,7 +2148,7 @@ Future<void> pickTime(BuildContext context) async {
       final woredaId = findIdByName(woredas, selectedWoreda.value) ?? '';
 
       // Debug logging for location IDs
-      secureLog('📍 Location IDs for submission:');
+      secureLog('   Location IDs for submission:');
       secureLog('   Selected Region: ${selectedRegion.value} → ID: $regionId');
       secureLog('   Selected Zone: ${selectedZone.value} → ID: $zoneId');
       secureLog('   Selected Woreda: ${selectedWoreda.value} → ID: $woredaId');
@@ -2275,30 +2234,25 @@ Future<void> pickTime(BuildContext context) async {
         secureLog('Added actDate: $dateStr, actTime: $timeStr');
       }
 
-      // Add pollution category ID (use from route if available, otherwise fetch from API)
-      String? categoryId = selectedPollutionCategoryId.value;
-      if (categoryId?.isEmpty ?? true) {
-        secureLog('Pollution category ID not in route, fetching from API...');
-        categoryId = await _fetchPollutionCategoryId(reportType);
-      }
-
+      // Add pollution category ID (already validated above)
+      final categoryId = selectedPollutionCategoryId.value;
       secureLog(
-        'Using pollution category ID: $categoryId (from route: ${pollutionCategoryId != null})',
+        'Using pollution category ID: $categoryId',
       );
       if (categoryId != null && categoryId.isNotEmpty) {
         formData.fields.add(MapEntry('pollution_category_id', categoryId));
       } else {
         Get.snackbar(
           'Error',
-          'Could not find pollution category. Please try again.',
+          'Please select a pollution category.',
           snackPosition: SnackPosition.BOTTOM,
         );
         isSubmitting.value = false;
         return;
       }
 
-      // Add phone if opted in
-      if (phoneOptIn.value && phoneController.text.trim().isNotEmpty) {
+      // Add phone number to form data for guests
+      if (phoneController.text.trim().isNotEmpty) {
         formData.fields.add(MapEntry('phone_no', phoneController.text.trim()));
       }
 
@@ -2323,38 +2277,37 @@ Future<void> pickTime(BuildContext context) async {
       secureLog('Total files in form data: ${formData.files.length}');
 
       // If user is a guest, request OTP using the phone on this page
-      final isLoggedIn = token != null && token.toString().isNotEmpty;
-      if (!isLoggedIn) {
+      if (!isUserLoggedIn) {
         final phone = phoneController.text.trim();
-        final isValidPhone = phone.length == 10 &&
-            (phone.startsWith('09') || phone.startsWith('07'));
-        if (!isValidPhone) {
-          phoneError.value = 'Phone number must start with 09 or 07';
-          Get.snackbar(
-            'Invalid phone number',
-            'Please enter a valid phone number to receive the code.',
-            snackPosition: SnackPosition.BOTTOM,
-          );
+        // Phone was already validated above, but guard just in case
+        if (phone.isEmpty || phone.length != 10) {
+          phoneError.value = 'Phone number is required';
           isSubmitting.value = false;
           return;
         }
 
         try {
-          // Ensure guest OTP request is sent without any existing auth header
-          final headers = Map<String, dynamic>.from(
-            DioClient.instance.dio.options.headers,
-          )..remove('Authorization');
+          // Use a separate Dio instance WITHOUT the auth error interceptor
+          // to prevent 401/403 from redirecting the guest to the login page.
+          final guestDio = dio.Dio(
+            dio.BaseOptions(
+              baseUrl: ApiConstants.baseUrl,
+              connectTimeout: ApiConstants.connectTimeout,
+              receiveTimeout: ApiConstants.receiveTimeout,
+              sendTimeout: ApiConstants.sendTimeout,
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+            ),
+          );
 
-          final response = await DioClient.instance.dio.post(
+          final response = await guestDio.post(
             ApiConstants.requestReportOtpEndpoint,
             data: {
               'phone_number': phone,
               'isGuest': true,
             },
-            options: dio.Options(
-              followRedirects: true,
-              headers: headers,
-            ),
           );
 
           final status = response.statusCode ?? 0;
@@ -2384,13 +2337,8 @@ Future<void> pickTime(BuildContext context) async {
           );
         } catch (e) {
           isSubmitting.value = false;
-          Get.snackbar(
-            'Failed to send OTP',
-            _cleanErrorMessage(e),
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white,
-          );
+          secureLog('Guest OTP request failed: $e');
+          _showSubmitFeedback('Failed to send OTP', _cleanErrorMessage(e), isError: true);
         }
         return;
       }
@@ -2398,18 +2346,14 @@ Future<void> pickTime(BuildContext context) async {
       await _submitFormData(
         httpClient: httpClient,
         formData: formData,
-        token: token?.toString(),
+        token: token,
         regionToPass: selectedRegion.value,
         isLoggedIn: true,
       );
     } catch (e) {
       isSubmitting.value = false;
       secureLog('Error submitting report: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to submit report: ${_cleanErrorMessage(e)}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      _showSubmitFeedback('Error', 'Failed to submit report: ${_cleanErrorMessage(e)}', isError: true);
     }
   }
 

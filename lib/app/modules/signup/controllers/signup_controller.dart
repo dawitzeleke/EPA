@@ -154,8 +154,14 @@ class SignUpController extends GetxController {
 
   /// Show error dialog
   void _showErrorDialog(String title, String message) {
+    // Prevent stacked dialogs without closing the current screen.
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+
     Get.defaultDialog(
       title: '',
+      barrierDismissible: true,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 24,
         vertical: 16,
@@ -183,7 +189,11 @@ class SignUpController extends GetxController {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.back(),
+              onPressed: () {
+                if (Get.isDialogOpen ?? false) {
+                  Get.back();
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),

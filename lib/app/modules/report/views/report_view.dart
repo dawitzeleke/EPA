@@ -844,9 +844,7 @@ class _ReportViewState extends State<ReportView> {
               Obx(() => SizedBox(
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: controller.isSubmitting.value
-                      ? null
-                      : () => controller.submitReport(isSoundReport),
+                  onPressed: () => controller.submitReport(isSoundReport),
                   style: ButtonStyle(
                     // Keep the button green for all states (including disabled)
                     backgroundColor: WidgetStateProperty.all<Color>(AppColors.primary),
