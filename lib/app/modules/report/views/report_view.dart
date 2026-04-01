@@ -1,5 +1,3 @@
-
-
 import 'package:eprs/app/modules/report/components/dash_border.dart';
 import 'package:eprs/app/modules/report/components/date_time_card.dart';
 import 'package:eprs/app/modules/report/components/location_description_card.dart';
@@ -33,7 +31,7 @@ class ReportView extends StatefulWidget {
 class _ReportViewState extends State<ReportView> {
   // Get controller instance
   ReportController get controller => Get.find<ReportController>();
-  
+
   @override
   void initState() {
     super.initState();
@@ -79,149 +77,151 @@ class _ReportViewState extends State<ReportView> {
 
               const SizedBox(height: 12),
               // Pollution Category Card
-                Card(
-                  color: const Color(0xFFFFFFFF),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Pollution Category',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+              Card(
+                color: const Color(0xFFFFFFFF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Pollution Category',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        const SizedBox(height: 12),
-                        Obx(() {
-                          if (controller.isLoadingPollutionCategories.value) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-
-                          if (controller.pollutionCategoriesError.value != null) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  controller.pollutionCategoriesError.value ?? 'Failed to Load Categories',
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                                const SizedBox(height: 8),
-                                TextButton(
-                                  onPressed: controller.fetchPollutionCategories,
-                                  child: const Text('Retry'),
-                                ),
-                              ],
-                            );
-                          }
-
-                          final relevantItems = isSoundReport
-                              ? controller.pollutionCategoriesSound
-                              : controller.pollutionCategoriesNormal;
-
-                          String? value = controller.selectedPollutionCategoryId.value;
-                          final validValues =
-                              relevantItems.map((entry) => entry['id']).whereType<String>().toSet();
-                          if (!validValues.contains(value)) {
-                            // Clear stale selection after rebuild to satisfy dropdown constraint
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              controller.selectPollutionCategory(null);
-                            });
-                            value = null;
-                          }
-
-                          if (relevantItems.isEmpty) {
-                            return const Text(
-                              'No pollution categories available for this report type',
-                              style: TextStyle(color: Colors.black54),
-                            );
-                          }
-
-                          return DropdownButtonFormField<String?>(
-                            initialValue: value,
-                            isExpanded: true,
-                            dropdownColor: Colors.white,
-                            alignment: AlignmentDirectional.centerStart,
-                            itemHeight: 48,
-                            menuMaxHeight: 260,
-                            borderRadius: BorderRadius.circular(8),
-                            items: [
-                              
-                              const DropdownMenuItem<String?>(
-                                value: null,
-                                child: Text(
-                                  'Select pollution category',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                              ),
-                              ...relevantItems.map((category) {
-                                final id = category['id'];
-                                final name = category['name'] ?? '';
-                                return DropdownMenuItem<String?>(
-                                  value: id,
-                                  child: Text(
-                                    name,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                            onChanged: controller.selectPollutionCategory,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 14,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  color: Color.fromRGBO(212, 212, 212, 1),
-                                  width: 1,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  color: Color.fromRGBO(212, 212, 212, 1),
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  color: Color.fromRGBO(212, 212, 212, 1),
-                                  width: 1.1,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
-                              hintText: 'Select pollution category',
-                              hintStyle: TextStyle(
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500,
-                              ),
+                      ),
+                      const SizedBox(height: 12),
+                      Obx(() {
+                        if (controller.isLoadingPollutionCategories.value) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: CircularProgressIndicator(),
                             ),
                           );
-                        }),
-                      ],
-                    ),
+                        }
+
+                        if (controller.pollutionCategoriesError.value != null) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                controller.pollutionCategoriesError.value ??
+                                    'Failed to Load Categories',
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                              const SizedBox(height: 8),
+                              TextButton(
+                                onPressed: controller.fetchPollutionCategories,
+                                child: const Text('Retry'),
+                              ),
+                            ],
+                          );
+                        }
+
+                        final relevantItems = isSoundReport
+                            ? controller.pollutionCategoriesSound
+                            : controller.pollutionCategoriesNormal;
+
+                        String? value =
+                            controller.selectedPollutionCategoryId.value;
+                        final validValues = relevantItems
+                            .map((entry) => entry['id'])
+                            .whereType<String>()
+                            .toSet();
+                        if (!validValues.contains(value)) {
+                          // Clear stale selection after rebuild to satisfy dropdown constraint
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            controller.selectPollutionCategory(null);
+                          });
+                          value = null;
+                        }
+
+                        if (relevantItems.isEmpty) {
+                          return const Text(
+                            'No pollution categories available for this report type',
+                            style: TextStyle(color: Colors.black54),
+                          );
+                        }
+
+                        return DropdownButtonFormField<String?>(
+                          initialValue: value,
+                          isExpanded: true,
+                          dropdownColor: Colors.white,
+                          alignment: AlignmentDirectional.centerStart,
+                          itemHeight: 48,
+                          menuMaxHeight: 260,
+                          borderRadius: BorderRadius.circular(8),
+                          items: [
+                            const DropdownMenuItem<String?>(
+                              value: null,
+                              child: Text(
+                                'Select pollution category',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.black54),
+                              ),
+                            ),
+                            ...relevantItems.map((category) {
+                              final id = category['id'];
+                              final name = category['name'] ?? '';
+                              return DropdownMenuItem<String?>(
+                                value: id,
+                                child: Text(
+                                  name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                          onChanged: controller.selectPollutionCategory,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(212, 212, 212, 1),
+                                width: 1,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(212, 212, 212, 1),
+                                width: 1,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(212, 212, 212, 1),
+                                width: 1.1,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Select pollution category',
+                            hintStyle: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
                   ),
                 ),
-
+              ),
 
               const SizedBox(height: 12),
 
@@ -259,7 +259,8 @@ class _ReportViewState extends State<ReportView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  controller.soundAreasError.value ?? 'Failed to load areas',
+                                  controller.soundAreasError.value ??
+                                      'Failed to load areas',
                                   style: const TextStyle(color: Colors.red),
                                 ),
                                 const SizedBox(height: 8),
@@ -354,15 +355,14 @@ class _ReportViewState extends State<ReportView> {
                   ),
                 ),
 
-                if (isSoundReport)
-              const SizedBox(height: 12),
+              if (isSoundReport) const SizedBox(height: 12),
 
               //time of the day card for sound report
               if (widget.reportType == ReportTypeEnum.sound.name)
                 SoundPeriodCard(soundPeriod: controller.soundPeriod),
 
               const SizedBox(height: 12),
-              
+
               // Time & Date Card
               DateTimeCard(
                 selectedDate: controller.selectedDate,
@@ -499,15 +499,17 @@ class _ReportViewState extends State<ReportView> {
                                           isAudio: isAudio,
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           child: Container(
                                             width: 120,
                                             height: 84,
                                             decoration: BoxDecoration(
-                                              color: isAudio 
+                                              color: isAudio
                                                   ? const Color(0xFFEFF7F0)
                                                   : Colors.transparent,
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                             child: isAudio
                                                 ? const Center(
@@ -522,32 +524,47 @@ class _ReportViewState extends State<ReportView> {
                                                         child: Icon(
                                                           Icons.videocam,
                                                           size: 40,
-                                                          color: Color(0xFF63557F),
+                                                          color:
+                                                              Color(0xFF63557F),
                                                         ),
                                                       )
                                                     : isImage
-                                                        ? FutureBuilder<Uint8List>(
-                                                            future: xFile.readAsBytes(),
-                                                            builder: (context, snapshot) {
-                                                              if (snapshot.hasData) {
-                                                                return Image.memory(
-                                                                  snapshot.data!,
-                                                                  fit: BoxFit.cover,
+                                                        ? FutureBuilder<
+                                                            Uint8List>(
+                                                            future: xFile
+                                                                .readAsBytes(),
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                  .hasData) {
+                                                                return Image
+                                                                    .memory(
+                                                                  snapshot
+                                                                      .data!,
+                                                                  fit: BoxFit
+                                                                      .cover,
                                                                 );
-                                                              } else if (snapshot.hasError) {
-                                                                return const Icon(Icons.image);
+                                                              } else if (snapshot
+                                                                  .hasError) {
+                                                                return const Icon(
+                                                                    Icons
+                                                                        .image);
                                                               } else {
                                                                 return const Center(
-                                                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                                                  child: CircularProgressIndicator(
+                                                                      strokeWidth:
+                                                                          2),
                                                                 );
                                                               }
                                                             },
                                                           )
                                                         : const Center(
                                                             child: Icon(
-                                                              Icons.insert_drive_file,
+                                                              Icons
+                                                                  .insert_drive_file,
                                                               size: 32,
-                                                              color: Color(0xFF63557F),
+                                                              color: Color(
+                                                                  0xFF63557F),
                                                             ),
                                                           ),
                                           ),
@@ -557,7 +574,8 @@ class _ReportViewState extends State<ReportView> {
                                         top: 4,
                                         right: 4,
                                         child: GestureDetector(
-                                          onTap: () => controller.removePickedImageAt(i),
+                                          onTap: () =>
+                                              controller.removePickedImageAt(i),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: Colors.black54,
@@ -599,7 +617,7 @@ class _ReportViewState extends State<ReportView> {
                 buildDropdown: _buildDropdown,
                 buildOnOffToggle: _onOffToggle,
               ),
-              
+
               const SizedBox(height: 12),
 
               LabeledTextFieldCard(
@@ -614,11 +632,9 @@ class _ReportViewState extends State<ReportView> {
                 controller: controller.descriptionController,
               ),
 
-
               const SizedBox(height: 12),
               // Phone Number Card
 
-              
               Obx(() => controller.isLoggedIn.value
                   ? const SizedBox.shrink()
                   : Card(
@@ -632,25 +648,24 @@ class _ReportViewState extends State<ReportView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                        children: const [
-                          Text(
-                            'Phone Number',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              children: const [
+                                Text(
+                                  'Phone Number',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  '*',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(width: 6),
-                          Text(
-                            '*',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-
-                       ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
@@ -660,59 +675,79 @@ class _ReportViewState extends State<ReportView> {
                                     children: [
                                       // 1. The actual input field
                                       Obx(() {
-                                        final isHidden = controller.obscurePhoneNumber.value;
+                                        final isHidden =
+                                            controller.obscurePhoneNumber.value;
                                         return TextFormField(
-                                          controller: controller.phoneController,
+                                          controller:
+                                              controller.phoneController,
                                           keyboardType: TextInputType.phone,
                                           maxLength: 10,
-                                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                                          inputFormatters:  [
-                                            FilteringTextInputFormatter.digitsOnly,
-                                            LengthLimitingTextInputFormatter(10),
+                                          maxLengthEnforcement:
+                                              MaxLengthEnforcement.enforced,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                            LengthLimitingTextInputFormatter(
+                                                10),
                                           ],
                                           // When hidden, make text transparent so overlay can show
                                           style: isHidden
-                                              ? GoogleFonts.robotoMono(color: Colors.transparent, fontSize: 16)
-                                              : GoogleFonts.robotoMono(color: Colors.black87, fontSize: 16),
+                                              ? GoogleFonts.robotoMono(
+                                                  color: Colors.transparent,
+                                                  fontSize: 16)
+                                              : GoogleFonts.robotoMono(
+                                                  color: Colors.black87,
+                                                  fontSize: 16),
                                           cursorColor: Colors.black,
                                           showCursor: true,
                                           decoration: InputDecoration(
-                                            hintText: 'Enter Your Phone Number (e.g. 091XXXXXXX)',
-                                            hintStyle: const TextStyle(fontSize: 13, color: Colors.black54),
+                                            hintText:
+                                                'Enter Your Phone Number (e.g. 091XXXXXXX)',
+                                            hintStyle: const TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.black54),
                                             counterText: '',
                                             errorText: null,
-                                            errorStyle: const TextStyle(height: 0, fontSize: 0),
+                                            errorStyle: const TextStyle(
+                                                height: 0, fontSize: 0),
                                             filled: true,
                                             fillColor: Colors.white,
-                                            contentPadding: const EdgeInsets.symmetric(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
                                               horizontal: 12,
                                               vertical: 14,
                                             ),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               borderSide: const BorderSide(
-                                                color: Color.fromRGBO(212, 212, 212, 1),
+                                                color: Color.fromRGBO(
+                                                    212, 212, 212, 1),
                                                 width: 0.5,
                                               ),
                                             ),
                                             enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               borderSide: const BorderSide(
-                                                color: Color.fromRGBO(212, 212, 212, 1),
+                                                color: Color.fromRGBO(
+                                                    212, 212, 212, 1),
                                                 width: 0.4,
                                               ),
                                             ),
                                             focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               borderSide: const BorderSide(
-                                                color: Color.fromRGBO(212, 212, 212, 1),
+                                                color: Color.fromRGBO(
+                                                    212, 212, 212, 1),
                                                 width: 0.8,
                                               ),
                                             ),
                                           ),
                                         );
                                       }),
-                                      
+
                                       // 2. The Masked Overlay
                                       // Listens to controller changes to update mask in real-time
                                       Positioned.fill(
@@ -726,28 +761,39 @@ class _ReportViewState extends State<ReportView> {
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: Obx(() {
-                                                final isHidden = controller.obscurePhoneNumber.value;
-                                                return ValueListenableBuilder<TextEditingValue>(
-                                                  valueListenable: controller.phoneController,
-                                                  builder: (context, value, child) {
+                                                final isHidden = controller
+                                                    .obscurePhoneNumber.value;
+                                                return ValueListenableBuilder<
+                                                    TextEditingValue>(
+                                                  valueListenable: controller
+                                                      .phoneController,
+                                                  builder:
+                                                      (context, value, child) {
                                                     // Only show overlay if hidden AND not empty
-                                                    if (!isHidden || value.text.isEmpty) {
-                                                      return const SizedBox.shrink();
+                                                    if (!isHidden ||
+                                                        value.text.isEmpty) {
+                                                      return const SizedBox
+                                                          .shrink();
                                                     }
-                                                    
+
                                                     final text = value.text;
                                                     String maskedText;
                                                     if (text.length <= 2) {
                                                       maskedText = text;
                                                     } else {
-                                                      maskedText = text.substring(0, 2) + '*' * (text.length - 2);
+                                                      maskedText = text
+                                                              .substring(0, 2) +
+                                                          '*' *
+                                                              (text.length - 2);
                                                     }
 
                                                     return Text(
                                                       maskedText,
-                                                      style: GoogleFonts.robotoMono(
+                                                      style: GoogleFonts
+                                                          .robotoMono(
                                                         color: Colors.black87,
-                                                        fontSize: 16, // Must match TextFormField default
+                                                        fontSize:
+                                                            16, // Must match TextFormField default
                                                       ),
                                                     );
                                                   },
@@ -789,7 +835,8 @@ class _ReportViewState extends State<ReportView> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           err,
-                                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                                          style: const TextStyle(
+                                              color: Colors.red, fontSize: 12),
                                         ),
                                       ),
                               );
@@ -799,44 +846,42 @@ class _ReportViewState extends State<ReportView> {
                       ),
                     )),
 
-
-
-
               const SizedBox(height: 18),
 
               // Terms checkbox
               Obx(() => Row(
-                children: [
-                  Checkbox(
-                    activeColor: AppColors.primary,
-                    value: controller.termsAccepted.value,
-                    onChanged: (v) => controller.termsAccepted.value = v ?? false,
-                  ),
-                  Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        text: 'I Agree To The ',
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                        ),
-                        children: [
+                    children: [
+                      Checkbox(
+                        activeColor: AppColors.primary,
+                        value: controller.termsAccepted.value,
+                        onChanged: (v) =>
+                            controller.termsAccepted.value = v ?? false,
+                      ),
+                      Expanded(
+                        child: Text.rich(
                           TextSpan(
-                            text: 'Terms And Conditions',
+                            text: 'I Agree To The ',
                             style: const TextStyle(
                               color: AppColors.primary,
-                              decoration: TextDecoration.underline,
                             ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Get.toNamed(Routes.TERM_AND_CONDITIONS);
-                              },
+                            children: [
+                              TextSpan(
+                                text: 'Terms And Conditions',
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Get.toNamed(Routes.TERM_AND_CONDITIONS);
+                                  },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              )),
+                    ],
+                  )),
 
               const SizedBox(height: 12),
 
@@ -871,8 +916,8 @@ class _ReportViewState extends State<ReportView> {
                             color: AppColors.onPrimary,
                           ),
                         ),
-                ),
-              )),
+                    ),
+                  )),
             ],
           ),
         ),
@@ -881,7 +926,8 @@ class _ReportViewState extends State<ReportView> {
   }
 
   // ignore: unused_element
-  Widget _evidenceTile(BuildContext ctx, IconData icon, String label, {bool isVoiceNote = false, bool isVideo = false}) {
+  Widget _evidenceTile(BuildContext ctx, IconData icon, String label,
+      {bool isVoiceNote = false, bool isVideo = false}) {
     return InkWell(
       onTap: () async {
         if (isVoiceNote) {
@@ -1045,7 +1091,7 @@ class _ReportViewState extends State<ReportView> {
   Widget _buildRecordingUI(BuildContext context) {
     // Build waveform outside Obx to keep it stable
     final waveformWidget = _buildSoundGauge();
-    
+
     return Obx(() {
       final duration = controller.recordingDuration.value;
       final isPaused = controller.isPaused.value;
@@ -1057,13 +1103,15 @@ class _ReportViewState extends State<ReportView> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color.fromRGBO(212, 212, 212, 1), width: 0.4),
+          border: Border.all(
+              color: const Color.fromRGBO(212, 212, 212, 1), width: 0.4),
         ),
         child: Column(
           children: [
             if (isWeb)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.orange.shade50,
                   borderRadius: BorderRadius.circular(8),
@@ -1097,7 +1145,8 @@ class _ReportViewState extends State<ReportView> {
                       ? controller.currentDecibel.value
                       : 0.0;
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F7F4),
                       borderRadius: BorderRadius.circular(8),
@@ -1112,7 +1161,8 @@ class _ReportViewState extends State<ReportView> {
                   );
                 }),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF3F7F4),
                     borderRadius: BorderRadius.circular(8),
@@ -1141,7 +1191,8 @@ class _ReportViewState extends State<ReportView> {
                     runSpacing: 8,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF3F7F4),
                           borderRadius: BorderRadius.circular(8),
@@ -1155,7 +1206,8 @@ class _ReportViewState extends State<ReportView> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF3F7F4),
                           borderRadius: BorderRadius.circular(8),
@@ -1173,7 +1225,8 @@ class _ReportViewState extends State<ReportView> {
                   if (controller.showMinDecibelWarning.value && isBelow) ...[
                     const SizedBox(height: 10),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.red.shade50,
                         borderRadius: BorderRadius.circular(8),
@@ -1181,7 +1234,8 @@ class _ReportViewState extends State<ReportView> {
                       ),
                       child: Row(
                         children: const [
-                          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 18),
+                          Icon(Icons.warning_amber_rounded,
+                              color: Colors.red, size: 18),
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -1210,7 +1264,9 @@ class _ReportViewState extends State<ReportView> {
                   color: (isRecording || isPaused) && !isWeb
                       ? AppColors.primary
                       : Colors.grey.shade400,
-                  enabled: (isRecording || isPaused) && !isWeb && !controller.isCanceling.value,
+                  enabled: (isRecording || isPaused) &&
+                      !isWeb &&
+                      !controller.isCanceling.value,
                   onPressed: () {
                     if (controller.isCanceling.value) return;
                     controller.cancelRecording().catchError((error) {
@@ -1229,9 +1285,8 @@ class _ReportViewState extends State<ReportView> {
                   icon: isRecording
                       ? (isPaused ? Icons.play_arrow : Icons.pause)
                       : Icons.mic,
-                  label: isRecording
-                      ? (isPaused ? 'Resume' : 'Pause')
-                      : 'Start',
+                  label:
+                      isRecording ? (isPaused ? 'Resume' : 'Pause') : 'Start',
                   color: isWeb ? Colors.grey.shade400 : AppColors.primary,
                   enabled: !isWeb,
                   onPressed: () {
@@ -1253,7 +1308,9 @@ class _ReportViewState extends State<ReportView> {
                   color: (isRecording || isPaused) && !isWeb
                       ? AppColors.primary
                       : Colors.grey.shade400,
-                  enabled: (isRecording || isPaused) && !isWeb && !controller.isStopping.value,
+                  enabled: (isRecording || isPaused) &&
+                      !isWeb &&
+                      !controller.isStopping.value,
                   onPressed: () {
                     if (controller.isStopping.value) return;
                     controller.stopRecording().catchError((error) {
@@ -1265,7 +1322,7 @@ class _ReportViewState extends State<ReportView> {
                       );
                     });
                   },
-                ),  
+                ),
               ],
             ),
           ],
@@ -1357,10 +1414,9 @@ class _ReportViewState extends State<ReportView> {
   }) {
     // Ensure the current value is in the items list
     // If value is not in items, use the first item (placeholder) if available
-    final currentValue = items.isNotEmpty
-        ? (items.contains(value) ? value : items.first)
-        : null;
-    
+    final currentValue =
+        items.isNotEmpty ? (items.contains(value) ? value : items.first) : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1576,6 +1632,3 @@ class _ReportViewState extends State<ReportView> {
     );
   }
 }
-
-
-

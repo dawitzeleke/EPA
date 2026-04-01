@@ -1,24 +1,10 @@
 pluginManagement {
-    val flutterSdkPath =
-        run {
-            val properties = java.util.Properties()
-            file("local.properties").inputStream().use { properties.load(it) }
-            val flutterSdkPath = properties.getProperty("flutter.sdk")
-            require(flutterSdkPath != null) { "flutter.sdk not set in local.properties" }
-            flutterSdkPath
-        }
-
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "org.gradle.kotlin.kotlin-dsl") {
-                useModule("org.gradle.kotlin:gradle-kotlin-dsl-plugins:4.4.0")
-            }
-            if (requested.id.id == "org.jetbrains.kotlin.jvm" ||
-                requested.id.id == "org.jetbrains.kotlin.android" ||
-                requested.id.id == "org.jetbrains.kotlin.kapt") {
-                useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:${requested.version}")
-            }
-        }
+    val flutterSdkPath = run {
+        val properties = java.util.Properties()
+        file("local.properties").inputStream().use { properties.load(it) }
+        val flutterSdkPath = properties.getProperty("flutter.sdk")
+        require(flutterSdkPath != null) { "flutter.sdk not set in local.properties" }
+        flutterSdkPath
     }
 
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
@@ -26,7 +12,7 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://repo1.maven.org/maven2") }
+        gradlePluginPortal()
     }
 }
 

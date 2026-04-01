@@ -1,4 +1,4 @@
-package com.example.eprs
+package et.aii.eprs
 
 import io.flutter.embedding.android.FlutterActivity
 
