@@ -949,16 +949,29 @@ Future<void> pickTime(BuildContext context) async {
   // ----------------------------
   // LOCATION API (regions / cities / zones / woredas)
   // ----------------------------
+  dio.Dio _createLocationDio() {
+    final token = box.read('auth_token')?.toString();
+    return dio.Dio(
+      dio.BaseOptions(
+        baseUrl: ApiConstants.baseUrl,
+        connectTimeout: ApiConstants.connectTimeout,
+        receiveTimeout: ApiConstants.receiveTimeout,
+        sendTimeout: ApiConstants.sendTimeout,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+  }
+
   Future<void> fetchRegions() async {
     isLoadingRegions.value = true;
     try {
-      final httpClient = Get.find<DioClient>().dio;
-      final token = Get.find<GetStorage>().read('auth_token');
+      final httpClient = _createLocationDio();
       final res = await httpClient.get(
         ApiConstants.regionsEndpoint,
-        options: dio.Options(
-          headers: {if (token != null) 'Authorization': 'Bearer $token'},
-        ),
       );
 
       secureLog('Regions API Response: ${res.data}');
@@ -1166,14 +1179,8 @@ Future<void> pickTime(BuildContext context) async {
     isLoadingZones.value = true;
     isLoadingZones.value = true;
     try {
-      final httpClient = Get.find<DioClient>().dio;
-      final token = Get.find<GetStorage>().read('auth_token');
-      final res = await httpClient.get(
-        '${ApiConstants.zonesByRegionEndpoint}/$regionId',
-        options: dio.Options(
-          headers: {if (token != null) 'Authorization': 'Bearer $token'},
-        ),
-      );
+      final httpClient = _createLocationDio();
+      final res = await httpClient.get('${ApiConstants.zonesByRegionEndpoint}/$regionId');
 
       final data = res.data;
       secureLog('Zones API Response for region $regionId: ${res.data}');
@@ -1238,14 +1245,8 @@ Future<void> pickTime(BuildContext context) async {
     isLoadingWoredas.value = true;
     isLoadingWoredas.value = true;
     try {
-      final httpClient = Get.find<DioClient>().dio;
-      final token = Get.find<GetStorage>().read('auth_token');
-      final res = await httpClient.get(
-        '${ApiConstants.woredasByLocationEndpoint}/$zoneId',
-        options: dio.Options(
-          headers: {if (token != null) 'Authorization': 'Bearer $token'},
-        ),
-      );
+      final httpClient = _createLocationDio();
+      final res = await httpClient.get('${ApiConstants.woredasByLocationEndpoint}/$zoneId');
 
       final data = res.data;
       secureLog('Woredas API Response for zone $zoneId: ${res.data}');
