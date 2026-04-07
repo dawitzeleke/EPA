@@ -20,8 +20,15 @@ class CityModel {
 
   factory CityModel.fromJson(Map<String, dynamic> json) {
     return CityModel(
-      id: json['city_id']?.toString() ?? '',
-      name: json['city_name']?.toString() ?? '',
+      id: json['city_id']?.toString() ??
+          json['cityId']?.toString() ??
+          json['id']?.toString() ??
+          '',
+      name: json['city_name']?.toString() ??
+          json['cityName']?.toString() ??
+          json['name']?.toString() ??
+          json['title']?.toString() ??
+          '',
       description: json['description']?.toString(),
       createdAt: _parseDate(json['created_at'] ?? json['createdAt']),
       updatedAt: _parseDate(json['updated_at'] ?? json['updatedAt']),

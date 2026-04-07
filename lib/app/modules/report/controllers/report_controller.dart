@@ -71,6 +71,9 @@ final isLoadingPollutionCategories = false.obs;
   final zones = <Map<String, String>>[].obs;
   final woredas = <Map<String, String>>[].obs;
   final subcities = <Map<String, String>>[].obs;
+  final selectedRegionId = RxnString();
+  final Map<String, List<Map<String, String>>> _regionZonesCache = {};
+  final Map<String, List<Map<String, String>>> _zoneWoredasCache = {};
   final isLoadingRegions = false.obs;
   final isLoadingCities = false.obs;
   final isLoadingZones = false.obs;
@@ -365,6 +368,7 @@ final isLoadingPollutionCategories = false.obs;
     selectedRegion.value = 'Select Region / City Administration';
     selectedZone.value = 'Select Zone / Sub-City';
     selectedWoreda.value = 'Select Woreda';
+    selectedRegionId.value = null;
 
     // Clear location data
     regions.clear();
@@ -1001,6 +1005,9 @@ Future<void> pickTime(BuildContext context) async {
       }
 
       regions.clear();
+      _regionZonesCache.clear();
+      _zoneWoredasCache.clear();
+      selectedRegionId.value = null;
       final mappedRegions = items
           .map<Map<String, String>>((e) {
             // Prefer explicit keys from the API response (region_id / region_name)
@@ -1017,6 +1024,56 @@ Future<void> pickTime(BuildContext context) async {
           })
           .where((m) => m['id']!.isNotEmpty && m['name']!.isNotEmpty)
           .toList();
+
+      for (final regionItem in items.whereType<Map>()) {
+        final regionId = regionItem['region_id']?.toString() ?? '';
+        final nestedZones = regionItem['zones'];
+        if (regionId.isEmpty || nestedZones is! List) continue;
+
+        final mappedNestedZones = nestedZones
+            .whereType<Map>()
+            .map<Map<String, String>>((zone) {
+              final id = zone['zone_id']?.toString() ?? zone['id']?.toString() ?? '';
+              final name = zone['zone_name']?.toString() ?? zone['name']?.toString() ?? '';
+              return {
+                'id': id,
+                'name': name,
+                'type': zone['iscity'] == true ? 'city_admin' : 'zone',
+                'region_id': regionId,
+              };
+            })
+            .where((zone) => zone['id']!.isNotEmpty && zone['name']!.isNotEmpty)
+            .toList();
+
+        _regionZonesCache[regionId] = mappedNestedZones;
+
+        for (final zone in nestedZones.whereType<Map>()) {
+          final zoneId = zone['zone_id']?.toString() ?? zone['id']?.toString() ?? '';
+          if (zoneId.isEmpty) continue;
+
+          final nestedWoredas = zone['woreda'] ?? zone['woredas'];
+          if (nestedWoredas is! List) continue;
+
+          final mappedNestedWoredas = nestedWoredas
+              .whereType<Map>()
+              .map<Map<String, String>>((woreda) {
+                final woredaId = woreda['woreda_id']?.toString() ?? woreda['id']?.toString() ?? '';
+                final woredaName = woreda['woreda_name']?.toString() ?? woreda['name']?.toString() ?? '';
+                return {'id': woredaId, 'name': woredaName};
+              })
+              .where((woreda) => woreda['id']!.isNotEmpty && woreda['name']!.isNotEmpty)
+              .toList();
+
+          _zoneWoredasCache[zoneId] = mappedNestedWoredas;
+          secureLog(
+            'Nested woredas cached for zone $zoneId: ${mappedNestedWoredas.map((woreda) => woreda['name']).toList()}',
+          );
+        }
+
+        secureLog(
+          'Nested zones cached for region $regionId: ${mappedNestedZones.map((zone) => '${zone['name']} (${zone['type']})').toList()}',
+        );
+      }
 
       regions.addAll(mappedRegions);
       // Debug: print mapped regions so we can verify UI data
@@ -1055,6 +1112,8 @@ Future<void> pickTime(BuildContext context) async {
       }).toList();
 
       cities.addAll(mappedCities);
+      final fetchedCityNames = cities.map((c) => c['name']).toList();
+      secureLog('🟢 Fetched cities: $fetchedCityNames');
       secureLog('📋 Mapped cities for UI:');
       for (var i = 0; i < cities.length; i++) {
         secureLog('   City $i: ${cities[i]['name']} (id: ${cities[i]['id']})');
@@ -1177,34 +1236,70 @@ Future<void> pickTime(BuildContext context) async {
 
   Future<void> fetchZonesForRegion(String regionId) async {
     isLoadingZones.value = true;
-    isLoadingZones.value = true;
     try {
-      final httpClient = _createLocationDio();
-      final res = await httpClient.get('${ApiConstants.zonesByRegionEndpoint}/$regionId');
+      final cachedZones = _regionZonesCache[regionId] ?? <Map<String, String>>[];
+      secureLog(
+        'Cached zones for region $regionId: ${cachedZones.map((zone) => '${zone['name']} (${zone['type']})').toList()}',
+      );
 
-      final data = res.data;
-      secureLog('Zones API Response for region $regionId: ${res.data}');
+      List<Map<String, String>> loadedZones = List<Map<String, String>>.from(cachedZones);
 
-      List items = [];
-      if (data is List) {
-        items = data;
-        secureLog('Data is a List with ${items.length} items');
-      } else if (data is Map) {
-        // Try multiple possible keys for the data array
-        if (data['data'] is List) {
-          items = data['data'];
-          secureLog('Data found in data key: ${items.length} items');
-        } else if (data['zones'] is List) {
-          items = data['zones'];
-          secureLog('Data found in zones key: ${items.length} items');
-        } else if (data['results'] is List) {
-          items = data['results'];
-          secureLog('Data found in results key: ${items.length} items');
-        } else {
-          secureLog(
-            'Warning: Could not find data array in response. Available keys: ${data.keys.toList()}',
-          );
+      if (loadedZones.isEmpty) {
+        final httpClient = _createLocationDio();
+        final res = await httpClient.get(ApiConstants.zonesEndpoint);
+
+        final data = res.data;
+        secureLog('Zones API Response for region $regionId: ${res.data}');
+
+        List items = [];
+        if (data is List) {
+          items = data;
+          secureLog('Data is a List with ${items.length} items');
+        } else if (data is Map) {
+          // Try multiple possible keys for the data array
+          if (data['data'] is List) {
+            items = data['data'];
+            secureLog('Data found in data key: ${items.length} items');
+          } else if (data['zones'] is List) {
+            items = data['zones'];
+            secureLog('Data found in zones key: ${items.length} items');
+          } else if (data['results'] is List) {
+            items = data['results'];
+            secureLog('Data found in results key: ${items.length} items');
+          } else {
+            secureLog(
+              'Warning: Could not find data array in response. Available keys: ${data.keys.toList()}',
+            );
+          }
         }
+
+        final apiZones = items
+            .whereType<Map>()
+            .where((e) {
+              final itemRegionId = (e['region_id'] ??
+                  (e['region'] is Map ? e['region']['region_id'] : null))
+                  ?.toString();
+
+              return itemRegionId == regionId;
+            })
+            .map<Map<String, String>>((e) {
+              final id = (e['zone_id'] != null)
+                  ? e['zone_id']?.toString() ?? ''
+                  : (e['id']?.toString() ?? '');
+              final name = (e['zone_name'] != null)
+                  ? (e['zone_name']?.toString() ?? '')
+                  : (e['name']?.toString() ?? '');
+              return {
+                'id': id,
+                'name': name,
+                'type': e['iscity'] == true ? 'city_admin' : 'zone',
+                'region_id': regionId,
+              };
+            })
+            .where((m) => m['id']!.isNotEmpty && m['name']!.isNotEmpty)
+            .toList();
+
+        loadedZones = apiZones;
       }
 
       zones.clear();
@@ -1213,20 +1308,11 @@ Future<void> pickTime(BuildContext context) async {
       woredas.clear();
       selectedWoreda.value = 'Select Woreda';
 
-      final mappedZones = items
-          .map<Map<String, String>>((e) {
-            final id = (e is Map && (e['zone_id'] != null))
-                ? e['zone_id']?.toString() ?? ''
-                : (e['id']?.toString() ?? '');
-            final name = (e is Map && (e['zone_name'] != null))
-                ? (e['zone_name']?.toString() ?? '')
-                : (e['name']?.toString() ?? '');
-            return {'id': id, 'name': name};
-          })
-          .where((m) => m['id']!.isNotEmpty && m['name']!.isNotEmpty)
+      zones.addAll(loadedZones);
+      final fetchedZoneOrSubCityNames = zones
+          .map((z) => '${z['name']} (${z['type'] ?? 'zone'})')
           .toList();
-
-      zones.addAll(mappedZones);
+      secureLog('🟢 Fetched zones/sub-cities for region $regionId: $fetchedZoneOrSubCityNames');
       secureLog('Mapped zones for UI: ${zones.map((r) => r['name']).toList()}');
       secureLog('Total zones loaded: ${zones.length}');
     } catch (e) {
@@ -1245,6 +1331,19 @@ Future<void> pickTime(BuildContext context) async {
     isLoadingWoredas.value = true;
     isLoadingWoredas.value = true;
     try {
+      final cachedWoredas = _zoneWoredasCache[zoneId] ?? <Map<String, String>>[];
+      secureLog('Cached woredas for zone $zoneId: ${cachedWoredas.map((woreda) => woreda['name']).toList()}');
+
+      if (cachedWoredas.isNotEmpty) {
+        woredas.clear();
+        selectedWoreda.value = 'Select Woreda';
+        woredas.addAll(cachedWoredas);
+        secureLog('Using cached nested woredas for zone $zoneId');
+        secureLog('Mapped woredas for UI: ${woredas.map((r) => r['name']).toList()}');
+        secureLog('Total woredas loaded: ${woredas.length}');
+        return;
+      }
+
       final httpClient = _createLocationDio();
       final res = await httpClient.get('${ApiConstants.woredasByLocationEndpoint}/$zoneId');
 
@@ -1305,13 +1404,53 @@ Future<void> pickTime(BuildContext context) async {
     }
   }
 
+  String _normalizeLocationName(String value) {
+    return value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  String? findRegionIdByName(String name) {
+    try {
+      if (regionsAndCities.isEmpty) {
+        secureLog('findRegionIdByName: regionsAndCities is empty for name: $name');
+        return null;
+      }
+
+      final normalizedName = _normalizeLocationName(name);
+
+      for (final item in regionsAndCities) {
+        final itemName = item['name'];
+        if (itemName == null) continue;
+
+        final isRegion = item['type'] == 'region';
+        if (!isRegion) continue;
+
+        if (_normalizeLocationName(itemName) == normalizedName) {
+          final id = item['id'];
+          secureLog('findRegionIdByName: Found "$name" → ID: $id');
+          return id;
+        }
+      }
+
+      // Fallback: match any entry by name if a region row is not found.
+      final fallback = findIdByName(regionsAndCities, name);
+      secureLog('findRegionIdByName: Fallback match for "$name" → ID: $fallback');
+      return fallback;
+    } catch (e) {
+      secureLog('findRegionIdByName: Not found "$name". Error: $e');
+      return null;
+    }
+  }
+
   String? findIdByName(List<Map<String, String>> list, String name) {
     try {
       if (list.isEmpty) {
         secureLog('findIdByName: List is empty for name: $name');
         return null;
       }
-      final found = list.firstWhere((e) => e['name'] == name);
+      final normalizedName = _normalizeLocationName(name);
+      final found = list.firstWhere(
+        (e) => e['name'] != null && _normalizeLocationName(e['name']!) == normalizedName,
+      );
       final id = found['id'];
       secureLog('findIdByName: Found "$name" → ID: $id');
       return id;

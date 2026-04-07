@@ -249,14 +249,11 @@ class LocationCard extends StatelessWidget {
                         controller.selectedWoreda.value = 'Select Woreda';
                         controller.woredas.clear();
 
-                        final id = controller.findIdByName(
-                            controller.regionsAndCities, selected);
-                        final selectedItem = items
-                            .where((item) => item['name'] == selected)
-                            .firstOrNull;
-                        final isRegion = selectedItem?['type'] == 'region';
-
-                        if (id != null && isRegion) {
+                        final id = controller.findRegionIdByName(selected);
+                        controller.selectedRegionId.value = id;
+                        if (selected != 'Select Region / City Administration' &&
+                            id != null &&
+                            id.isNotEmpty) {
                           controller.fetchZonesForRegion(id);
                         } else {
                           controller.zones.clear();
@@ -271,7 +268,10 @@ class LocationCard extends StatelessWidget {
                       return const SizedBox.shrink();
                     }
 
-                    final items = controller.zones;
+                    final activeRegionId = controller.selectedRegionId.value;
+                    final items = controller.zones
+                      .where((zone) => zone['region_id'] == activeRegionId)
+                      .toList();
                     final names =
                         ['Select Zone / Sub-City'] +
                             items.map((e) => e['name']!).toList();

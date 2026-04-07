@@ -20,6 +20,7 @@ class ApiConstants {
   // Location endpoints (full URLs using baseUrl)
   static const String regionsEndpoint = '${baseUrl}regions';
   static const String citiesEndpoint = '${baseUrl}cities';
+  static const String zonesEndpoint = '${baseUrl}zones';
   // zones endpoint can be queried as '${zonesByRegionEndpoint}/region/{regionId}'
   static const String zonesByRegionEndpoint = '${baseUrl}zones/region';
   // woredas endpoint can be queried as '${woredasByLocationEndpoint}/location/{zoneId}'
