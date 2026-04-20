@@ -15,7 +15,9 @@ import 'package:noise_meter/noise_meter.dart' as noise_meter;
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:eprs/core/network/dio_client.dart';
+import 'package:eprs/core/network/guest_dio_factory.dart';
 import 'package:eprs/core/constants/api_constants.dart';
+import 'package:eprs/core/utils/error_helpers.dart';
 import 'package:eprs/app/routes/app_pages.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:eprs/data/models/sound_area_model.dart';
@@ -448,7 +450,7 @@ final isLoadingPollutionCategories = false.obs;
       }
       _updateMinRequiredDecibel();
     } catch (e) {
-      soundAreasError.value = _cleanErrorMessage(e);
+      soundAreasError.value = ErrorHelpers.cleanErrorMessage(e);
     } finally {
       isLoadingSoundAreas.value = false;
     }
@@ -541,7 +543,7 @@ final isLoadingPollutionCategories = false.obs;
     } catch (e, stackTrace) {
       secureLog('❌ Error fetching pollution categories: $e');
       secureLog('Stack trace: $stackTrace');
-      pollutionCategoriesError.value = _cleanErrorMessage(e);
+      pollutionCategoriesError.value = ErrorHelpers.cleanErrorMessage(e);
     }
     isLoadingPollutionCategories.value = false;
   }
@@ -1086,7 +1088,7 @@ Future<void> pickTime(BuildContext context) async {
       secureLog('Error fetching regions: $e');
       Get.snackbar(
         'Error',
-        'Failed to load regions: ${_cleanErrorMessage(e)}',
+        'Failed to load regions: ${ErrorHelpers.cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1128,7 +1130,7 @@ Future<void> pickTime(BuildContext context) async {
       secureLog('Stack trace: $stackTrace');
       Get.snackbar(
         'Error',
-        'Failed to load cities: ${_cleanErrorMessage(e)}',
+        'Failed to load cities: ${ErrorHelpers.cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1319,7 +1321,7 @@ Future<void> pickTime(BuildContext context) async {
       secureLog('Error fetching zones: $e');
       Get.snackbar(
         'Error',
-        'Failed to load zones: ${_cleanErrorMessage(e)}',
+        'Failed to load zones: ${ErrorHelpers.cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -1328,7 +1330,6 @@ Future<void> pickTime(BuildContext context) async {
   }
 
   Future<void> fetchWoredasForZone(String zoneId) async {
-    isLoadingWoredas.value = true;
     isLoadingWoredas.value = true;
     try {
       final cachedWoredas = _zoneWoredasCache[zoneId] ?? <Map<String, String>>[];
@@ -1396,7 +1397,7 @@ Future<void> pickTime(BuildContext context) async {
       secureLog('Error fetching woredas: $e');
       Get.snackbar(
         'Error',
-        'Failed to load woredas: ${_cleanErrorMessage(e)}',
+        'Failed to load woredas: ${ErrorHelpers.cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
@@ -2427,20 +2428,7 @@ Future<void> pickTime(BuildContext context) async {
         }
 
         try {
-          // Use a separate Dio instance WITHOUT the auth error interceptor
-          // to prevent 401/403 from redirecting the guest to the login page.
-          final guestDio = dio.Dio(
-            dio.BaseOptions(
-              baseUrl: ApiConstants.baseUrl,
-              connectTimeout: ApiConstants.connectTimeout,
-              receiveTimeout: ApiConstants.receiveTimeout,
-              sendTimeout: ApiConstants.sendTimeout,
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              },
-            ),
-          );
+          final guestDio = GuestDioFactory.create();
 
           final response = await guestDio.post(
             ApiConstants.requestReportOtpEndpoint,
@@ -2478,7 +2466,7 @@ Future<void> pickTime(BuildContext context) async {
         } catch (e) {
           isSubmitting.value = false;
           secureLog('Guest OTP request failed: $e');
-          _showSubmitFeedback('Failed to send OTP', _cleanErrorMessage(e), isError: true);
+          _showSubmitFeedback('Failed to send OTP', ErrorHelpers.cleanErrorMessage(e), isError: true);
         }
         return;
       }
@@ -2493,7 +2481,7 @@ Future<void> pickTime(BuildContext context) async {
     } catch (e) {
       isSubmitting.value = false;
       secureLog('Error submitting report: $e');
-      _showSubmitFeedback('Error', 'Failed to submit report: ${_cleanErrorMessage(e)}', isError: true);
+      _showSubmitFeedback('Error', 'Failed to submit report: ${ErrorHelpers.cleanErrorMessage(e)}', isError: true);
     }
   }
 
@@ -2587,40 +2575,9 @@ Future<void> pickTime(BuildContext context) async {
       secureLog('Error submitting report: $e');
       Get.snackbar(
         'Error',
-        'Failed to submit report: ${_cleanErrorMessage(e)}',
+        'Failed to submit report: ${ErrorHelpers.cleanErrorMessage(e)}',
         snackPosition: SnackPosition.BOTTOM,
       );
     }
-  }
-
-  String _cleanErrorMessage(Object error) {
-    if (error is dio.DioException) {
-      final extracted = _extractMessage(error.response?.data);
-      if (extracted != null && extracted.trim().isNotEmpty) {
-        return extracted.trim();
-      }
-      final msg = error.message;
-      if (msg != null && msg.trim().isNotEmpty) {
-        return msg.trim();
-      }
-    }
-    final text = error.toString();
-    final cleaned = text
-        .replaceAll('Exception: ', '')
-        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
-        .trim();
-    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
-  }
-
-  String? _extractMessage(dynamic data) {
-    if (data is Map) {
-      for (final key in ['message', 'msg', 'detail', 'error']) {
-        final value = data[key];
-        if (value is String && value.trim().isNotEmpty) return value.trim();
-      }
-    } else if (data is String && data.trim().isNotEmpty) {
-      return data.trim();
-    }
-    return null;
   }
 }

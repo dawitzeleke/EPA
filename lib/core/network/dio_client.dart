@@ -4,11 +4,14 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:eprs/app/routes/app_pages.dart';
 import '../constants/api_constants.dart';
+import 'retry_interceptor.dart';
+import 'cache_interceptor.dart';
 
 /// Dio client singleton for making HTTP requests
 class DioClient {
   static DioClient? _instance;
   late Dio _dio;
+  late final CacheInterceptor _cacheInterceptor;
   bool _isHandlingAuthError = false;
 
   DioClient._internal() {
@@ -22,6 +25,22 @@ class DioClient {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+      ),
+    );
+
+    // In-memory response cache (GET only, 5-min TTL)
+    _cacheInterceptor = CacheInterceptor(
+      ttl: const Duration(minutes: 5),
+      maxEntries: 50,
+    );
+    _dio.interceptors.add(_cacheInterceptor);
+
+    // Retry with exponential back-off for transient failures
+    _dio.interceptors.add(
+      RetryInterceptor(
+        dio: _dio,
+        maxRetries: 3,
+        baseDelay: const Duration(milliseconds: 500),
       ),
     );
 
@@ -67,6 +86,15 @@ class DioClient {
   void clearAuthToken() {
     _dio.options.headers.remove('Authorization');
   }
+
+  /// Clear all cached API responses.
+  void clearCache() => _cacheInterceptor.clear();
+
+  /// Invalidate a specific cached entry by its cache key.
+  void invalidateCache(String key) => _cacheInterceptor.invalidate(key);
+
+  /// Number of cached entries (useful for debugging).
+  int get cacheSize => _cacheInterceptor.cacheSize;
 
   Future<void> _handleAuthExpired() async {
     if (_isHandlingAuthError) return;

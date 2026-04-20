@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:dio/dio.dart' as dio;
 import 'package:eprs/app/routes/app_pages.dart';
 import 'package:eprs/core/constants/api_constants.dart';
+import 'package:eprs/core/network/guest_dio_factory.dart';
+import 'package:eprs/core/utils/error_helpers.dart';
 import 'report_controller.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -84,20 +86,7 @@ class ReportOtpController extends GetxController {
 
     isResending.value = true;
     try {
-      // Use a clean Dio instance without the auth error interceptor
-      // to prevent 401/403 from redirecting the guest to login.
-      final guestDio = dio.Dio(
-        dio.BaseOptions(
-          baseUrl: ApiConstants.baseUrl,
-          connectTimeout: ApiConstants.connectTimeout,
-          receiveTimeout: ApiConstants.receiveTimeout,
-          sendTimeout: ApiConstants.sendTimeout,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
-      );
+      final guestDio = GuestDioFactory.create();
 
       final response = await guestDio.post(
         ApiConstants.requestReportOtpEndpoint,
@@ -109,13 +98,13 @@ class ReportOtpController extends GetxController {
       final status = response.statusCode ?? 0;
       final success = status >= 200 && status < 300;
       if (!success) {
-        throw Exception(_extractMessage(response.data) ?? 'Failed to resend code');
+        throw Exception(ErrorHelpers.extractMessage(response.data) ?? 'Failed to resend code');
       }
       code.value = '';
       startTimer();
       Get.snackbar(
         'OTP resent',
-        _extractMessage(response.data) ?? 'A new code was sent to $phone',
+        ErrorHelpers.extractMessage(response.data) ?? 'A new code was sent to $phone',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.primary,
         colorText: AppColors.onPrimary,
@@ -123,7 +112,7 @@ class ReportOtpController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Resend failed',
-        _cleanErrorMessage(e),
+        ErrorHelpers.cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: AppColors.onPrimary,
@@ -155,20 +144,7 @@ class ReportOtpController extends GetxController {
 
     isLoading.value = true;
     try {
-      // Use a clean Dio instance without the auth error interceptor
-      // to prevent 401/403 from redirecting the guest to login.
-      final guestDio = dio.Dio(
-        dio.BaseOptions(
-          baseUrl: ApiConstants.baseUrl,
-          connectTimeout: ApiConstants.connectTimeout,
-          receiveTimeout: ApiConstants.receiveTimeout,
-          sendTimeout: ApiConstants.sendTimeout,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
-      );
+      final guestDio = GuestDioFactory.create();
 
       final response = await guestDio.post(
         ApiConstants.verifyReportOtpEndpoint,
@@ -181,7 +157,7 @@ class ReportOtpController extends GetxController {
       final status = response.statusCode ?? 0;
       final success = status >= 200 && status < 300;
       if (!success) {
-        throw Exception(_extractMessage(response.data) ?? 'Invalid or expired code');
+        throw Exception(ErrorHelpers.extractMessage(response.data) ?? 'Invalid or expired code');
       }
 
       authToken = _extractToken(response);
@@ -190,7 +166,7 @@ class ReportOtpController extends GetxController {
         // Do not persist as a logged-in session token.
       }
 
-      final message = _extractMessage(response.data) ?? 'Code verified successfully';
+      final message = ErrorHelpers.extractMessage(response.data) ?? 'Code verified successfully';
       Get.snackbar(
         'Verified',
         message,
@@ -231,7 +207,7 @@ class ReportOtpController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Verification failed',
-        _cleanErrorMessage(e),
+        ErrorHelpers.cleanErrorMessage(e),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
@@ -239,18 +215,6 @@ class ReportOtpController extends GetxController {
     } finally {
       isLoading.value = false;
     }
-  }
-
-  String? _extractMessage(dynamic data) {
-    if (data is Map) {
-      for (final key in ['message', 'msg', 'detail']) {
-        final value = data[key];
-        if (value is String && value.trim().isNotEmpty) return value;
-      }
-    } else if (data is String && data.trim().isNotEmpty) {
-      return data.trim();
-    }
-    return null;
   }
 
   String? _extractToken(dio.Response response) {
@@ -271,24 +235,5 @@ class ReportOtpController extends GetxController {
       if (headerToken != null && headerToken.isNotEmpty) return headerToken;
     } catch (_) {}
     return null;
-  }
-
-  String _cleanErrorMessage(Object error) {
-    if (error is dio.DioException) {
-      final extracted = _extractMessage(error.response?.data);
-      if (extracted != null && extracted.trim().isNotEmpty) {
-        return extracted.trim();
-      }
-      final msg = error.message;
-      if (msg != null && msg.trim().isNotEmpty) {
-        return msg.trim();
-      }
-    }
-    final text = error.toString();
-    final cleaned = text
-        .replaceAll('Exception: ', '')
-        .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
-        .trim();
-    return cleaned.isEmpty ? 'Something went wrong' : cleaned;
   }
 }
