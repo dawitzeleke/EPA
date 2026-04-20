@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 import 'core/di/injection_container.dart' as di;
+import 'core/constants/languages/app_fallback_localizations.dart';
 import 'core/constants/languages/app_translations.dart';
 import 'app/modules/language/controllers/language_controller.dart';
 
@@ -12,15 +14,24 @@ void main() async {
 
   // Initialize dependency injection
   await di.InjectionContainer.init();
+  final appTranslations = await AppTranslations.load();
 
   final languageController = Get.put(LanguageController(), permanent: true);
 
   runApp(
     GetMaterialApp(
       title: "EPA",
-      translations: AppTranslations(),
+      translations: appTranslations,
       locale: languageController.locale.value,
       fallbackLocale: AppTranslations.fallbackLocale,
+      localizationsDelegates: const [
+        AppFallbackMaterialLocalizationsDelegate(),
+        AppFallbackCupertinoLocalizationsDelegate(),
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppTranslations.supportedLocales,
       initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,

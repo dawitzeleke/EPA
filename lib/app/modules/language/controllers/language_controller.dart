@@ -14,30 +14,40 @@ class LanguageOption {
 
 class LanguageController extends GetxController {
   static const _storageKey = 'selected_locale';
+  static const _defaultLocale = Locale('en', 'US');
 
   final GetStorage _storage;
-  final Rx<Locale> locale = const Locale('en', 'US').obs;
+  final Rx<Locale> locale = _defaultLocale.obs;
 
   LanguageController({GetStorage? storage})
       : _storage = storage ?? Get.find<GetStorage>() {
     locale.value = _readLocale();
   }
 
-  final List<LanguageOption> availableLanguages = const [
+  static const List<LanguageOption> _allLanguages = [
     LanguageOption(key: 'English', locale: Locale('en', 'US')),
     LanguageOption(key: 'Amharic', locale: Locale('am', 'ET')),
     LanguageOption(key: 'Afaan Oromo', locale: Locale('om', 'ET')),
+    LanguageOption(key: 'Somali', locale: Locale('so', 'ET')),
   ];
+
+  List<LanguageOption> get availableLanguages => _allLanguages;
 
   Locale _readLocale() {
     final raw = _storage.read<String>(_storageKey);
-    if (raw == null || raw.isEmpty) return const Locale('en', 'US');
+    if (raw == null || raw.isEmpty) return _defaultLocale;
     final parts = raw.split('_');
-    if (parts.length != 2) return const Locale('en', 'US');
-    return Locale(parts[0], parts[1]);
+    if (parts.length != 2) return _defaultLocale;
+
+    final stored = Locale(parts[0], parts[1]);
+    if (_isSupported(stored)) return stored;
+
+    return _defaultLocale;
   }
 
   void changeLocale(Locale newLocale) {
+    if (!_isSupported(newLocale)) return;
+
     locale.value = newLocale;
     _storage.write(_storageKey, '${newLocale.languageCode}_${newLocale.countryCode}');
     Get.updateLocale(newLocale);
@@ -53,8 +63,16 @@ class LanguageController extends GetxController {
         return 'AM';
       case 'om':
         return 'OM';
+      case 'so':
+        return 'SO';
       default:
         return 'EN';
     }
   }
+
+  bool _isSupported(Locale locale) => availableLanguages.any(
+        (option) =>
+            option.locale.languageCode == locale.languageCode &&
+            option.locale.countryCode == locale.countryCode,
+      );
 }

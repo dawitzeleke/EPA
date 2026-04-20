@@ -1,8 +1,21 @@
-import 'package:get/get.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class AppTranslations extends Translations {
+  final Map<String, Map<String, String>> _keys;
+
+  AppTranslations(this._keys);
+
   static const fallbackLocale = Locale('en', 'US');
+  static const supportedLocales = <Locale>[
+    Locale('en', 'US'),
+    Locale('am', 'ET'),
+    Locale('om', 'ET'),
+    Locale('so', 'ET'),
+  ];
 
   static const Map<String, String> _en = {
     'Track Report Status': 'Track Report Status',
@@ -226,10 +239,110 @@ class AppTranslations extends Translations {
     'Current:': 'Amma:',
   };
 
+  static const Map<String, String> _soLegacy = {
+    'Track Report Status': 'La soco Xaaladda Warbixinta',
+    'Search': 'Raadi',
+    'Welcome Back': 'Ku soo noqo',
+    'Email': 'Iimayl',
+    'Password': 'Furaha sirta',
+    'Remember Me': 'I xasuuso',
+    'Forgot Password': 'Furaha ma ilowday?',
+    'Sign In': 'Soo gal',
+    'Continue as Guest': 'Sida marti u sii wad',
+    "Don't have an account?": 'Akoon ma lihid?',
+    'Sign Up': 'Isdiiwaangeli',
+    'Full Name': 'Magaca oo dhan',
+    'Phone Number': 'Lambarka telefoonka',
+    'Continue': 'Sii wad',
+    'Home': 'Bogga hore',
+    'Welcome': 'Ku soo dhawoow',
+    'Enter Report ID': 'Geli Aqoonsiga Warbixinta',
+    'Report': 'Warbixin',
+    'Awareness': 'Wacyigelin',
+    'Status': 'Xaalad',
+    'Settings': 'Dejinta',
+    'Report Status': 'Xaaladda Warbixinta',
+    'All': 'Dhammaan',
+    'Pending': 'Sugaya',
+    'Verified': 'La xaqiijiyey',
+    'Logout': 'Ka bax',
+    'Language': 'Luqad',
+    'English': 'Ingiriisi',
+    'Amharic': 'Amxaari',
+    'Afaan Oromo': 'Afaan Oromo',
+    'Tigrinya': 'Tigrinya',
+    'Somali': 'Soomaali',
+    'Complaint Status': 'Xaaladda Cabashada',
+    'Current:': 'Hadda:',
+  };
+
+  static Future<AppTranslations> load() async {
+    final keys = <String, Map<String, String>>{
+      'en_US': Map<String, String>.from(_en),
+      'am_ET': Map<String, String>.from(_am),
+      'om_ET': Map<String, String>.from(_om),
+      'so_ET': Map<String, String>.from(_soLegacy),
+    };
+
+    final soFromFile = await _loadFlattenedJson(
+      'EPA Project (1) (1) somali.json',
+    );
+    if (soFromFile.isNotEmpty) {
+      keys['so_ET']!.addAll(soFromFile);
+    }
+
+    final amFromFile = await _loadFlattenedJson(
+      'EPA Project (1)24 amharic (1).json',
+    );
+    if (amFromFile.isNotEmpty) {
+      keys['am_ET']!.addAll(amFromFile);
+    }
+
+    return AppTranslations(keys);
+  }
+
+  static Future<Map<String, String>> _loadFlattenedJson(String assetPath) async {
+    try {
+      final raw = await rootBundle.loadString(assetPath);
+      if (raw.trim().isEmpty) return <String, String>{};
+
+      final dynamic decoded = jsonDecode(raw);
+      if (decoded is! Map<String, dynamic>) return <String, String>{};
+
+      return _flattenMap(decoded);
+    } catch (_) {
+      return <String, String>{};
+    }
+  }
+
+  static Map<String, String> _flattenMap(
+    Map<String, dynamic> source, [
+    String prefix = '',
+  ]) {
+    final flattened = <String, String>{};
+
+    source.forEach((key, value) {
+      final dottedKey = prefix.isEmpty ? key : '$prefix.$key';
+
+      if (value is Map<String, dynamic>) {
+        flattened.addAll(_flattenMap(value, dottedKey));
+        return;
+      }
+
+      if (value is List) {
+        return;
+      }
+
+      final text = value?.toString();
+      if (text == null) return;
+
+      flattened[dottedKey] = text;
+      flattened.putIfAbsent(key, () => text);
+    });
+
+    return flattened;
+  }
+
   @override
-  Map<String, Map<String, String>> get keys => {
-        'en_US': _en,
-        'am_ET': _am,
-        'om_ET': _om,
-      };
+  Map<String, Map<String, String>> get keys => _keys;
 }

@@ -1,0 +1,2444 @@
+{
+  "common": {
+    "loading": "Soodejinaya...",
+    "error": "Khalad",
+    "success": "Guul",
+    "cancel": "Jooji",
+    "save": "Keydii",
+    "saving": "Keydso...",
+    "delete": "Tirtir",
+    "edit": "Isbedel",
+    "view": "Daawo",
+    "search": "Raadi",
+    "filter": "Miirid",
+    "clear": "Cad",
+    "submit": "Gudbi",
+    "back": "Diib",
+    "next": "Xiga",
+    "previous": "Hore",
+    "close": "Xiir",
+    "open": "Fuur",
+    "yes": "Haa",
+    "no": "Maya",
+    "confirm": "Kuxaqeji",
+    "assign": "Uqonde",
+    "create": "Abuur",
+    "update": "Cusbooneysii",
+    "add": "Kudar",
+    "remove": "Ka saar",
+    "select": "Dooro",
+    "all": "DHAMAAN",
+    "none": "Midna",
+    "active": "Firfircoon",
+    "inactive": "Aan Firfircooneyn",
+    "pending": "Sugaya",
+    "completed": "Dhameystiiray",
+    "rejected": "Diiday",
+    "approved": "La ansixiyay",
+    "authorized": "La fasaxay",
+    "returned": "La soo ceeliyey",
+    "closed": "La xiiray",
+    "action":"Ficil"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Ku Soo Dhawoow Xariirka Nadiifinta Itoobiya",
+    "totalReports": "Wadarta Warbixinada",
+    "activeCases": "Kiisas Firfircoon",
+    "resolvedCases": "Kiisaska la xaliyay",
+    "pendingCases": "Kiisaska laalan"
+  },
+  "navigation": {
+    "home": "Guri",
+    "reports": "Warbixinada",
+    "cases": "Kiisaska",
+    "dashboard": "Dashboard",
+    "settings": "Dejinta",
+    "profile": "Barofayl",
+    "logout": "Kabax"
+  },
+  "filters": {
+    "status": "Xaaladda",
+    "region": "deegaanka",
+    "zone": "Gobol",
+    "woreda": "Dagmo",
+    "city": "Magaalo",
+    "subcity": "Magaalo hoosaadka",
+    "pollutionCategory": "Qaybta wasakhowga",
+    "subPollutionCategory": "Qaybta Wasakhowga Hoose",
+    "penaltyCategory": "Qaybta Ciqaabta"
+  },
+  "sidebar": {
+    "generalDashboard": "Dashboard",
+    "userManagement": "Maamulka Isticmaalaha",
+    "staffUsers": "Isticmaalayaasha Shaqaalaha",
+    "regionalCityUsers": "Isticmaalayaasha Gobolka/Magaalada",
+    "customers": "Macaamiisha",
+    "rolesPermissions": "Doorarka iyo Ogolaanshaha",
+    "report": "Warbixin",
+    "reportList": "Liiska Warbixinta",
+    "archive": "Kaydka",
+    "baseData": "Xogta Saldhigga",
+    "getReport": "Hel Warbixin",
+    "team_case_List": "Liiska Kiiska Kooxda",
+    "generalReport": "Warbixinta Guud"
+  },
+  "user":{
+    "add_user":"Kudar Istiicmaale",
+    "title":"Maamulka Isticmaalaha",
+    "subtitle":"Kani waa Maaraynta Isticmaalaha Xaarunta Guud",
+    "edit_user":"Wax ka beddel Isticmaalaha",
+    "update_the_user_details":"Cusbooneysii faahfaahinta isticmaalaha",
+    "fill_in_details_to_add_new_user":"Buuxi faahfaahinta si aad ugu darto isticmaale cusub",
+    "delete_warning":"Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto isticmaalahan?",
+
+     "full_name": "Magaca oo buuxa",
+    "enter_full_name": "Geli magaca oo buuxa",
+    "email_address": "Ciwaanka iimaylka",
+    "email_placeholder": "email@domain.com",
+    "role": "Doorka",
+    "select_role": "Dooro door(ka)",
+    "pollution_category": "Qaybta wasakhowga",
+    "select_pollution_categories": "Dooro qaybaha wasakhda",
+    "subpollution_category": "Qaybta wasakh-hoosaadka",
+    "select_subpollution_category": "Dooro qaybta wasaqowga",
+    "hierarchy": "Kala sareynta",
+    "select_hierarchy": "Dooro kala sareynta...",
+    "user_status":"Heerka Isticmaalaha",
+    "ref_no":"Lambarka Tixraaca",
+    "regional":{
+    "subtitle":"This is the Regional User Management"
+            },
+    "filter_by_hierarchy":"Kala miirida ka sareynta"
+            
+  },
+  "region": {
+    "title": "Maamulka Gobolka",
+    "regionList": "Liiska Gobolka",
+    "addRegion": "Ku dar gobolka",
+    "editRegion": "Gobolka wax ka beddel",
+    "deleteRegion": "Gobolka Tirtir",
+    "regionName": "Gobolka Magaca",
+    "regionDescription": "Sharaxaada Gobolka",
+    "regionId": "Aqoonsiga gobolka",
+    "refNo": "Lambarka Tixraca",
+    "isActive": "Waa Firfircoon",
+    "actions": "Ficilada",
+    "confirmDelete": "Ma hubtaa inaad doonayso inaad tirtirto gobolkan?",
+    "regionDeleted": "Gobolka waa la tirtiray si guul leh",
+    "regionAdded": "Gobolka ayaa si guul leh loogu daray",
+    "regionUpdated": "Gobolka si guul leh ayaa loo cusboonaysiiyay",
+    "noRegionsFound": "Lama helin gobollo",
+    "searchRegions": "Raadi gobollada...",
+    "adminPage": {
+      "title": "Maamulka Gobolka",
+      "complaints": "Caabashooyinka",
+      "assignedToZone": "Loo qoondeeyay Gobol/Magaalo",
+      "assignedToWoreda": "Loo qoondeeyay degmada",
+      "underInvestigation": "Baaritaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey",
+      "pending": "La sugayo",
+      "verified": "La xaqiijiyay",
+      "authorized": "La fasaxay",
+      "returned": "soo noqday",
+      "closed": "Xiran",
+      "all": "DHAMAAN",
+      "filterByStatus": "Ku kala miirid Xaaladda",
+      "searchComplaints": "Raadi caabashooyinka...",
+      "noComplaintsFound": "Wax cabasho ah lagama helin",
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqaoonsiga Warbixinta",
+      "pollutionCategory": "Qaybta wasakhowga",
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda",
+      "assignExpert": "U dhiibo Khabiir",
+      "viewDetails": "Daawo Faahfaahinta",
+      "assignToWoreda": "U qoondee Degmada",
+      "assignToZone": "U qoondee Gobol",
+      "assignToCity": "U qoonde Magaalada"
+    },
+    "reportDetail": {
+      "title": "Faahfaahinta Warbixin",
+      "filterUsers": "Ku sifee isticmaalayaasha gobol ama magaalo, ka dibna ku dar kooxdaada.",
+      "filterByRegionCity": "Ku kala sooc Gobolka iyo Magaalada",
+      "filterBySubcityZone": "Ku kala sooc Magaalada hoose iyo Gobolka",
+      "filterByWoreda": "Ku kala sooc Degmada",
+      "selectedRegion": "Gobolka la Doortay",
+      "selectedCity": "Magaada la Doortay",
+      "allRegionsCities": "Dhamaan gobollada iyo magaaloyinka",
+      "experts": "Khabiirad",
+      "createTeam": "Samee koox",
+      "selectExpert": "Dooroo khabiirka",
+      "pickALeader": "Hogaamiye dooro",
+      "selectMore": "Dooro {{count}} dheeraad ah",
+      "createTeamSuccess": "Kooxda si guul leh ayaa loo abuuray",
+      "expertAssigned": "Khabiir si guul leh loo magacaabay",
+      "invalidHierarchy": "Xulashada kala sareynta aan ansax ahayn",
+      "caseIdMissing": "Aqoonsiga kiiska ayaa maqan Ma samayn karo koox.",
+      "selectAtLeastOne": "Fadlan dooro ugu yaraan hal khabiir",
+      "failedToAssign": "Ku guul daraystay in la magacaabo khabiir",
+      "failedToFormTeam": "Ku guuldareystay in la sameeyo koox"
+    }
+  },
+  "zone": {
+    "title": "Maamulka Gobolka",
+    "zoneList": "Liiska Gobolka",
+    "addZone": "Ku dar Gobolka",
+    "editZone": "Wax ka beddel Gobolka",
+    "deleteZone": "Tirtir Gobolka  ",
+    "zoneName": "Magaca Gobolka",
+    "zoneDescription": "Sharaxaada Gobolka",
+    "zoneId": "Aqoonsiga Aaga",
+    "regionName": "Magaca Gobolka",
+    "isActive": "Waa Firfircoon",
+    "actions": "Ficilada",
+    "confirmDelete": "Ma hubtaa inaad doonayso inaad tirtirto aagan?",
+    "zoneDeleted": "Gobolka si guul leh ayaa loo tirtiray",
+    "zoneAdded": "Gobolka ayaa lagu daray si guul leh",
+    "zoneUpdated": "Gobolka si guul leh ayaa loo cusboonaysiiyay",
+    "noZonesFound": "Gobol lama helin",
+    "searchZones": "Raadi gobollada...",
+    "adminPage": {
+      "title": "Maamulaha Aagga",
+      "complaints": "Caabashooyika",
+      "pending": "La sugayo",
+      "assignedToWoreda": "Loo qoondeeyay degmada",
+      "underInvestigation": "Baaritaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey",
+      "authorized": "La fasaxay",
+      "returned": "soo noqday",
+      "closed": "La xiiray",
+      "all": "Dhamaan",
+      "filterByStatus": "Ku kala shaandhee Xaaladda",
+      "searchComplaints": "Raadi Caabashoouinka...",
+      "noComplaintsFound": "Wax cabasho ah lagama helin",
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqoonsiga warbixinta",
+      "pollutionCategory": "Qaybta wasakhowga",
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda",
+      "assignExpert": "U qondee Khabiir",
+      "viewDetails": "Daawo Faahfaahinta"
+    }
+  },
+  "woreda": {
+    "title": "Maamulka Degmada",
+    "woredaList": "Liiska Degmooyinka",
+    "addWoreda": "Ku dar Degmada",
+    "editWoreda": "Wax ka beddel degmada",
+    "deleteWoreda": "Tirtir Degmada",
+    "woredaName": "Degmada/Magaca Magaalada Hoose",
+    "woredaDescription": "Sharaxaada Degmada",
+    "woredaId": "Aqoonsiga degmada",
+    "zoneName": "Magaca Gobolka",
+    "regionName": "Magaca Deegaanka",
+    "isActive": "Waa Firfircoon",
+    "actions": "Ficilada",
+    "confirmDelete": "Ma hubtaa inaad doonayso inaad tirtirto degmadan?",
+    "woredaDeleted": "Degmada waa la tirtiray si guul leh",
+    "woredaAdded": "Degmada ayaa ku dartay si guul leh",
+    "woredaUpdated": "Degmada si guul leh ayaa loo cusboonaysiiyay",
+    "noWoredasFound": "Degmo lama helin",
+    "searchWoredas": "Ka raadi degmooyinka...",
+    "adminPage": {
+      "title": "Maamulka Degmada",
+      "complaints": "Caabashooyika",
+      "underInvestigation": "Baaritaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey",
+      "authorized": "La fasaxay",
+      "returned": "soo noqday",
+      "closed": "xiran",
+      "all": "Dhamaan",
+      "filterByStatus": "Ku kala shaandhee Xaaladda",
+      "searchComplaints": "Raadi cabashooyinka...",
+      "noComplaintsFound": "Wax cabasho ah lagama helin",
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqoonsiga warbixinta",
+      "pollutionCategory": "Qaybta wasakhowga",
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda",
+      "assignExpert": "U dhiibo Khabiir",
+      "viewDetails": "Daawo Faahfaahinta"
+    }
+  },
+    "role": {
+    "title": "Maareynta Doorka",
+    "description": "Maamul dhammaan doorarka iyo oggolaanshaha",
+    "searchPlaceholder": "Raadi doorarka...",
+    "addButton": "Doorka ku dar",
+    "table": {
+      "refNo": "Lambarka Tixraca",
+      "role": "Doorka",
+      "permissions": "Ogolaanshaha"
+    },
+    "access": {
+      "noAccess": "Ma jiro Gelitaan",
+      "full": "Helitaanka Buuxa",
+      "half": "Helitaanka badh",
+      "quarter": "Heelinta rubuc",
+      "custom": "Helitaanka Gaarka ah"
+    },
+    "permissions": {
+      "label": "Ogolaanshaha",
+      "selectAll": "Dooro Dhammaan"
+    },
+    "modal": {
+      "addTitle": "Doorka ku dar",
+      "editTitle": "Doorka wax ka beddel",
+      "description": "Buuxi faahfaahinta si aad door ugu darto."
+    },
+    "view": {
+      "title": "Faahfaahinta Doorka",
+      "description": "Daawo tafaasiisha doorkan oo dhamaystiran",
+      "name": "Magac",
+      "description": "Sharaxaada",
+      "permissions": "Ogolaanshaha"
+    },
+    "confirm": {
+      "delete": {
+        "title": "Tirtir Doorka",
+        "message": "Tallaabadan lama noqon karo. Ma hubtaa?"
+      }
+    },
+    "messages": {
+      "updateSuccess": "Doorka si guul leh ayaa loo cusboonaysiiyay",
+      "createSuccess": "Doorka si guul leh ayaa loo abuuray",
+      "operationFailed": "Hawlgalku wuu fashilmay",
+      "deleteSuccess": "Doorkii si guul leh ayaa loo tirtiray",
+      "deleteFailed": "Waa lagu guul daraystay in la tirtiro doorka",
+      "deleteError": "Khalad tirtirida doorka"
+    },
+    "fields": {
+      "role": "Doorka",
+      "rolePlaceholder": "Geli magaca doorka",
+      "description": "Sharaxaada",
+      "descriptionPlaceholder": "Geli sharaxaad",
+      "onlyRegional": "Gobolka kaliya"
+    }
+  },
+
+  "customer": {
+    "title": "Maareynta Macmiilka",
+    "searchPlaceholder": "Raadi macaamiisha...",
+    "columns": {
+      "no": "Maya.",
+      "full_name": "Magaca Macamiisha",
+      "email": "Iimeylka",
+      "phone_number": "Lambarka Telefoonka",
+      "user_type": "Nooca Istiicmaale",
+      "account_status": "xaaladda Akoonka"
+    },
+    "userType": {
+      "all": "Dhamaan Istiicmaalayaasha",
+      "guest": "Isticmaalayaasha martida",
+      "registered": "Isticmaalayaasha Diiwaangashan"
+    },
+    "status": {
+      "activated": "Macmiil si guul leh ayuu u hawlgeliyay",
+      "deactivated": "Macmiil si guul leh ayuu u demilay",
+      "updateFailed": "Ku guuldareystay in la cusboonaysiiyo heerka macmiilka"
+    },
+    "labels": {
+      "guest": "Martida",
+      "registered": "diiwaan gashan",
+      "active": "Firfircoon",
+      "inactive": "Firfircoonayn"
+    }
+  },
+
+  "hierarchy": {
+    "region": "Gobolka",
+    "zone": "Gobolka", 
+    "city": "Magaalada",
+    "subcity": "Magaalo hoosaadk",
+    "woreda": "Degmo",
+    "regionLevel": "Heerka Deegaaka",
+    "zoneLevel": "Heerka Gobolka",
+    "cityLevel": "Heerka Magaalada",
+    "subcityLevel": "Heerka Magaalada hoose",
+    "woredaLevel": "Heerka Degmada",
+    "assignedToRegion": "Loo qoondeeyay Gobolka",
+    "assignedToZone": "Loo qoondeeyay Deegaanka",
+    "assignedToCity": "Loo qoondeeyay Magaalada",
+    "assignedToWoreda": "Loo qoondeeyay Degmada",
+    "assignedToSubcity": "Loo qoondeeyay Magaalada hoose"
+  },
+  "forms": {
+    "required": "Goobtan waa loo baahan yahay",
+    "invalidEmail": "Fadlan geli iimayl sax ah",
+    "minLength": "Waa inuu noqdaa ugu yaraan {{min}} xarfo",
+    "maxLength": "Waa in aanu ka badnayn {{max}} xarfo",
+    "selectOption": "Fadlan dooro ikhtiyaar",
+    "uploadFile": "Soo rar faylka",
+    "dragDrop": "Jiid oo ku rid faylasha halkan",
+    "orClick": "ama guji si aad u baadho",
+    "fileSizeLimit": "Cabbirka faylka waa inuu ka yar yahay {{size}} MB",
+    "supportedFormats": "Qaababka la taageeray: {{formats}}",
+    "uploading": "Soo dejinta...",
+    "uploadSuccess": "Faylka si guul leh ayaa loo soo geliyey",
+    "uploadError": "Ku guuldareystay in la soo geliyo faylka"
+  },
+  "messages": {
+    "loadingData": "Soodejinaya xogta...",
+    "noDataAvailable": "Wax xog ah lagama hayo",
+    "operationSuccess": "Hawlgalku si guul leh ayuu u dhammaaday",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "networkError": "Cilada shabakada Fadlan isku day mar kale",
+    "unauthorized": "Laguuma ogola inaad falkan samayso",
+    "accessDenied": "Waa la diiday gelitaanka",
+    "pageNotFound": "Bogga lama heelin",
+    "serverError": "Cilad server Fadlan isku day mar kale hadhow"
+  },
+  "reportDetailUI": {
+    "common": {
+      "filterUsers": "Ku sifee isticmaalayaasha gobol ama magaalo, ka dibna ku dar kooxdaada.",
+      "filterByRegionCity": "Ku kala sooc Gobolka iyo Magaalada",
+      "filterBySubcityZone": "Ku sifey magaalada hoose iyo Aaga",
+      "filterByWoreda": "Ku sifey degmada",
+      "selectedRegion": "Deegaanka la doortay",
+      "selectedCity": "Magaalada la doortay",
+      "allRegionsCities": "Dhammaan Gobollada iyo Magaalooyinka",
+      "all": "Dhamaan",
+      "experts": "Khabiiirad",
+      "createTeam": "Samee koox",
+      "selectExpert": "Dooroo khabiirka",
+      "pickALeader": "Hogaamiye dooro",
+      "selectMore": "Dooro {{count}} wax badan",
+      "createTeamSuccess": "Kooxda si guul leh ayaa loo abuuray",
+      "expertAssigned": "Khabiir si guul leh loo magacaabay",
+      "invalidHierarchy": "Xulashada kala sareynta aan ansax ahayn",
+      "caseIdMissing": "Aqoonsiga kiiska ayaa maqan Ma samayn karo koox",
+      "selectAtLeastOne": "Fadlan dooro ugu yaraan hal khabiir",
+      "failedToAssign": "Ku guul daraystay in la magacaabo khabiir",
+      "failedToFormTeam": "Ku guuldareystay in la sameeyo koox",
+      "verify": "Xaqiiji",
+      "reject": "Diid",
+      "assign": "Uqoonde",
+      "reportAssignedSuccess": "Warbixinta si guul leh ayaa loo qoondeeyay!",
+      "assignedToZoneAdmin": "Loo xilsaaray Maamulaha Aagga",
+      "assignedToRegionalExpert": "Loo dhiibay Khabiir Goboleed",
+      "pleaseAttachOneFile": "Fadlan ku soo lifaaq ugu yaraan hal fayl",
+      "pleaseEnterActivity": "Fadlan gali hawshaada",
+      "reportSubmitted": "Warbixinta ayaa lagu soo gudbiyay si guul leh!",
+      "reportSubmitFailed": "Ku guuldarraystay inuu soo gudbiyo warbixinta",
+      "updatedSuccessfully": "Si guul leh loo cusboonaysiiyay!",
+      "updateFailed": "Cusbooneysii waa guuldareystay",
+      "selectAtLeastTwo": "Fadlan dooro ugu yaraan 2 xubnood oo koox ah si aad koox u samayso.",
+      "complaintIdMissingRefresh": "Aqoonsiga cabashada wuu maqan yahay. Fadlan dib u cusboonaysii oo isku day mar kale.",
+      "pleaseSelectAtLeastOneExpert": "Fadlan dooro ugu yaraan hal khabiir",
+      "pleaseProvideReturnReason": "Fadlan keen sabab soo noqosho",
+      "reportClosed": "Warbixinta ayaa si guul leh u xidhay!",
+      "failedToCloseReport": "Ku guuldarraystay inuu xidho warbixinta",
+      "pleaseFillAllFields": "Fadlan buuxi dhammaan goobaha",
+      "assignmentFailed": "Meelayntu way fashilantay",
+      "pleaseSelectARejectionReason": "Fadlan dooro sabab diidmo",
+      "pleaseProvideRejectionDescription": "Fadlan bixi sharraxaad diidmo",
+      "extensionRequested": "Kordhinta ayaa codsatay si guul leh",
+      "extensionRequestFailed": "Ku guul daraystay in la codsado kordhin"
+    },
+    "region": {
+      "title": "Faahfaahinta Warbixinta Gobolka",
+      "filterByRegionAndCity": "Ku sifey Gobolka & Magaalada",
+      "filterBySubcityAndZone": "Ku sifey magaalada hoose & Aaga",
+      "filterByWoreda": "Ku sifey degmada",
+      "assignedToZone": "Loo qoondeeyay Gobol/Magaalo",
+      "assignedToWoreda": "Loo qoondeeyay degmada",
+      "assignToWoreda": "U qoondee Degmada",
+      "assignToZone": "U qoondee Gobolka",
+      "assignToCity": "U qoondee Magaalada",
+      "createTeam": "Samee koox",
+      "assignExpert": "U qondee Khabiir",
+      "viewDetails": "Daawo Faahfaahinta",
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqaoonsiga Warbixinta",
+      "pollutionCategory": "Qaybta wasakhowga",
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda",
+      "pending": "La sugayo",
+      "verified": "La xaqiijiyay",
+      "authorized": "La fasaxay",
+      "returned": "La soo ceeliyey",
+      "closed": "Xiran",
+      "underInvestigation": "Baaritaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey"
+    },
+    "zone": {
+      "title": "Faahfaahinta Warbixinta Aagga", 
+      "filterByRegionAndCity": "Ku sifey Gobolka & Magaalada",
+      "filterBySubcityAndZone": "Ku sifey magaalada hoose iyo Aaga",
+      "filterByWoreda": "Ku sifey degmada",
+      "assignedToWoreda": "Loo qoondeeyay Degmada",
+      "assignToWoreda": "U qoondee Degmada",
+      "createTeam": "Samee koox",
+      "assignExpert": "U qondee Khabiir",
+      "viewDetails": "Daawo Faahfaahinta",
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqaoonsiga Warbixinta", 
+      "pollutionCategory": "Qaybta wasakhowga",
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda",
+      "pending": "La sugayo",
+      "authorized": "La fasaxay",
+      "returned": "La soo ceeliyey",
+      "closed": "Xiran",
+      "underInvestigation": "Baadhitaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey"
+    },
+    "woreda": {
+      "title": "Faahfaahinta Warbixinta Degmada",
+      "filterByRegionAndCity": "Ku sifey Gobolka & Magaalada",
+      "filterBySubcityAndZone": "Ku sifey magaalada hoose & Aaga", 
+      "filterByWoreda": "Ku sifey degmada",
+      "createTeam": "Samee koox",
+      "assignExpert": "U qondee Khabiir",
+      "viewDetails": "Daawo Faahfaahinta",
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqoonsiga warbixinta",
+      "pollutionCategory": "Qaybta wasakhowga", 
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda",
+      "authorized": "La fasaxay",
+      "returned": "La soo ceeliyey",
+      "closed": "Xiran",
+      "underInvestigation": "Baadhitaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey"
+    },
+    "filters": {
+      "all": "Dhamaan",
+      "pending": "La sugayo",
+      "verified": "La xaqiijiyay", 
+      "authorized": "La fasaxay",
+      "returned": "La soo ceeliyey",
+      "closed": "Xiran",
+      "underInvestigation": "Baadhitaanka ku socda",
+      "investigationSubmitted": "Baadhitaan La Gudbiyey",
+      "assignedToZone": "Loo qoondeeyay Gobol/Magaalo",
+      "assignedToWoreda": "Loo qoondeeyay Degmada"
+    },
+    "actions": {
+      "assignToWoreda": "U qoondee Degmada",
+      "assignToZone": "U qoondee Gobolka",
+      "assignToCity": "U qoondee Magaalada",
+      "assignToSubcity": "U qoondee Magaalada hoose",
+      "assignHandlingUnit": "U qoondee Unugga wax ka qabashada",
+      "individual": "Shakhsi",
+      "team": "Koox",
+      "assignExpert": "U qondee Khabiir",
+      "viewDetails": "Daawo Faahfaahinta",
+      "createTeam": "Samee koox"
+    },
+    "table": {
+      "complaintId": "Aqoonsiga cabashada",
+      "reportId": "Aqaoonsiga Warbixinta",
+      "pollutionCategory": "Qaybta wasakhowga",
+      "location": "Goobta",
+      "createdAt": "Waxa la sameeyay",
+      "status": "Xaaladda"
+    },
+    "team": {
+      "title": "Samee koox",
+      "description": "Dooro khabiiro si ay koox ugu sameeyaan kiiskan",
+      "selectExpert": "Dooroo khabiirka",
+      "pickALeader": "Hogaamiye dooro",
+      "selectMore": "Dooro {{count}} wax badan",
+      "createTeam": "Samee koox",
+      "createTeamSuccess": "Kooxda si guul leh ayaa loo abuuray",
+      "expertAssigned": "Khabiir si guul leh loo magacaabay",
+      "invalidHierarchy": "Xulashada kala sareynta aan ansax ahayn",
+      "caseIdMissing": "Aqoonsiga kiiska ayaa maqan Ma samayn karo koox",
+      "selectAtLeastOne": "Fadlan dooro ugu yaraan hal khabiir",
+      "failedToAssign": "Ku guul daraystay in la magacaabo khabiir",
+      "failedToFormTeam": "Ku guuldareystay in la sameeyo koox"
+    }
+  },
+  "address": {
+    "title": "Goobaha Xafiiska EPA",
+    "searchPlaceholder": "Raadi ciwaanada...",
+    "addButton": "Kudar Goobta Xafiiska",
+    "addModalTitle": "Kudar Goobta Xafiiska",
+    "editModalTitle": "Wax ka beddel Goobta Xafiiska",
+    "deleteConfirmation": {
+      "title": "Tirtir Goobta Xafiiska",
+      "message": "Ma hubtaa inaad doonayso inaad tirtirto goobtan xafiiska?",
+      "confirmLabel": "Tirtir"
+    },
+    "toast": {
+      "updated": "Si guul leh loo cusboonaysiiyay ✅",
+      "created": "Si guul leh loo sameeyay ✅",
+      "operationFailed": "Hawlgalku wuu fashilmay ❌",
+      "deleted": "Si guul leh ayaa loo tirtiray 🗑️",
+      "deleteFailed": "Tirtiridda waa fashilantay",
+      "formErrors": "Fadlan hagaaji khaladaadka foomka"
+    },
+    "table": {
+      "no": "Maya.",
+      "name": "Magac",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "phone": "Telefoon",
+      "email": "Iimeylka",
+      "description": "Sharaxaada"
+    },
+    "form": {
+      "fields": {
+        "name": "Magac",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "phone_number": "Lambarka Telefoonka",
+        "email": "Iimeylka",
+        "description": "Sharaxaada"
+      },
+      "buttons": {
+        "cancel": "Jooji",
+        "save": "Keydii",
+        "update": "Cusbooneysii"
+      }
+    }
+  },
+  "awareness":{
+
+  "title": "Wacyigelin",
+  "searchPlaceholder": "Raadi Wacyigelinta...",
+  "addButton": "Ku darso Wacyigelin",
+  "addModalTitle": "Ku darso Wacyigelin",
+  "editModalTitle": "Wax ka beddel wacyigelinta",
+  "deleteConfirmation": {
+    "title": "Tirtir wacyigelinta",
+    "message": "Ma hubtaa inaad rabto inaad tirtirto nuxurka wacyigelinta?",
+    "confirmLabel": "Tirtir"
+  },
+  "toast": {
+    "updated": "Si guul leh loo cusboonaysiiyay ",
+    "created": "Si guul leh loo sameeyay ",
+    "operationFailed": "Hawlgalku wuu fashilmay ",
+    "deleted": "Si guul leh ayaa loo tirtiray 🗑️",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "formErrors": "Fadlan buuxi meelaha loo baahan yahay"
+  },
+  "table": {
+    "no": "Maya",
+    "title": "Ciwaanka",
+    "file": "Fayl",
+    "viewFile": "Daawo Faylka"
+  },
+  "form": {
+    "fields": {
+      "title": "Ciwaanka",
+      "description": "Sharaxaada",
+      "file": "Fayl"
+    },
+    "placeholders": {
+      "title": "Geli ciwaanka",
+      "description": "Geli sharaxaad"
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii",
+      "close": "Xiir",
+      "remove": "Ka saar"
+    },
+    "fileUpload": {
+      "clickToUpload": "Guji si aad u soo rogto",
+      "dragDrop": "ama jiido oo tuur",
+      "acceptedFormats": "PDF, JPG, PNG (MAX. 10MB)",
+      "replaceNotice": "Soo rar faylka cusub kaliya haddii aad rabto inaad bedesho",
+      "willReplace": "",
+      "view": "Daawo"
+    },
+    "messages": {
+      "noDescription": "Sharaxaadda lama hayo"
+    }
+  }
+},
+"addressManagement": {
+  "title": "Maareynta Cinwaanka",
+  "searchPlaceholder": "Raadi...",
+  "filterTabs": {
+    "regions": "Gobollada",
+    "cityAdministrations": "Maamulka Magaalada"
+  },
+  "city": {
+    "label": "Magaalada",
+    "addTitle": "Ku dar Magaalada",
+    "editTitle": "Wax ka beddel magaalada",
+    "deleteTitle": "Tirtir Magaalada",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto magaalo cusub.",
+    "descriptionEdit": "Faahfaahinta magaalada kala cusboonaysii",
+    "fields": {
+      "name": {
+        "label": "Magaca Magaalada",
+        "placeholder": "Geli magaca magaalada"
+      }
+    },
+    "table": {
+      "refNo": "Lambarka Tixraca",
+      "name": "Magaca Magaalada"
+    },
+    "messages": {
+      "added": "Magaalada ayaa si guul leh ugu dartay",
+      "updated": "Magaalada si guul leh ayaa loo cusboonaysiiyay",
+      "deleted": "Magaalada waa la tirtiray",
+      "deleteFailed": "Ku guuldareystay in la tirtiro magaalada",
+      "fetchFailed": "Ku guuldarraystay in la keeno magaalooyinka",
+      "saveFailed": "Ku guuldareystay inuu keydiyo magaalada",
+      "deleteConfirmation": "Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto magaaladan?"
+    }
+  },
+  "region": {
+    "label": "Deegaan",
+    "addTitle": "Ku dar Deegaan",
+    "editTitle": "Gobolka wax ka beddel",
+    "deleteTitle": "Gobolka Tirtir",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto gobol cusub",
+    "descriptionEdit": "Cusbooneysii xogta gobolka",
+    "fields": {
+      "name": {
+        "label": "Magaca Magaalada",
+        "placeholder": "Geli magaca gobolka"
+      }
+    },
+    "table": {
+      "refNo": "Lambarka Tixraca",
+      "name": "Magaca Gobolka"
+    },
+    "messages": {
+      "added": "Gobolka ayaa si guul leh loogu daray",
+      "updated": "Gobolka si guul leh ayaa loo cusboonaysiiyay",
+      "deleted": "Gobolka waa la tirtiray",
+      "deleteFailed": "Ku guuldareystay in la tirtiro gobolka",
+      "fetchFailed": "Ku guul daraystay in la keeno gobollo",
+      "saveFailed": "Ku guuldareystay in la keydiyo gobolka",
+      "deleteConfirmation": "Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto gobolkan?"
+    }
+  },
+  "subCity": {
+    "label": "Magaalada hoose",
+    "addTitle": "Ku dar Magaalada Hoose",
+    "editTitle": "Wax ka beddel magaalada Hoose",
+    "deleteTitle": "Tirtir Magaalada Hoose",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto magaalada hoose ee cusub.",
+    "fields": {
+      "name": {
+        "label": "Magaca Magaalada Hoose",
+        "placeholder": "Geli magaca Magaalada Hoose"
+      }
+    },
+    "messages": {
+      "added": "Magaalada Hoose ayaa si guul leh ugu dartay",
+      "updated": "Si guul leh loo cusboonaysiiyay ",
+      "deleted": "Magaalada hoose waa la tirtiray",
+      "saveFailed": "Ku guuldareystay in la keydiyo magaalo hoosaadka"
+    }
+  },
+  "zone": {
+    "label": "Gobolka",
+    "addTitle": "Ku dar Gobol",
+    "editTitle": "Wax ka beddel Gobolka",
+    "deleteTitle": "Tirtir Gobolka",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto gobol cusub.",
+    "fields": {
+      "name": {
+        "label": "Magaca Gobolka",
+        "placeholder": "Geli magaca gobolka"
+      }
+    },
+    "messages": {
+      "added": "Gobol ayaa lagu daray si guul leh",
+      "updated": "Gobolka si guul leh ayaa loo cusboonaysiiyay",
+      "deleted": "Gobolka waa la tirtiray",
+      "saveFailed": "Ku guuldareystay in la keydiyo Gobolka"
+    }
+  },
+  "buttons": {
+    "cancel": "Jooji",
+    "save": "Keydii",
+    "update": "Cusbooneysii",
+    "delete": "Tirtir",
+    "back": "Diib"
+  },
+  "toast": {
+    "validationError": "Fadlan hagaaji khaladaadka ansixinta ka hor inta aanad kaydin",
+    "fetchError": "Ku guuldareystay in la keeno {{type}}",
+    "saveError": "Ku guul daraystay in la kaydiyo {{type}}",
+    "deleteError": "Waa lagu guul daraystay in la tirtiro {{type}}"
+  }
+},
+"zoneDetail": {
+  "title": "{{type}} Maamulka - {{location}}",
+  "subtitle": "Maamul dhammaan {{type}} ee nidaamka",
+  "searchPlaceholder": "Raadi...",
+  "filterTabs": {
+    "subCity": "MagaaladaHose",
+    "zone": "Gobol/Magaalo"
+  },
+  "subCity": {
+    "label": "Magaalada hoose",
+    "addTitle": "Ku dar Magaalada Hoose",
+    "editTitle": "Wax ka beddel magaalada Hoose",
+    "deleteTitle": "Tirtir Magaalada Hoose",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto magaalada hoose ee cusub.",
+    "descriptionEdit": "Cusbooneysii xogta gobolka",
+    "fields": {
+      "name": {
+        "label": "Magaca Magaalada Hoose",
+        "placeholder": "Geli magaca Magaalada Hoose"
+      }
+    },
+    "table": {
+      "refNo": "Lambarka Tixraca",
+      "name": "Magaca Magaalada Hoose"
+    },
+    "messages": {
+      "added": "Magaalada Hoose ayaa si guul leh ugu dartay",
+      "updated": "Magaalada si guul leh ayaa loo cusboonaysiiyay",
+      "deleted": "Magaalada hoose ayaa si guul leh loo tirtiray",
+      "deleteFailed": "Waa lagu guul daraystay in la tirtiro magaalada",
+      "fetchFailed": "Ku guuldarraystay inuu keeno xaafadaha",
+      "saveFailed": "Ku guuldareystay inuu badbaadiyo magaalada",
+      "deleteConfirmation": "Tallaabadan lama noqon karo. Ma hubtaa inaad rabto inaad tirtirto magaaladan?"
+    }
+  },
+  "zone": {
+    "label": "Gobol/Magaalada",
+    "addTitle": "Ku dar Gobo/Magaalo",
+    "editTitle": "Wax ka beddel Gobol/Magaalada",
+    "deleteTitle": "Tirtir Gobol/Magaalo",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto gobol/magaalo cusub.",
+    "descriptionEdit": "Cusbooneysii faahfaahinta aaga/magaalada",
+    "fields": {
+      "name": {
+        "label": "Magaca Gobol/Magaalada",
+        "placeholder": "Geli gobol/magaca magaalada"
+      }
+    },
+    "table": {
+      "refNo": "Lambarka Tixraca",
+      "name": "Magaca Gobol/Magaalada"
+    },
+    "messages": {
+      "added": "Gobol/Magaalada ayaa si guul leh loogu daray",
+      "updated": "Gobol/Magaalada si guul leh ayaa loo cusboonaysiiyay",
+      "deleted": "Gobol/Magaalada ayaa si guul leh loo tirtiray",
+      "deleteFailed": "Ku guuldareystay in la tirtiro gobol/magaalada",
+      "fetchFailed": "Ku guuldareystay in la keeno gobol/magaalo",
+      "saveFailed": "Ku guuldareystay inuu keydiyo gobol/magaalada",
+      "deleteConfirmation": "Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto gobolkan/magaaladan?"
+    }
+  },
+  "woreda": {
+    "label": "Degmo",
+    "addTitle": "Ku dar Degmo",
+    "editTitle": "Wax ka beddel Degmada",
+    "deleteTitle": "Tirtir Degmada",
+    "descriptionAdd": "Buuxi faahfaahinta si aad ugu darto degmo cusub.",
+    "descriptionEdit": "Cusbooneysii faahfaahinta degmada",
+    "fields": {
+      "name": {
+        "label": "Magaca Degmada/Magaalada Hoose",
+        "placeholder": "Geli magaca degmada"
+      }
+    },
+    "table": {
+      "refNo": "Lambarka Tixraca",
+      "name": "Magaca Degmada/Magaalada Hoose"
+    },
+    "messages": {
+      "added": "Degmada ayaa si guul leh loogu daray",
+      "updated": "Degmada si guul leh loo cusboonaysiiyay ",
+      "deleted": "Degmada waa la tirtiray si guul leh",
+      "deleteFailed": "Ku guuldareystay in la tirtiro degmada",
+      "fetchFailed": "Ku guul daraystay in la keeno degmooyin",
+      "saveFailed": "Ku guuldareystay in la keydiyo degmada",
+      "deleteConfirmation": "Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto degmadan?"
+    }
+  },
+  "buttons": {
+    "cancel": "Jooji",
+    "save": "Keydii",
+    "update": "Cusbooneysii",
+    "delete": "Tirtir",
+    "back": "Diib"
+  },
+  "toast": {
+    "validationError": "Fadlan hagaaji khaladaadka ansixinta ka hor inta aanad kaydin",
+    "fetchError": "Ku guuldareystay in la keeno {{type}}",
+    "saveError": "Ku guul daraystay in la kaydiyo {{type}}",
+    "deleteError": "Waa lagu guul daraystay in la tirtiro {{type}}"
+  }
+},
+"woredaManagement": {
+  "title": "{{location}} Maamulka Degmada",
+  "subtitle": {
+    "zone": "Maamul degmooyinka gobol/magaaladan.",
+    "subcity": "Maamul degmooyinka hoosaadkan.",
+    "system": "Maamul degmooyinka nidaamka"
+  },
+  "searchPlaceholder": "Raadi....",
+  "addButton": "Ku dar dagmo",
+  "addModalTitle": "Kudar Degmo",
+  "editModalTitle": "Wax ka beddel degmo",
+  "deleteConfirmation": {
+    "title": "Tirtir Degmada",
+    "message": "Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto degmadan?",
+    "confirmLabel": "Tirtir",
+    "cancelLabel": "Jooji"
+  },
+  "table": {
+    "refNo": "Lambarka Tixraca",
+    "name": "Magaca Degmada/Magaalada Hoose"
+  },
+  "form": {
+    "fields": {
+      "name": {
+        "label": "Magaca Degmada/Magaalada Hoose",
+        "placeholder": "Geli magaca degmada"
+      },
+      "status": {
+        "label": "Xaaladda",
+        "placeholder": "Dooro Xaaladda"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii",
+      "saving": "Keydinaya...",
+      "deleting": "Tirtiraya..."
+    },
+    "validation": {
+      "errors": "Khaladaadka xaqiijinta: {{errors}}"
+    }
+  },
+  "toast": {
+    "fetchFailed": "Ku guul daraystay in la keeno degmooyin",
+    "added": "Gobol ayaa lagu daray si guul leh",
+    "addFailed": "Ku guuldareystay in lagu daro degmada",
+    "updated": "Degmada si guul leh ayaa loo cusboonaysiiyay",
+    "updateFailed": "Ku guul daraystay in la cusboonaysiiyo degmada",
+    "deleted": "Degmada waa la tirtiray si guul leh",
+    "deleteFailed": "Ku guuldareystay in la tirtiro degmada",
+    "deleteError": "Khalad tirtirida degmada",
+    "saveError": "Khalad ayaa dhacay markii la kaydinayay"
+  },
+  "loading": {
+    "saving": "Keydinaya...",
+    "deleting": "Tirtiraya..."
+  }
+},"faq": {
+  "title": "FAQ Maamul",
+  "searchPlaceholder": "Raadi FAQs...",
+  "addButton": "Ku dar FAQ",
+  "addModalTitle": "Ku dar FAQ",
+  "editModalTitle": "Wax ka beddel Edit FAQ",
+  "deleteConfirmation": {
+    "title": "Tirtir FAQ",
+    "message": "Ma hubtaa inaad doonayso inaad tan tirtirto FAQ?",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "question": "Su'aal",
+    "answer": "Jawaab",
+    "status": "Xaaladda",
+    "active": "Firfircoon",
+    "inactive": "Firfircoonayn"
+  },
+  "form": {
+    "fields": {
+      "question": {
+        "label": "Su'aal",
+        "placeholder": "Geli Su'aal",
+        "required": "*"
+      },
+      "answer": {
+        "label": "Jawaab",
+        "placeholder": "Geli Jawaabta",
+        "required": "*"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "required": "Fadlan buuxi meelaha loo baahan yahay"
+    }
+  },
+  "toast": {
+    "activated": "FAQ Si guul leh loo hawlgeliyay",
+    "deactivated": "FAQ Si guul leh ayaa loo demilay",
+    "statusUpdateFailed": "Cusboonaysiinta xaalada waa fashilantay",
+    "updated": "Si guul leh loo cusboonaysiiyay",
+    "created": "Si guul leh loo sameeyay",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  },
+  "status": {
+    "toggle": {
+      "active": "Firfircoon",
+      "inactive": "Firfircoonayn"
+    }
+  }
+},
+"formAndReportTypes": {
+  "title": "Foomka iyo Noocyada Warbixinta",
+  "tabs": {
+    "reportTypes": "Noocyada Warbixinta",
+    "formTypes": "Noocyada Foomamka",
+    "reportingForms": "Foomamka Warbixinta"
+  }
+},
+"formTypes": {
+  "title": "Noocyada Foomamka",
+  "searchPlaceholder": "Raadi noocyada foomka...",
+  "addButton": "Ku dra Noocyada Foomka",
+  "addModalTitle": "ku dar noocayada foomka",
+  "editModalTitle": "Wax ka beddel Nooca Foomka",
+  "deleteConfirmation": {
+    "title": "Tirtir Nooca Foomka",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto Nooca Foomka?",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "formType": "Noocyada FoomkaForm Type",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "form_type": {
+        "label": "Noocyada Foomka",
+        "placeholder": "Geli Noocyada Foomka"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaaxada"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    }
+  },
+  "toast": {
+    "updated": "Si guul leh loo cusboonaysiiyay",
+    "created": "Si guul leh loo sameeyay",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray 🗑️",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "formErrors": "Fadlan hagaaji khaladaadka foomka"
+  }
+},
+
+"guideDocuments": {
+  "title": "Dukumentiyada Hagaha",
+  "searchPlaceholder": "Raadi dukumeenti...",
+  "addButton": "Ku dar Dukumentiga Hagaha",
+  "addModalTitle": "Ku dar Dukumentiga Hagaha",
+  "editModalTitle": "Wax ka bedel Document Guide",
+  "deleteConfirmation": {
+    "title": "Delete Guide Document",
+    "message": "Ma hubtaa inaad rabto inaad tirtirto dukumeentigan?",
+    "confirmLabel": "Tirtir"
+  },
+  "previewModal": {
+    "title": "Horudhac Faylka",
+    "close": "Xiir",
+    "download": "Soo dejiso",
+    "preview": "Horudhac",
+    "tip": "Talo: Isticmaal badhanka soo dejinta si aad u kaydiso faylkan qalabkaaga"
+  },
+  "table": {
+    "no": "Maya",
+    "title": "Ciwaanka",
+    "description": "Sharaxaada",
+    "file": "Fayl",
+    "status": "Xaaladda",
+    "active": "Firfircoon",
+    "inactive": "Firfircoonayn",
+    "noFile": "Fayl lama helin"
+  },
+  "form": {
+    "fields": {
+      "title": {
+        "label": "Cinwaan",
+        "placeholder": "Geli Cinwaanka",
+        "required": "*"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaaxada",
+        "required": "*"
+      },
+      "file": {
+        "label": "Fayl"
+      }
+    },
+    "fileUpload": {
+      "clickToUpload": "Guji si aad u soo rogto",
+      "dragDrop": "ama jiido oo tuur",
+      "acceptedFormats": "PDF, Sawiiro, Muqaal, Maqal (MAX. 10MB)",
+      "replaceNotice": "Soo roog faylka cusub kaliya haddii aad rabto inaad bedesho",
+      "newFileNotice": "Fayl cusub ayaa la soo gelin doonaa",
+      "remove": "Ka saar",
+      "preview": "Horudhac",
+      "download": "Soo dejiso"
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "required": "Fadlan buuxi meelaha loo baahan yahay"
+    }
+  },
+  "toast": {
+    "activated": "Dukumeentiga si guul leh ayaa loo hawlgeliyay",
+    "deactivated": "Dukumeentiga si guul leh ayuu u demilay",
+    "statusUpdateFailed": "Cusboonaysiinta xaalada waa fashilantay",
+    "updated": "Si guul leh loo cusboonaysiiyay ",
+    "created": "Si guul leh loo sameeyay",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray 🗑️",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  },
+  "status": {
+    "toggle": {
+      "active": "Firfircoon",
+      "inactive": "Firfircoonayn"
+    }
+  }
+},
+
+
+"news": {
+  "title": "Wararka",
+  "searchPlaceholder": "Raadi Wararka...",
+  "addButton": "Kudar Wararka",
+  "addModalTitle": "Kudar Wararka",
+  "editModalTitle": "Wax ka beddel Wararka",
+  "deleteConfirmation": {
+    "title": "Tirtir Wararka",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto waxa ku jira wararka?",
+    "confirmLabel": "Tirtir"
+  },
+  "viewModal": {
+    "close": "Xiir",
+    "attachment": "Lifaaqa:",
+    "noDescription": "Sharaxaadda lama hayo.",
+    "viewFile": "Daawo Faylka"
+  },
+  "filePreview": {
+    "title": "Daawo Fayl",
+    "close": "Xiir"
+  },
+  "table": {
+    "no": "Maya",
+    "title": "Ciwaanka",
+    "file": "Fayl",
+    "description": "Sharaxaada",
+    "noFile": "Fayl ma jiro",
+    "noDescription": "Sharaxaadda lama hayo"
+  },
+  "form": {
+    "fields": {
+      "title": {
+        "label": "Cinwaan",
+        "placeholder": "Geli cinwaanka wararka",
+        "required": "Cinwaanka ayaa loo baahan yahay",
+        "characters": "{{current}} / {{max}} xarafo",
+        "exceeded": " (Xadka dhaafey!)",
+        "nearLimit": "xarafo"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaxaadda wararka",
+        "required": "Geli sharaxaadda wararka",
+        "characters": "{{current}} / {{max}} xarafo",
+        "exceeded": " (Xadka dhaafey!)",
+        "nearLimit": "xarafo"
+      },
+      "file": {
+        "label": "Fayl"
+      }
+    },
+    "fileUpload": {
+      "clickToUpload": "Guji si aad u soo rogto",
+      "dragDrop": "ama jiido oo tuur",
+      "acceptedFormats": "PDF, JPG, PNG (MAX. 10MB)",
+      "replaceNotice": "Soo roog faylka cusub kaliya haddii aad rabto inaad bedesho",
+      "newFileNotice": "Fayl cusub ayaa la soo gelin doonaa",
+      "remove": "Ka saar",
+      "view": "Daawo"
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii",
+      "close": "Xiir"
+    },
+    "validation": {
+      "fixErrors": "Fadlan ku hagaaji khaladaadka foomka",
+      "titleRequired": "Cinwaanka ayaa loo baahan yahay",
+      "descriptionRequired": "Sharaxaada ayaa loo baahan yahay"
+    }
+  },
+  "toast": {
+    "updated": "Wararka si guul leh ayaa loo cusboonaysiiyay ✅",
+    "created": "Warka ayaa si guul leh loo sameeyay ✅",
+    "operationFailed": "Hawlgalku wuu fashilmay ❌",
+    "deleted": "Warka waa la tirtiray si guul leh 🗑️",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "fetchFailed": "Ku guuldareystay in la soo geliyo warka",
+    "loadFailed": "Ku guuldareystay in la soo geliyo faahfaahinta wararka",
+    "saveFailed": "Ku guul daraystay in uu kaydiyo warka"
+  },
+  "loading": {
+    "saving": "Keydinaya...",
+    "deleting": "Tirtiraya..."
+  }
+},
+"organizationHierarchy": {
+  "title": "Heerarka Ururka",
+  "viewModes": {
+    "tree": "Muuqaalka Geedka",
+    "table": "Muuqaalka Shaxda"
+  },
+  "actions": {
+    "addRoot": "Xididka ku dar",
+    "addChild": "Kudar Ilmaha",
+    "edit": "Wax ku bedelEdit",
+    "delete": "Tirtir",
+    "view": "Daawo",
+    "expand": "Balaadhi",
+    "collapse": "Burbur",
+    "cancel": "Jooji",
+    "save": "Keydii",
+    "update": "Cusbooneysii"
+  },
+  "modals": {
+    "add": {
+      "title": "Kudar Heerka Ururka",
+      "titleWithParent": "Hoos ku dar \"{{parentName}}\"",
+      "editTitle": "Wax ka beddel Heerka Ururka",
+      "fields": {
+        "name": {
+          "label": "Magaca Sarraynta",
+          "placeholder": "Geli magaca kala sareynta",
+          "required": "*"
+        },
+        "isRegional": {
+          "label": "Waa Gobol",
+          "locked": "(Laga soo xidhay waalidka)"
+        },
+        "region": {
+          "label": "Deegaan",
+          "locked": "(La soo xidhay)",
+          "placeholder": "Gobolka dooro"
+        },
+        "zone": {
+          "label": "Gobol",
+          "placeholder": "Dooro Gobolka"
+        },
+        "woreda": {
+          "label": "Degmada",
+          "placeholder": "Dooro Gobolka"
+        }
+      },
+      "validation": {
+        "nameRequired": "Fadlan geli magac kala sareyn",
+        "regionRequired": "Gobolka ayaa looga baahan yahay heer gobol",
+        "rootExists": "Kala sareynta xididka ayaa horay u jirtay. Fadlan ku dar heerka jira hoostiisa."
+      },
+      "buttons": {
+        "cancel": "Jooji",
+        "save": "Keydii",
+        "update": "Cusbooneysii",
+        "saving": "Keydinaya..."
+      }
+    },
+    "delete": {
+      "title": "Tirtirida kala sareynta",
+      "message": "Ma hubtaa inaad doonayso inaad tirtirto \"{{name}}\"? Tallaabadan lama noqon karo.",
+      "confirm": "Tirtir",
+      "cancel": "Jooji"
+    }
+  },
+  "treeView": {
+    "noData": "Wax kala sareyn ah lama helin",
+    "createRoot": "Abuur Heerarkii xididka",
+    "level": "Heerka {{level}}",
+    "type": {
+      "region": "Deegaan",
+      "city": "Magaalada",
+      "subcity": "Magaala hoose",
+      "zone": "Gobol",
+      "woreda": "Degmo",
+      "organization": "Xaruun"
+    },
+    "labels": {
+      "region": "Deegaanka: {{name}}",
+      "zone": "Gobol: {{name}}",
+      "woreda": "Degmo"
+    }
+  },
+  "tableView": {
+    "info": "Muujinaya {{count}} walxaha kala sareynta • Guji",
+    "toViewChildren": "si loo eego carruurta",
+    "noData": "Ma jiro xog kala sareyn oo la heli karo",
+    "addRoot": "Ku dar kala sareynta xididka",
+    "columns": {
+      "level": "Heerka",
+      "name": "Magac",
+      "actions": "Ficilada"
+    },
+    "level": "Heerka {{level}}",
+    "type": {
+      "region": "Deegaanka",
+      "zone": "Gobol",
+      "woreda": "Degmo"
+    }
+  },
+  "badges": {
+    "level": "Heerka {{level}}"
+  },
+  "toast": {
+    "nameRequired": "Fadlan geli magac kala sareyn",
+    "rootExists": "Kala sareynta xididka ayaa horay u jirtay. Fadlan ku dar heerka jira hoostiisa.",
+    "updated": "Heerarkii si guul leh ayaa loo cusboonaysiiyay!",
+    "created": "Kala sareynta ayaa loo sameeyay si guul leh!",
+    "saveError": "Khalad keydinta kala sareynta: {{message}}",
+    "deleted": "Heerarkii waa la tirtiray si guul leh",
+    "deleteError": "Khalad tirtirida kala sareynta: {{message}}",
+    "loadFailed": "Ku guuldarraystay in la raro xogta kala sarraysa",
+    "invalidNode": "Guntin aan sax ahayn oo loo doortay tafatirka"
+  },
+  "icons": {
+    "region": "🏢",
+    "city": "🏢",
+    "subcity": "🏢",
+    "zone": "🏢",
+    "woreda": "🏢",
+    "organization": "🏛️"
+  }
+},
+"penaltyCategory": {
+  "title": "Sababta Xiritaanka",
+  "searchPlaceholder": "Raadi qaybaha ciqaabta...",
+  "addButton": "Kudar Qaybta",
+  "addModalTitle": "Kudar Sababta Xiritaanka",
+  "editModalTitle": "Wax ka beddel Sababta Xiritaanka",
+  "deleteConfirmation": {
+    "title": "Tirtir Sababta Xiritaanka",
+    "message": "Tani waxay sidoo kale tirtiri doontaa dhammaan qaybaha hoose. Sii wad?",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "closureReason": "Sababta Xiritaanka",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "penalty_name": {
+        "label": "Sababta Xiritaanka",
+        "placeholder": "Geli sababta xidhitaanka"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaaxada"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "cusbooneysii"
+    }
+  },
+  "toast": {
+    "updated": "Si guul leh loo cusboonaysiiyay",
+    "created": "Si guul leh loo sameeyay",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "formErrors": "Fadlan hagaaji khaladaadka foomka"
+  }
+},
+
+"penaltyCategoryDetail": {
+  "title": "Sababta Xiritaanka Hoosaadka - {{name}}",
+  "subtitle": "Maamul ganaaxyada hoose",
+  "searchPlaceholder": "Raadi ganaaxyo-hoosaadka...",
+  "addButton": "Ku dar ciqaab-hoosaad",
+  "addModalTitle": "Ku dar ciqaab-hoosaad",
+  "editModalTitle": "Ciqaab-hoosaadka wax ka beddel",
+  "deleteConfirmation": {
+    "title": "Tirtir Ciqaab-hoosaadka",
+    "message": "Tan lama celin karo.",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "subPenalty": "Ciqaab-hoosaadka",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "issue_type": {
+        "label": "Ciqaab-hoosaadka",
+        "placeholder": "Enter sub-penalty",
+        "validation": {
+          "min": "Magaca ciqaab-hoosaadka waa inuu noqdaa ugu yaraan 2 xaraf",
+          "max": "Magaca ciqaab-hoosaadka aad buu u dheer yahay"
+        }
+      },
+      "description": {
+        "label": "Sharaxaada",
+        "placeholder": "Geli sharaxaad",
+        "validation": {
+          "max": "Sharaxaad aad u dheer"
+        }
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "required": "Fadlan buuxi meelaha loo baahan yahay"
+    }
+  },
+  "toast": {
+    "updated": "La cusboonaysiiyay",
+    "added": "Lagu daray",
+    "deleted": "La tirtiray",
+    "failed": "Fashilmay",
+    "serverError": "Cilad server"
+  }
+}
+,
+"pollutionCategory": {
+  "title": "Maareynta Qaybta Wasakhowga",
+  "searchPlaceholder": "Ka raadi qaybaha wasakhowga...",
+  "addButton": "Kudar Qaybta",
+  "addModalTitle": "Kudar Qaybta Wasakhowga",
+  "editModalTitle": "Wax ka beddel qaybta wasakhowga",
+  "addSubModalTitle": "Kudar Qaybta Wasakhowga Hoosaadka",
+  "deleteConfirmation": {
+    "title": "Tirtir Qaybta",
+    "message": "Tallaabadan lama noqon karo.",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "id": "ID",
+    "pollutionCategory": "Qaybta wasakhowga",
+    "description": "Sharaxaada",
+    "isSoundPollution": "Waa Wasakhowga Codka",
+    "yes": "Haa",
+    "no": "Maya"
+  },
+  "form": {
+    "main": {
+      "fields": {
+        "pollution_category": {
+          "label": "Qaybta wasakhowga",
+          "placeholder": "Geli qaybta wasakhowga"
+        },
+        "description": {
+          "label": "Sharaaxad",
+          "placeholder": "Geli sharaxaad"
+        },
+        "is_sound": {
+          "label": "Ma Sanqadu Wasakhaysan?"
+        }
+      }
+    },
+    "sub": {
+      "fields": {
+        "sub_pollution_category": {
+          "label": "Qaybta Wasakhowga-hoosaadka",
+          "placeholder": "Geli qaybta wasakh-hoosaadka"
+        },
+        "description": {
+          "label": "Sharaaxad",
+          "placeholder": "Geli Sharaaxada"
+        }
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "cusbooneysii"
+    }
+  },
+  "toast": {
+    "updated": "Si guul leh loo cusboonaysiiyay",
+    "created": "Si guul leh loo cusboonaysiiyay",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "formErrors": "Fadlan hagaaji khaladaadka foomka",
+    "parentMissing": "Qaybta waalidka maqan",
+    "subAdded": "Qayb-hoosaad ayaa lagu daray si guul leh",
+    "subFailed": "Ku guul daraystay in lagu daro qayb-hoosaad",
+    "validationError": "Fadlan si sax ah u buuxi dhammaan goobaha loo baahan yahay",
+    "serverError": "Cilad server"
+  }
+},
+"pollutionCategoryDetail": {
+  "title": "Maamul qaybaha hoose - {{category}}",
+  "subtitle": "Maamul qaybaha hoose ee qaybtan wasakhaysan",
+  "searchPlaceholder": "Raadi qaybo-hoosaad...",
+  "addButton": "Kudar Qayb-hoosaad",
+  "addModalTitle": "Kudar Qayb-hoosaad Cusub",
+  "editModalTitle": "Wax ka beddel Qaybta-hoosaadka",
+  "deleteConfirmation": {
+    "title": "Tirtir Qayb-hoosaadka",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto qaybtan? Tallaabadan lama noqon karo.",
+    "confirmLabel": "Tirtir",
+    "cancelLabel": "Jooji"
+  },
+  "loading": "Soodejinaya qaybo-hoosaad...",
+  "table": {
+    "no": "Maya",
+    "subCategoryName": "Magaca Qaybta-hoosaadka",
+    "investigationDays": "Maalmaha Baaritaanka",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "sub_pollution_category": {
+        "label": "Magaca Qaybta-hoosaadka",
+        "placeholder": "Geli magaca qayb-hoosaadka",
+        "validation": {
+          "required": "Magaca qayb-hoosaadka ayaa loo baahan yahay",
+          "min": "Magaca qaybta hoose waa in uu ahaadaa ugu yaraan 2 xaraf",
+          "max": "Magaca qaybta hoose aad buu u dheer yahay"
+        }
+      },
+      "investigation_days": {
+        "label": "Maalmaha Baaritaanka",
+        "placeholder": "Gali maalmaha baaritaanka",
+        "validation": {
+          "positive": "Maalmaha baaritaanku waa inay ahaadaan tiro togan",
+          "integer": "Maalmaha baaritaanku waa inay ahaadaan tiro dhan"
+        }
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaxaad",
+        "validation": {
+          "max": "Sharaxaad aad u dheer"
+        }
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    }
+  },
+  "toast": {
+    "loadFailed": "Ku guuldarraystay in la soo geliyo qaybo-hoosaadyo",
+    "updated": "Qayb-hoosaadka si guul leh ayaa loo cusboonaysiiyay",
+    "updateFailed": "Cusbooneysii waa guuldareystay",
+    "added": "Qayb-hoosaad ayaa lagu daray si guul leh",
+    "addFailed": "Abuuritaanku waa fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "formErrors": "Fadlan hagaaji khaladaadka foomka",
+    "serverError": "Cilad server Fadlan isku day mar kale"
+  }
+},
+"regionManagement": {
+  "title": "Maamulka Gobolka",
+  "searchPlaceholder": "Raadi gobollada...",
+  "addButton": "Ku dar Gobol",
+  "addModalTitle": "Ku dar Gobol",
+  "editModalTitle": "Gobolka wax ka beddel",
+  "deleteConfirmation": {
+    "title": "Gobolka tirtir",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto gobolkan?",
+    "confirmLabel": "Tirtir",
+    "cancelLabel": "Jooji"
+  },
+  "table": {
+    "id": "ID",
+    "regionName": "Magaca Gobolka",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "region_name": {
+        "label": "Magaca Gobolka",
+        "placeholder": "Geli magaca gobolka"
+      },
+      "description": {
+        "label": "Sharaxaada",
+        "placeholder": "Geli sharaxaad"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "fixErrors": "Hagaaji khaladaadka ansaxinta ka hor inta aadan gudbin"
+    }
+  },
+  "toast": {
+    "updated": "Gobolka si guul leh ayaa loo cusboonaysiiyay",
+    "added": "Gobolka ayaa si guul leh loogu daray",
+    "deleted": "Gobolka waa la tirtiray si guul leh",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  }
+},
+"rejectionReason": {
+  "title": "Diidmada/Soo celinta Sababaha",
+  "searchPlaceholder": "Raadi diidmada/soo celinta sababaha...",
+  "addButton": "Kudar Sababta Diidmada",
+  "addModalTitle": "Ku dar diidmada/soo celinta sababta",
+  "editModalTitle": "Wax ka beddel diidmada/Sababta soo noqoshada",
+  "deleteConfirmation": {
+    "title": "Tirtir Sababta Diidmada/Soo celinta",
+    "message": "Ma hubtaa inaad rabto inaad tirtirto diidmadan/soo celintan?",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "reason": "Sababta",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "reason": {
+        "label": "Sababta",
+        "placeholder": "Gali sababta diidmada/celinta"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaaxada"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "formErrors": "Fadlan hagaaji khaladaadka foomka"
+    }
+  },
+  "toast": {
+    "updated": "Sababta diidmada/soo celinta waa la cusboonaysiiyay",
+    "created": "Sababta diidmada/soo celinta ayaa la sameeyay",
+    "operationFailed": "Hawlgalku wuu fashilmay ❌",
+    "deleted": "Si guul leh ayaa loo tirtiray 🗑️",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  }
+},
+
+"reportTypes": {
+  "title": "Noocyada Warbixinta",
+  "searchPlaceholder": "Raadi noocyada warbixinta...",
+  "addButton": "Kudar Nooca Warbixinta",
+  "addModalTitle": "Kudar Nooca Warbixinta",
+  "editModalTitle": "Wax ka beddel Nooca Warbixinta",
+  "deleteConfirmation": {
+    "title": "Tirtir Nooca Warbixinta",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto Nooca Warbixintan? Tallaabadan lama noqon karo.",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "reportType": "Nooca Warbixinta",
+    "subPollutionCategory": "Qaybta Wasakhowga-hoosaadka"
+  },
+  "form": {
+    "fields": {
+      "report_type": {
+        "label": "Nooca Warbixinta",
+        "placeholder": "Geli nooca warbixinta"
+      },
+      "sub_pollution_category_id": {
+        "label": "Qaybta Wasakhowga-hoosaadka",
+        "placeholder": "Dooro Qaybta Wasakhowga Hoosaadka",
+        "selectOption": "Dooro Qaybta Wasakhowga Hoosaadka"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "formErrors": "Fadlan hagaaji khaladaadka foomka"
+    }
+  },
+  "toast": {
+    "updated": "Si guul leh loo cusboonaysiiyay ",
+    "created": "Si guul leh loo sameeyay",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay",
+    "loadFailed": "Ku guuldarraystay in la raro noocyada warbixinta",
+    "na": "N/A"
+  },
+  "loading": "Soo dejinta noocyada warbixinta..."
+},
+"soundArea": {
+  "title": "Goobaha dhawaaqa",
+  "searchPlaceholder": "Ka raadi goobaha dhawaaqa...",
+  "addButton": "Ku dar Istimaale",
+  "addModalTitle": "Ku dar Aagga Codka",
+  "editModalTitle": "Wax ka beddel Aagga Codka",
+  "deleteConfirmation": {
+    "title": "Tirtir Aagga Codka",
+    "message": "Ma hubtaa inaad rabto inaad tirtirto aagga codka?",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "no": "Maya",
+    "name": "Magac",
+    "description": "Sharaxaada",
+    "dayNoiseLevel": "Heerka Qaylada maalinta (dB)",
+    "nightNoiseLevel": "Heerka Qaylada Habeenkii (dB)",
+    "duration": "Muddada"
+  },
+  "form": {
+    "fields": {
+      "name": {
+        "label": "Magaca",
+        "placeholder": "Geli magaca goobta codka"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli sharaxaad"
+      },
+      "standard_noiselevel_day": {
+        "label": "Heerka Qayladaa Maalinta (dB)",
+        "placeholder": "Geli heerka qaylada maalinta"
+      },
+      "standard_noiselevel_night": {
+        "label": "Heerka Qaylada Habeenkii (dB)",
+        "placeholder": "Geli heerka qaylada habeenkii"
+      },
+      "start_time": {
+        "label": "Waqtiga Bilawga",
+        "placeholder": "Dooro wakhtiga bilowga"
+      },
+      "end_time": {
+        "label": "Dhamaadka wakhtiga",
+        "placeholder": "Dooro wakhtiga dhamaadka"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "formErrors": "Fadlan hagaaji khaladaadka foomka"
+    }
+  },
+  "toast": {
+    "updated": "Si guul leh loo cusboonaysiiyay ✅",
+    "created": "Si guul leh loo sameeyay ✅",
+    "operationFailed": "Hawlgalku wuu fashilmay ❌",
+    "deleted": "Si guul leh ayaa loo tirtiray 🗑️",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  }
+},
+"subPollutionCategory": {
+  "title": "Maaraynta Qaybta Wasakhowga Hoose",
+  "searchPlaceholder": "Ka raadi qaybaha wasakhowga hoose...",
+  "addButton": "Kudar Qayb-hoosaadka",
+  "addModalTitle": "Kudar Qaybta Wasakhowga Hoose",
+  "editModalTitle": "Wax ka beddel qaybta wasakhowga hoose",
+  "deleteConfirmation": {
+    "title": "Tirtir Qaybta Wasakhowga-hoosaadka",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto shaygan?",
+    "confirmLabel": "Tirtir",
+    "cancelLabel": "Jooji"
+  },
+  "table": {
+    "id": "ID",
+    "category": "Qaybta",
+    "subCategory": "Qaybta hoose",
+    "description": "Sharaxaada"
+  },
+  "form": {
+    "fields": {
+      "pollution_category_id": {
+        "label": "Qaybta wasakhowga",
+        "placeholder": "Dooro qaybta wasakhowga"
+      },
+      "sub_pollution_category": {
+        "label": "Qaybta hoose",
+        "placeholder": "Geli qaybta wasakhowga hoose"
+      },
+      "description": {
+        "label": "Sharaaxad",
+        "placeholder": "Geli Sharaaxada"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "fixErrors": "Hagaaji khaladaadka ansaxinta ka hor inta aadan gudbin"
+    }
+  },
+  "toast": {
+    "updated": "Hagaaji khaladaadka ansaxinta ka hor inta aadan gudbin",
+    "added": "Qaybta wasakh-hoosaadka ayaa si guul leh loogu daray",
+    "deleted": "Qaybta wasakh-hoosaadka ayaa si guul leh loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  }
+},
+"zoneCity": {
+  "title": "Maamulka Gobolka/Magaalada",
+  "subtitle": "Tani waa gobolka/maamulka magaalada ee nidaamka EPA ee xirfadleyda sare.",
+  "searchPlaceholder": "Raadi...",
+  "addButton": "Ku dar gobol/magaalo",
+  "addModalTitle": "Ku dar gobol/magaalo",
+  "editModalTitle": "Wax ka beddel gobol/magaalo",
+  "deleteConfirmation": {
+    "title": "Tirtir Gobolka",
+    "message": "Tallaabadan lama noqon karo. Ma hubtaa inaad doonayso inaad tirtirto gobolkan?",
+    "confirmLabel": "Tirtir",
+    "cancelLabel": "Jooji"
+  },
+  "table": {
+    "refNo": "Lambarka Tixraca",
+    "name": "Magaca Gobolka"
+  },
+  "form": {
+    "fields": {
+      "name": {
+        "label": "Magaca Gobolka/Magaalada",
+        "placeholder": "Geli gobol/magaca magaalada"
+      }
+    },
+    "descriptions": {
+      "add": "Buuxi faahfaahinta si aad ugu darto gobol/magaalo cusub.",
+      "edit": "Cusbooneysii faahfaahinta gobol/magaalada"
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "fixErrors": "Fadlan hagaaji khaladaadka ansixinta ka hor inta aanad kaydin"
+    }
+  },
+  "toast": {
+    "updated": "Gobolka/Magaalada si guul leh ayaa loo cusboonaysiiyay",
+    "added": "Gobolka/Magaalada ayaa lagu daray si guul leh",
+    "deleted": "Gobolka waa la tirtiray"
+  }
+},
+"baseData": {
+  "title": "Xogta Saldhigga",
+  "subtitle": "Tani waa Xogta Saldhigga ee Xirfadlaha Sare",
+  "searchPlaceholder": "Raadi xogta saldhiga...",
+  "clearSearch": "Nadiifi Raadinta",
+  "searchResults": "{{tirinta}} ee {{ total}} walxaha la helay",
+  "noResults": {
+    "title": "Wax natiijooyin ah lama helin",
+    "message": "Ma jiro shay xog sal ah oo ku habboon raadintaada \"{{search}}\""
+  },
+  "viewButton": "Daawo",
+  "items": {
+    "regionCityManagement": {
+      "title": "Maamulka Gobolka ama Magaalada",
+      "description": "Waa meesha laga maamulo gobolka ama magaalada."
+    },
+    "pollutionCategory": {
+      "title": "Qaybta wasakhowga",
+      "description": "Tani waa meesha lagu dejiyo waddooyinka ama lagu maamulo warbixinnada"
+    },
+    "epaOfficeLocation": {
+      "title": "Epa Goobta Xafiiska",
+      "description": "Tani waa meesha lagu dejiyo waddooyin ama lagu maamulo cinwaannada"
+    },
+    "closureReason": {
+      "title": "Sababta Xiritaanka",
+      "description": "Tani waa meesha lagu dejiyo waddooyinka ama lagu maamulo ciqaabta"
+    },
+    "organizationStructure": {
+      "title": "Qaab dhismeedka Ururka",
+      "description": "Tani waa meesha lagu dejiyo waddooyinka ama lagu maamulo xogta ururka"
+    },
+    "soundArea": {
+      "title": "Aagga Codka",
+      "description": "Tani waa meesha lagu maamulo aagagga dhawaaqa"
+    },
+    "awareness": {
+      "title": "Wacyigelin",
+      "description": "Tani waa meesha lagu maamulo xogta la xiriirta wacyigelinta"
+    },
+    "formReportTypes": {
+      "title": "Foom/Warbixin Noocyada",
+      "description": "Tani waa meesha lagu maamulo foomka/warbixinta noocyada"
+    },
+    "rejectionReasons": {
+      "title": "Diidmada/Soo celinta Sababaha",
+      "description": "Tani waa meesha lagu maareeyo sababaha diidmada"
+    },
+    "news": {
+      "title": "Wararka",
+      "description": "Halkani waa meesha laga maamulo wararka iyo ogaysiisyada"
+    },
+    "faqs": {
+      "title": "FAQs",
+      "description": "Tani waa meesha lagu maamulo su'aalaha inta badan la is weydiiyo"
+    },
+    "guideDocuments": {
+      "title": "Dukumentiyada Hagaha",
+      "description": "Halkani waa meesha lagu maamulo dukumentiyada hagaha dadweynaha"
+    }
+  }
+},
+"duptyDirectorReports": {
+  "title": "Maamulka Warbixinta",
+  "subtitle": "Maamul dhammaan warbixinada laguu qoondeeyay.",
+  "searchPlaceholder": "Raadi warbixinta",
+  "exportButton": "Dhoofinta",
+  "loading": "Soodejinaya warbixinada...",
+  "table": {
+    "refNo": "Lambarka Tixraca",
+    "pollutionCategory": "Qaybta wasakhowga",
+    "location": "Goobta",
+    "reportedTime": "Waqtiga la soo sheegay",
+    "status": "Xaaladda"
+  },
+  "filters": {
+    "all": "Dhamaan",
+    "verified": "La xaqiijiyay",
+    "underInvestigation": "Baaritaanka ku socda",
+    "returned": "soo noqday"
+  },
+  "status": {
+    "pending": "La sugayo",
+    "underReview": "Waa la arkayaa",
+    "verified": "La xaqiijiyay",
+    "underInvestigation": "baaritaan ku_socdo",
+    "authorized": "La fasaxay",
+    "returned": "La soo ceeliyey",
+    "closed": "Xiran",
+    "unknown": "Aan la aqoon",
+    "na": "N/A",
+    "unknownLocation": "Aan la aqoon",
+    "unknownDate": "Taariikh aan la aqoon"
+  },
+  "toast": {
+    "success": "Guulaysay",
+    "error": "Cilad"
+  }
+},
+"generalReport": {
+  "title": "Warbixinta Falanqaynta Guud",
+  "subtitle": "Falanqaynta xogta oo dhamaystiran oo leh burbur faahfaahsan",
+  "loading": "Soodejinaya...",
+  "refresh": "Dib u cusboonaysii",
+  "filters": {
+    "title": "Xulashada Miirida",
+    "showFilters": "Muuji filtarrada",
+    "hideFilters": "Qari filtarrada",
+    "clearAll": "Nadiifi Dhammaan",
+    "applyFilters": "Codso filtarrada",
+    "activeFilters": "Miirida Firfircoon",
+    "fields": {
+      "reportId": {
+        "label": "Warbixinta ID",
+        "placeholder": "Geli warbixinta ID"
+      },
+      "startDate": {
+        "label": "Taariikhda Bilawga"
+      },
+      "endDate": {
+        "label": "Taariikhda dhamaadka"
+      },
+      "region": {
+        "label": "Gobol",
+        "all": "Dhammaan Gobollada"
+      },
+      "pollutionCategory": {
+        "label": "Qaybta wasakhowga",
+        "all": "Qaybta Dhamaan"
+      },
+      "penaltyCategory": {
+        "label": "Qaybta ciqaabta",
+        "all": "Dhamaan Ciqaabta"
+      },
+      "dateRange": {
+        "label": "Taariikh: {{start}} - {{end}}"
+      }
+    }
+  },
+  "export": {
+    "button": "Dhoofinta",
+    "csv": "U dhoofi sida CSV",
+    "excel": "U dhoofi sida Excel",
+    "json": "U dhoofi sida JSON",
+    "pdf": "Daabac PDF",
+    "filename": "warbixin_guud_{{type}}_{{date}}"
+  },
+  "dataTypes": {
+    "all": "Dhammaan Xogta",
+    "complaints": "Caabashooyika",
+    "experts": "Khabiirad",
+    "customers": "Macaamiisha",
+    "cases": "Kiisaska",
+    "assignments": "Shaqooyinka"
+  },
+  "table": {
+    "columns": {
+      "reportId": "Warbixinta ID",
+      "status": "Xaaladda",
+      "region": "Gobolka",
+      "city": "Magaalada",
+      "zone": "Gobolka",
+      "subcity": "Magaalada hoose",
+      "category": "Qaybta",
+      "subCategory": "Qaybta hoose",
+      "createdAt": "Waxa la sameeyay",
+      "actions": "Ficilada",
+      "view": "Daawo",
+      "profile": "Barofayl",
+      "customer": "Macmiil",
+      "location": "Goobta",
+      "caseStatus": "Xaalada Kiis",
+      "name": "Magac",
+      "email": "Iimeylka",
+      "phone": "Telefoon",
+      "specialization": "Takhasuska",
+      "totalAssignments": "Wadarta Shaqooyinka",
+      "active": "Firfircoon",
+      "closed": "Xiran",
+      "successRate": "Heerka Guusha",
+      "lastAssignment": "Xilkii U Dambeeyey",
+      "accountStatus": "Heerka Koontada",
+      "guest": "Martida",
+      "totalComplaints": "Wadarta Cabashooyinka",
+      "activeComplaints": "Firfircoon",
+      "closedComplaints": "La xaliyay",
+      "lastComplaint": "Cabashada u dambaysa",
+      "joined": "Ku biiray",
+      "count": "Tiri",
+      "value": "Qiimaha",
+      "type": "Nooca",
+      "assignments": "Shaqooyinka",
+      "assignmentCount": "Shaqooyinka"
+    },
+    "empty": "—",
+    "yes": "Haa",
+    "no": "Maya"
+  },
+  "status": {
+    "pending": "La sugayo",
+    "verified": "La xaqiijiyay",
+    "rejected": "Waa la diiday",
+    "assigned": "loo xilsaaray",
+    "inProgress": "Horumarka",
+    "completed": "Dhameystiiray",
+    "closed": "Xiran",
+    "active": "Firfircoon",
+    "inactive": "Aan Firfircooneyn"
+  },
+  "pdf": {
+    "title": "Warbixinta Falanqaynta Guud",
+    "generatedOn": "La soo saaray: {{date}}",
+    "activeFilters": "Miirida Firfircoon",
+    "start": "bilow: {{date}}",
+    "end": "Dhamaad: {{date}}",
+    "region": "Gobolka: {{name}}",
+    "category": "Qaybta",
+    "totalRecords": "Wadarta Diiwaanada: {{count}}",
+    "page": "Bogga {{current}} ee {{total}}"
+  },
+  "toast": {
+    "exportSuccess": "Dhoofintu waxay ku dhamaatay si guul leh",
+    "exportFailed": "Dhoofintu way fashilantay: {{message}}",
+    "pdfSuccess": "PDF si guul leh loo soo saaray",
+    "pdfFailed": "Sameysiga PDF waa fashilmay: {{message}}"
+  },
+  "alerts": {
+    "viewDetails": "Daawashada {{type}} Faahfaahinta",
+    "details": "Faahfaahin"
+  }
+},
+"generalDashboard": {
+  "title": "Dashboard-ka Deegaanka",
+  "subtitle": "La soco cabashooyinka wasakhowga iyo ka qayb qaadashada macaamiisha",
+  "common": {
+    "na": "N/A",
+    "unknown": "Aan la aqoon"
+  },
+  "tabs": {
+    "pollution": "Dashboard-ka wasakhaysan",
+    "customer": "Macmiil Dashboard"
+  },
+  "filters": {
+    "title": "Dashboard Miirid",
+    "show": "Daawo Miirida",
+    "hide": "Dashboard-ka wasakhaysan",
+    "clearAll": "Nadiifi Dhammaan",
+    "loading": "Soodejinaya...",
+    "error": "Khalad soo dejinta xogta",
+    "fields": {
+      "status": {
+        "label": "Xaaladda",
+        "all": "Dhammaan Xaaladda"
+      },
+      "region": {
+        "label": "Gobolka",
+        "all": "Dhammaan Gobollada",
+        "disabledHint": "Nadiifi xulashada magaalada si aad awood ugu yeelato gobollada"
+      },
+      "zone": {
+        "label": "Gobolka",
+        "all": "Dhammaan Gobollada"
+      },
+      "woreda": {
+        "label": "Degmo",
+        "all": "Dhamaan Degmooyinka",
+        "zone": "Degmo (Gobol)",
+        "subcity": "Degmo (Magaalada Hoose)"
+      },
+      "city": {
+        "label": "Magaalada",
+        "all": "Dhamaan Magaalooyin",
+        "disabledHint": "Nadiifi xulashada gobolka si aad awood ugu yeelatid magaalooyinka"
+      },
+      "subcity": {
+        "label": "Magaalada hoose",
+        "all": "Dhamaan Magaalo Hoosaad"
+      },
+      "pollutionCategory": {
+        "label": "Qaybta Wasakhowga",
+        "all": "Qaybta Dhamaan"
+      },
+      "subPollutionCategory": {
+        "label": "Qaybta Wasakhowga Hoose",
+        "all": "Dhammaan Qaybaha Hoose",
+        "selectFirst": "Marka hore dooro qaybta wasakhowga",
+        "hint": "Fadlan door qaybta wasakhowga si aad u aragto qaybo-hoosaadyo"
+      },
+      "penaltyCategory": {
+        "label": "Qaybta ciqaabta",
+        "all": "Dhamaan Ciqaabta"
+      },
+      "startDate": {
+        "label": "Taariikhda Bilawga"
+      },
+      "endDate": {
+        "label": "Taariikhda dhamaadka"
+      },
+      "timeRange": {
+        "label": "Waqtiga Kala Duwan",
+        "options": {
+          "7d": "7-dii maalmood ee u dambeeyay",
+          "30d": "30-dii maalmood ee u dambeeyay",
+          "90d": "90-dii maalmood ee u dambeeyay",
+          "180d": "6-dii bilood ee la soo dhaafay",
+          "365d": "Sannadkii hore",
+          "all": "Waqti kasta"
+        }
+      }
+    },
+    "statusOptions": {
+      "all": "Dhammaan Xaaladda",
+      "pending": "La sugayo",
+      "under_investigation": "In Baaritaanka",
+      "verified": "La xaqiijiyay",
+      "under_review": "La soo arkayaa",
+      "investigation_submitted": "Baadhitaan La Gudbiyey",
+      "closed": "xiran",
+      "rejected": "La diiday"
+    }
+  },
+  "pollution": {
+    "stats": {
+      "total": "Wadarta cabashooyinka",
+      "totalDesc": "Dhammaan warbixinnada wasakhda ayaa la helay",
+      "pending": "La sugayo",
+      "pendingDesc": "Sugitaanka shaqada",
+      "inProgress": "Baaritaanka ku socda",
+      "inProgressDesc": "Baaritaan ayaa ku socda",
+      "closed": "xiran",
+      "closedDesc": "xiran",
+      "rejected": "La diiday",
+      "rejectedDesc": "Warbixin aan sax ahayn ama nuqul ah",
+      "resolutionRate": "Heerka Xallinta",
+      "avgResolutionTime": "Celceliska Waqtiga Xallinta",
+      "topCategory": "Qaybta Sare",
+      "topRegion": "Gobolka ugu sareeya"
+    },
+    "charts": {
+      "pollutionTrend": {
+        "title": "Isbeddellada Wasakhaynta",
+        "subtitle": "Warbixinnada qayb ahaan waqti ka dib",
+        "noData": "Ma jiro xog isbeddel ah oo la heli karo",
+        "applyFilters": "Codso filtarrada si aad u aragto xogta",
+        "tooltip": "{{value}} warbixino",
+        "dateLabel": "Taariikh: {{label}}"
+      },
+      "penaltyDistribution": {
+        "title": "Qaybinta Ciqaabta",
+        "subtitle": "Noocyada ciqaabta la soo saaray",
+        "noData": "Ma jiro xog ganaax ah oo la heli karo",
+        "applyFilters": "Codso filtarrada si aad u aragto xogta",
+        "tooltip": "{{value}} kiisaska"
+      },
+      "regionalReports": {
+        "title": "Wararka Gobolka",
+        "subtitle": "Warbixinta gobolka",
+        "noData": "Ma jiro xog gobol oo la heli karo",
+        "applyFilters": "Codso filtarrada si aad u aragto xogta",
+        "total": "Warta",
+        "closed": "Xiran"
+      },
+      "subPollutionBreakdown": {
+        "title": "Qaybaha Wasakhowga",
+        "subtitle": "Kala-baxa qaybaha muhiimka ah",
+        "noData": "Wax xog-hoosaad ah lama hayo",
+        "applyFilters": "Codso filtarrada si aad u aragto burbur",
+        "reports": "{{count}} warbixino",
+        "unknownCategory": "Qaybta aan la garanayn",
+        "unknown": "Aan la aqoon"
+      },
+      "map": {
+        "title": "Goobaha Ka Warbixi",
+        "subtitle": "Qaybinta warbixinnada juqraafiyeed",
+        "noData": "Xog goobta lagama hayo",
+        "applyFilters": "Codso filtarrada si aad u aragto meelaha",
+        "popup": {
+          "city": "Magaalada",
+          "totalReports": "Wadarta Wararka: {{count}}",
+          "closed": "xiran",
+          "resolutionRate": "Heerka Xallinta: {{rate}}%"
+        }
+      }
+    }
+  },
+  "customer": {
+    "stats": {
+      "total": "Wadarta Macaamiisha",
+      "registered": "Macaamiisha diiwaangashan",
+      "guest": "Macaamiisha Martida",
+      "multipleReports": "Macaamiisha leh 2+ Warbixin",
+      "avgEngagement": "Celceliska Dhibcaha Ka-qaybgalka",
+      "retentionRate": "Heerka Haysashada",
+      "avgReportsPerCustomer": "Celcelis ahaan Warbixinada Macmiilkiiba",
+      "active": "Macaamiisha firfircoon"
+    },
+    "charts": {
+      "reportsPerCustomer": {
+        "title": "Warbixinada Sida loo qaybiyo macmiilka",
+        "noData": "Ma jiro xogta qaybinta macaamiisha",
+        "tooltip": "{{value}} warbixino",
+        "customerLabel": "Macmiil: {{label}}"
+      },
+      "activityTimeline": {
+        "title": "Jadwalka Hawlaha Macmiilka",
+        "noData": "Ma jiro xogta wakhtiga hawlqabadka",
+        "tooltip": "{{value}} warbixino",
+        "monthLabel": "Bisha: {{label}}"
+      }
+    },
+    "topCustomers": {
+      "title": "Macaamiisha ugu sarreeya ee ka warbixinaya",
+      "noData": "Ma jiro xogta macmiilka oo la heli karo",
+      "applyFilters": "Codso filtarrada si aad u aragto falanqaynta macaamiisha",
+      "rank": "#{{rank}}",
+      "status": {
+        "active": "Firfircoon",
+        "inactive": "Aan Firfircooneyn"
+      },
+      "fields": {
+        "totalReports": "Wadarta Wararka:",
+        "phone": "Telefoon",
+        "firstReport": "Warbixintii Koowaad:",
+        "lastReport": "Warbixintii Ugu Dambeysay:",
+        "accountStatus": "Heerka Koontada:"
+      }
+    }
+  },
+  "map": {
+    "loading": "Soodejinaya khariidada...",
+    "error": "Khalad dejinta khariidada",
+    "center": {
+      "lat": 9.145,
+      "lng": 40.4897
+    }
+  },
+  "loading": {
+    "dashboard": "Soodejinaya xogta dashboard-ka...",
+    "fetching": "Soo jiidashada {{type}} falanqaynta",
+    "complaint": "cabashada",
+    "customer": "macmiil"
+  },
+  "tooltips": {
+    "refresh": "Dib u cusboonaysii xogta",
+    "export": "Warbixinta dhoofinta",
+    "clearFilters": "Nadiifi dhammaan filtarrada"
+  },
+  "errors": {
+    "fetchFailed": "Ku guuldareystay in la keeno {{resource}}",
+    "exportFailed": "Ku guuldareystay in la dhoofiyo warbixinta",
+    "exportSuccess": "Warbixinta dhoofinta si guul leh dhoofiyay!"
+  }
+},
+
+"duptyDirectorReportDetail": {
+  "title": "Maamulka Warbixinta",
+  "loading": "Soodejinaya...",
+  "authorize": {
+    "button": "Ogolaanshaha",
+    "authorizing": "Ogolaanshaha...",
+    "success": "Cabashada si guul leh ayaa loo oggolaaday. Koodhka QR waa la sameeyay!",
+    "failed": "Ku guul daraystay inuu oggolaado cabashada",
+    "error": "Khalad ayaa dhacay markii la fasaxayay cabashada"
+  },
+  "return": {
+    "button": "Soo noqo",
+    "modalTitle": "Soo celi Cabashada",
+    "instruction": "Fadlan dooro sabab diidmo oo ku dar sharraxaad dheeri ah haddii loo baahdo.",
+    "rejectionReason": {
+      "placeholder": "Dooro sababta diidmada"
+    },
+    "description": {
+      "placeholder": "Additional description"
+    },
+    "cancel": "Jooji",
+    "confirm": "Soo celi Cabashada",
+    "returning": "Soo noqoshada...",
+    "validation": {
+      "selectReason": "Fadlan dooro sabab diidmo"
+    },
+    "success": "Cabashada si guul leh ayaa loo soo celiyay",
+    "failed": "Ku guuldareystay soo celinta cabashada",
+    "error": "Khalad ayaa dhacay markii la soo celinayay cabashada"
+  },
+  "qrCode": {
+    "downloadSuccess": "Koodhka QR si guul leh ayaa loo soo dejiyay",
+    "complaintId": "Cabashada ID",
+    "complaintNumber": "Lambarka Cabashada",
+    "status": "Xaalada",
+    "pollutionCategory": "Qaybta wasakhowga",
+    "createdAt": "Waxa la sameeyay",
+    "authorizedAt": "La fasaxay At",
+    "authorizationId": "Oggolaanshaha ID",
+    "type": "Nooca",
+    "successMessage": {
+      "title": "Cabashada si guul leh loo oggolaaday",
+      "description": "Cabashadan waa la oggolaaday. Waxaad arki kartaa oggolaanshaha QR code."
+    }
+  },
+  "toast": {
+    "loadFailed": "Ku guuldareystay in la soo geliyo warbixinta",
+    "complaintIdMissing": "ID cabashada wuu maqan yahay"
+  },
+  "common": {
+    "na": "N/A"
+  }
+},
+
+"reportingForms": {
+  "title": "Foomamka Warbixinta",
+  "searchPlaceholder": "Raadi foomamka warbixinta...",
+  "addButton": "Kudar Foomka Warbixinta",
+  "addModalTitle": "Kudar Foomka Warbixinta",
+  "editModalTitle": "Wax ka beddel Foomka Warbixinta",
+  "deleteConfirmation": {
+    "title": "Tirtir Foomka Warbixinta",
+    "message": "Ma hubtaa inaad doonayso inaad tirtirto foomkan warbixinta?",
+    "confirmLabel": "Tirtir"
+  },
+  "table": {
+    "formName": "Magaca Foomka",
+    "inputType": "Nooca Gelitaanka",
+    "required": "Loo baahan yahay",
+    "yes": "Haa",
+    "no": "Maya"
+  },
+  "form": {
+    "fields": {
+      "report_form": {
+        "label": "Magaca Foomka",
+        "placeholder": "Geli magaca foomka"
+      },
+      "input_type": {
+        "label": "Nooca Gelitaanka",
+        "placeholder": "Dooro nooca gelinta",
+        "options": {
+          "text": "Qoraal",
+          "number": "Lambar",
+          "email": "Email",
+          "tel": "Telefoon",
+          "date": "Taariikh",
+          "time": "wakhtiga",
+          "datetime": "Taariikhda iyo Waqtiga",
+          "textarea": "Aagga qoraalka",
+          "select": "Dooro Hoos-u-dhac",
+          "radio": "Badhannada Raadiyaha",
+          "checkbox": "Sanduuqyada hubinta",
+          "file": "Fay Usoo roog",
+          "image": "Sawiir Usoo roog"
+        }
+      },
+      "options": {
+        "label": "Ikhtiyaarada",
+        "placeholder": "Geli ikhtiyaarka (halkiiba hal)",
+        "helper": "Geli ikhtiyaar kasta khad cusub. Kuwaas waxa loo isticmaali doona door/raadiyo/ikhtiraac doorasho."
+      },
+      "required": {
+        "label": "Loo baahan yahay",
+        "yes": "Haa, goobtan waa loo baahan yahay",
+        "no": "Maya, goobtan waa ikhtiyaari"
+      },
+      "form_type_id": {
+        "label": "Form Type",
+        "placeholder": "Dooro nooca foomka"
+      },
+      "report_type_id": {
+        "label": "Nooca Warbixinta",
+        "placeholder": "Dooro nooca warbixinta"
+      }
+    },
+    "buttons": {
+      "cancel": "Jooji",
+      "save": "Keydii",
+      "update": "Cusbooneysii"
+    },
+    "validation": {
+      "formErrors": "Fadlan hagaaji khaladaadka foomka"
+    }
+  },
+  "toast": {
+    "updated": "Foomka warbixinta si guul leh ayaa loo cusboonaysiiyay",
+    "created": "Foomka warbixinta ayaa loo sameeyay si guul leh",
+    "operationFailed": "Hawlgalku wuu fashilmay",
+    "deleted": "Si guul leh ayaa loo tirtiray",
+    "deleteFailed": "Tirtiridda waa fashilantay"
+  }
+}
+  }
