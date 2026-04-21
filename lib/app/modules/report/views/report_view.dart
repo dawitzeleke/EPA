@@ -1008,13 +1008,13 @@ class _ReportViewState extends State<ReportView> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.camera_alt_outlined),
-                    title: const Text('Take Photo'),
+                    title:  Text('Take Photo'.tr),
                     onTap: () => Navigator.of(sheetCtx).pop(1),
                   ),
                   ListTile(
                     leading: const Icon(Icons.photo_library_outlined),
-                    title: const Text('Upload from Gallery'),
-                    onTap: () => Navigator.of(sheetCtx).pop(2),
+                    title:  Text('Upload from Gallery'.tr),
+                    onTap: () => Navigator.of(sheetCtx).pop(2),     
                   ),
                   const SizedBox(height: 8),
                 ],

@@ -149,15 +149,15 @@ class ReportSuccessView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Successfully Sent',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF0B2035),
+                    Text(
+                      'Successfully Sent'.tr,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF0B2035),
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 22),
 
                   // info card
@@ -188,23 +188,23 @@ class ReportSuccessView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children:  [
-                                const Text(
-                                  'Report ID:',
-                                  style: TextStyle(color: Color(0xFF6B7280)),
+                                Text(
+                                  'Report ID'.tr,
+                                  style: const TextStyle(color: Color(0xFF6B7280)),
                                 ),
                                 const SizedBox(height: 12),
                                 if (resolvedName != null)
-                                  const Text('Name', style: TextStyle(color: Color(0xFF6B7280))),
+                                  Text('Name'.tr, style: const TextStyle(color: Color(0xFF6B7280))),
                                 if (resolvedName != null) const SizedBox(height: 12),
-                                const Text(
-                                  'Date & Time:',
-                                  style: TextStyle(color: Color(0xFF6B7280)),
+                                Text(
+                                  'Date & Time'.tr,
+                                  style: const TextStyle(color: Color(0xFF6B7280)),
                                 ),
                                 if (resolvedRegion != null) ...[
                                   const SizedBox(height: 12),
-                                  const Text(
-                                    'Region:',
-                                    style: TextStyle(color: Color(0xFF6B7280)),
+                                  Text(
+                                    'Region'.tr,
+                                    style: const TextStyle(color: Color(0xFF6B7280)),
                                   ),
                                 ],
                               ],
@@ -280,8 +280,8 @@ class ReportSuccessView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Text(
-                          'Done',
+                        child:  Text(
+                          'Done'.tr,
                           style: TextStyle(
                             color: AppColors.onPrimary,
                             fontSize: 16,
