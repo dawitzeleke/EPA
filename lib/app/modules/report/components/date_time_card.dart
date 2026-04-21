@@ -29,16 +29,16 @@ class DateTimeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              children: const [
+              children: [
                 Text(
-                  'Time and Date',
-                  style: TextStyle(
+                  'Time and Date'.tr,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(width: 6),
-                Text(
+                const SizedBox(width: 6),
+                const Text(
                   '*',
                   style: TextStyle(
                     color: Colors.red,
@@ -54,7 +54,7 @@ class DateTimeCard extends StatelessWidget {
                   child: Obx(() {
                     final d = selectedDate.value;
                     final label = d == null
-                        ? 'Select Date'
+                        ? 'Select Date'.tr
                         : '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
                     return OutlinedButton(
                       onPressed: onPickDate,
@@ -84,7 +84,7 @@ class DateTimeCard extends StatelessWidget {
                     final t = selectedTime.value;
                     String label;
                     if (t == null) {
-                      label = 'Select Time';
+                      label = 'Select Time'.tr;
                     } else {
                       final hour = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
                       final minute = t.minute.toString().padLeft(2, '0');

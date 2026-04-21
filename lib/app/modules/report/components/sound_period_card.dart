@@ -19,9 +19,9 @@ class SoundPeriodCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Time of Day',
-              style: TextStyle(
+            Text(
+              'Time of Day'.tr,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 color: Colors.black87,
@@ -54,7 +54,7 @@ class SoundPeriodCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Day',
+                        'Day'.tr,
                         style: TextStyle(
                           color: current == 'Day'
                               ? AppColors.primary
@@ -86,7 +86,7 @@ class SoundPeriodCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Night',
+                        'Night'.tr,
                         style: TextStyle(
                           color: current == 'Night'
                               ? AppColors.primary

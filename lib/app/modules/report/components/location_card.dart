@@ -42,16 +42,16 @@ class LocationCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              children: const [
+              children: [
                 Text(
-                  'Are you in the spot',
-                  style: TextStyle(
+                  'Are you in the spot'.tr,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(width: 6),
-                Text(
+                const SizedBox(width: 6),
+                const Text(
                   '*',
                   style: TextStyle(
                     color: Colors.red,
@@ -102,7 +102,7 @@ class LocationCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Yes',
+                        'Yes'.tr,
                         style: TextStyle(
                           color:
                               isInSpot ? AppColors.primary : Colors.black87,
@@ -137,7 +137,7 @@ class LocationCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'No',
+                        'No'.tr,
                         style: TextStyle(
                           color:
                               isNotInSpot ? AppColors.primary : Colors.black87,
@@ -157,22 +157,22 @@ class LocationCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20),
                   Row(
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         Icons.location_on_outlined,
                         size: 18,
                         color: Colors.black87,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'Location',
-                        style: TextStyle(
+                        'Location'.tr,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(width: 6),
-                      Text(
+                      const SizedBox(width: 6),
+                      const Text(
                         '*',
                         style: TextStyle(
                           color: Colors.red,
@@ -205,7 +205,7 @@ class LocationCard extends StatelessWidget {
                             () => Text(
                               controller.autoDetectLocation.value
                                   ? controller.detectedAddress.value
-                                  : 'Tap Search Location\nAddis Ababa | N.L | W-1',
+                                  : 'Tap Search Location'.tr,
                               style: const TextStyle(color: Colors.black54),
                             ),
                           ),
@@ -236,7 +236,7 @@ class LocationCard extends StatelessWidget {
                           'Select Region / City Administration';
                     }
                     return buildDropdown(
-                      'Region / City Administration',
+                      'Region / City Administration'.tr,
                       names,
                       value: controller.selectedRegion.value,
                       enabled: true,
@@ -281,7 +281,7 @@ class LocationCard extends StatelessWidget {
                         children: [
                           const SizedBox(height: 8),
                           buildDropdown(
-                            'Zone / Sub-City',
+                            'Zone / Sub-City'.tr,
                             ['Select Zone / Sub-City'],
                             value: 'Select Zone / Sub-City',
                             enabled: false,
@@ -310,7 +310,7 @@ class LocationCard extends StatelessWidget {
                       children: [
                         const SizedBox(height: 8),
                         buildDropdown(
-                          'Zone / Sub-City',
+                          'Zone / Sub-City'.tr,
                           names,
                           value: controller.selectedZone.value,
                           enabled: items.isNotEmpty,
@@ -352,7 +352,7 @@ class LocationCard extends StatelessWidget {
                       children: [
                         const SizedBox(height: 8),
                         buildDropdown(
-                          'Woreda',
+                          'Woreda'.tr,
                           names,
                           value: controller.selectedWoreda.value,
                           enabled: true,

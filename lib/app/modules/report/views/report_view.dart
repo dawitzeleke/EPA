@@ -59,7 +59,7 @@ class _ReportViewState extends State<ReportView> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Report Issue',
+        title: 'Report Issue'.tr,
         showBack: true,
         forceHomeOnBack: true, // ensure back reliably returns to Home shell
         showHelp: true,
@@ -87,9 +87,9 @@ class _ReportViewState extends State<ReportView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Pollution Category',
-                        style: TextStyle(
+                      Text(
+                        'Pollution Category'.tr,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -111,13 +111,13 @@ class _ReportViewState extends State<ReportView> {
                             children: [
                               Text(
                                 controller.pollutionCategoriesError.value ??
-                                    'Failed to Load Categories',
+                                    'Failed to Load Categories'.tr,
                                 style: const TextStyle(color: Colors.red),
                               ),
                               const SizedBox(height: 8),
                               TextButton(
                                 onPressed: controller.fetchPollutionCategories,
-                                child: const Text('Retry'),
+                                child: Text('Retry'.tr),
                               ),
                             ],
                           );
@@ -142,9 +142,9 @@ class _ReportViewState extends State<ReportView> {
                         }
 
                         if (relevantItems.isEmpty) {
-                          return const Text(
-                            'No pollution categories available for this report type',
-                            style: TextStyle(color: Colors.black54),
+                          return Text(
+                            'No pollution categories available for this report type'.tr,
+                            style: const TextStyle(color: Colors.black54),
                           );
                         }
 
@@ -157,12 +157,12 @@ class _ReportViewState extends State<ReportView> {
                           menuMaxHeight: 260,
                           borderRadius: BorderRadius.circular(8),
                           items: [
-                            const DropdownMenuItem<String?>(
+                            DropdownMenuItem<String?>(
                               value: null,
                               child: Text(
-                                'Select pollution category',
+                                'Select pollution category'.tr,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.black54),
+                                style: const TextStyle(color: Colors.black54),
                               ),
                             ),
                             ...relevantItems.map((category) {
@@ -210,7 +210,7 @@ class _ReportViewState extends State<ReportView> {
                             ),
                             filled: true,
                             fillColor: Colors.white,
-                            hintText: 'Select pollution category',
+                            hintText: 'Select pollution category'.tr,
                             hintStyle: TextStyle(
                               color: Colors.grey.shade600,
                               fontWeight: FontWeight.w500,
@@ -236,9 +236,9 @@ class _ReportViewState extends State<ReportView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Land Use Type',
-                          style: TextStyle(
+                        Text(
+                          'Land Use Type'.tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -273,9 +273,9 @@ class _ReportViewState extends State<ReportView> {
                           }
 
                           if (controller.soundAreas.isEmpty) {
-                            return const Text(
-                              'No sound areas available',
-                              style: TextStyle(color: Colors.black54),
+                            return Text(
+                              'No sound areas available'.tr,
+                              style: const TextStyle(color: Colors.black54),
                             );
                           }
 
@@ -291,12 +291,12 @@ class _ReportViewState extends State<ReportView> {
                             menuMaxHeight: 260,
                             borderRadius: BorderRadius.circular(8),
                             items: [
-                              const DropdownMenuItem<String?>(
+                              DropdownMenuItem<String?>(
                                 value: null,
                                 child: Text(
-                                  'Select sound area',
+                                  'Select sound area'.tr,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black54),
+                                  style: const TextStyle(color: Colors.black54),
                                 ),
                               ),
                               ...items.map(
@@ -342,7 +342,7 @@ class _ReportViewState extends State<ReportView> {
                               ),
                               filled: true,
                               fillColor: Colors.white,
-                              hintText: 'Select sound area',
+                              hintText: 'Select sound area'.tr,
                               hintStyle: TextStyle(
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
@@ -386,22 +386,22 @@ class _ReportViewState extends State<ReportView> {
                     children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Icon(
+                        children: [
+                          const Icon(
                             Icons.camera_alt_outlined,
                             size: 18,
                             color: Colors.black87,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
-                            'Add Evidence',
-                            style: TextStyle(
+                            'Add Evidence'.tr,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
                           ),
-                          SizedBox(width: 6),
-                          Text(
+                          const SizedBox(width: 6),
+                          const Text(
                             '*',
                             style: TextStyle(
                               color: Colors.red,
@@ -426,12 +426,12 @@ class _ReportViewState extends State<ReportView> {
                             _evidenceTile(
                               context,
                               Icons.camera_alt_outlined,
-                              'Photo',
+                              'Photo'.tr,
                             ),
                             _evidenceTile(
                               context,
                               Icons.videocam_outlined,
-                              'Record Video',
+                              'Record Video'.tr,
                               isVideo: true,
                             ),
                           ],
@@ -452,9 +452,9 @@ class _ReportViewState extends State<ReportView> {
                               color: const Color(0xFFEFF7F0),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Text(
-                              'No files uploaded',
-                              style: TextStyle(color: Colors.black87),
+                            child: Text(
+                              'No files uploaded'.tr,
+                              style: const TextStyle(color: Colors.black87),
                             ),
                           );
                         }
@@ -598,7 +598,7 @@ class _ReportViewState extends State<ReportView> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '$count File(s) Uploaded',
+                              '$count ${'File(s) Uploaded'.tr}',
                               style: const TextStyle(color: Colors.black87),
                             ),
                           ],
@@ -621,13 +621,13 @@ class _ReportViewState extends State<ReportView> {
               const SizedBox(height: 12),
 
               LabeledTextFieldCard(
-                title: 'Specific Location',
+                title: 'Specific Location'.tr,
                 maxLines: 1,
                 controller: controller.specificLocationController,
               ),
               const SizedBox(height: 12),
               LabeledTextFieldCard(
-                title: 'Description',
+                title: 'Description'.tr,
                 maxLines: 3,
                 controller: controller.descriptionController,
               ),
@@ -648,16 +648,16 @@ class _ReportViewState extends State<ReportView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              children: const [
+                              children: [
                                 Text(
-                                  'Phone Number',
-                                  style: TextStyle(
+                                  'Phone Number'.tr,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
                                 ),
-                                SizedBox(width: 6),
-                                Text(
+                                const SizedBox(width: 6),
+                                const Text(
                                   '*',
                                   style: TextStyle(
                                     color: Colors.red,
@@ -702,7 +702,7 @@ class _ReportViewState extends State<ReportView> {
                                           showCursor: true,
                                           decoration: InputDecoration(
                                             hintText:
-                                                'Enter Your Phone Number (e.g. 091XXXXXXX)',
+                                                'Enter Your Phone Number (e.g. 091XXXXXXX)'.tr,
                                             hintStyle: const TextStyle(
                                                 fontSize: 13,
                                                 color: Colors.black54),
@@ -860,13 +860,13 @@ class _ReportViewState extends State<ReportView> {
                       Expanded(
                         child: Text.rich(
                           TextSpan(
-                            text: 'I Agree To The ',
+                            text: 'I Agree To The '.tr,
                             style: const TextStyle(
                               color: AppColors.primary,
                             ),
                             children: [
                               TextSpan(
-                                text: 'Terms And Conditions',
+                                text: 'Terms And Conditions'.tr,
                                 style: const TextStyle(
                                   color: AppColors.primary,
                                   decoration: TextDecoration.underline,
@@ -907,9 +907,9 @@ class _ReportViewState extends State<ReportView> {
                             valueColor: AlwaysStoppedAnimation<Color>(AppColors.onPrimary),
                           ),
                         )
-                      : const Text(
-                          'SEND',
-                          style: TextStyle(
+                      : Text(
+                          'SEND'.tr,
+                          style: const TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -947,12 +947,12 @@ class _ReportViewState extends State<ReportView> {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.videocam_outlined),
-                      title: const Text('Record a Video'),
+                      title: Text('Record a Video'.tr),
                       onTap: () => Navigator.of(sheetCtx).pop(1),
                     ),
                     ListTile(
                       leading: const Icon(Icons.video_library_outlined),
-                      title: const Text('Upload from Gallery'),
+                      title: Text('Upload from Gallery'.tr),
                       onTap: () => Navigator.of(sheetCtx).pop(2),
                     ),
                     const SizedBox(height: 8),
@@ -977,14 +977,14 @@ class _ReportViewState extends State<ReportView> {
               }
               if (!ctx.mounted) return;
               Get.snackbar(
-                'Upload',
-                'Video added',
+                'Upload'.tr,
+                'Video added'.tr,
                 snackPosition: SnackPosition.BOTTOM,
               );
             } catch (e) {
               if (!ctx.mounted) return;
               Get.snackbar(
-                'Upload failed',
+                'Upload failed'.tr,
                 e.toString(),
                 snackPosition: SnackPosition.BOTTOM,
               );
@@ -1118,13 +1118,13 @@ class _ReportViewState extends State<ReportView> {
                   border: Border.all(color: Colors.orange.shade200),
                 ),
                 child: Row(
-                  children: const [
-                    Icon(Icons.info_outline, color: Colors.orange, size: 18),
-                    SizedBox(width: 8),
+                  children: [
+                    const Icon(Icons.info_outline, color: Colors.orange, size: 18),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Recording not supported in web. Please use Android/iOS.',
-                        style: TextStyle(color: Colors.orange, fontSize: 12),
+                        'recording_web_not_supported'.tr,
+                        style: const TextStyle(color: Colors.orange, fontSize: 12),
                       ),
                     ),
                   ],
@@ -1152,7 +1152,7 @@ class _ReportViewState extends State<ReportView> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'Frequency ${decibel.toStringAsFixed(1)}db',
+                      '${'Frequency'.tr} ${decibel.toStringAsFixed(1)}db',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,
@@ -1168,7 +1168,7 @@ class _ReportViewState extends State<ReportView> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Duration ${controller.formatDuration(duration)}',
+                    '${'Duration'.tr} ${controller.formatDuration(duration)}',
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 12,
@@ -1198,7 +1198,7 @@ class _ReportViewState extends State<ReportView> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Min required ${minDb.toStringAsFixed(0)} dB',
+                          '${'Min required'.tr} ${minDb.toStringAsFixed(0)} dB',
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 12,
@@ -1213,7 +1213,7 @@ class _ReportViewState extends State<ReportView> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Max recorded ${maxDb.toStringAsFixed(1)} dB',
+                          '${'Max recorded'.tr} ${maxDb.toStringAsFixed(1)} dB',
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 12,
@@ -1233,14 +1233,14 @@ class _ReportViewState extends State<ReportView> {
                         border: Border.all(color: Colors.red.shade200),
                       ),
                       child: Row(
-                        children: const [
-                          Icon(Icons.warning_amber_rounded,
+                        children: [
+                          const Icon(Icons.warning_amber_rounded,
                               color: Colors.red, size: 18),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Recorded sound level is below the minimum required for the selected land use type.',
-                              style: TextStyle(color: Colors.red, fontSize: 12),
+                              'sound_level_below_minimum'.tr,
+                              style: const TextStyle(color: Colors.red, fontSize: 12),
                             ),
                           ),
                         ],
@@ -1260,7 +1260,7 @@ class _ReportViewState extends State<ReportView> {
                 // Cancel button
                 _buildRecordingButton(
                   icon: Icons.cancel_outlined,
-                  label: 'Cancel',
+                  label: 'Cancel'.tr,
                   color: (isRecording || isPaused) && !isWeb
                       ? AppColors.primary
                       : Colors.grey.shade400,
@@ -1272,7 +1272,7 @@ class _ReportViewState extends State<ReportView> {
                     controller.cancelRecording().catchError((error) {
                       secureLog('Error canceling recording: $error');
                       Get.snackbar(
-                        'Error',
+                        'Error'.tr,
                         'Failed to cancel recording: ${error.toString()}',
                         snackPosition: SnackPosition.BOTTOM,
                       );
@@ -1285,8 +1285,9 @@ class _ReportViewState extends State<ReportView> {
                   icon: isRecording
                       ? (isPaused ? Icons.play_arrow : Icons.pause)
                       : Icons.mic,
-                  label:
-                      isRecording ? (isPaused ? 'Resume' : 'Pause') : 'Start',
+                  label: isRecording
+                      ? (isPaused ? 'Resume'.tr : 'Pause'.tr)
+                      : 'Start'.tr,
                   color: isWeb ? Colors.grey.shade400 : AppColors.primary,
                   enabled: !isWeb,
                   onPressed: () {
@@ -1304,7 +1305,7 @@ class _ReportViewState extends State<ReportView> {
                 // Stop button
                 _buildRecordingButton(
                   icon: Icons.stop,
-                  label: 'Stop',
+                  label: 'Stop'.tr,
                   color: (isRecording || isPaused) && !isWeb
                       ? AppColors.primary
                       : Colors.grey.shade400,
@@ -1316,7 +1317,7 @@ class _ReportViewState extends State<ReportView> {
                     controller.stopRecording().catchError((error) {
                       secureLog('Error stopping recording: $error');
                       Get.snackbar(
-                        'Error',
+                        'Error'.tr,
                         'Failed to stop recording: ${error.toString()}',
                         snackPosition: SnackPosition.BOTTOM,
                       );
@@ -1526,7 +1527,7 @@ class _ReportViewState extends State<ReportView> {
                       : const EdgeInsets.only(right: 8.0),
                   child: isPhoneNumber
                       ? Text(
-                          isOn ? 'HIDE' : 'SHOW',
+                          isOn ? 'HIDE'.tr : 'SHOW'.tr,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -1534,7 +1535,7 @@ class _ReportViewState extends State<ReportView> {
                           ),
                         )
                       : Text(
-                          isOn ? 'ON' : 'OFF',
+                          isOn ? 'ON'.tr : 'OFF'.tr,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ReportTypeDescriptionCard extends StatelessWidget {
   final String reportType;
@@ -7,28 +8,24 @@ class ReportTypeDescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title;
-    String desc;
+    String titleKey;
+    String descKey;
     switch (reportType) {
       case 'pollution':
-        title = 'Pollution Description';
-        desc =
-            'Describe the pollution observed (air, water, or soil), its source, and any visible impact on the environment or public health.';
+        titleKey = 'Pollution Description';
+        descKey = 'pollution_desc_body';
         break;
       case 'waste':
-        title = 'Waste Description';
-        desc =
-            'Describe the type of waste (household, industrial, construction), exact location, and whether it is actively being dumped or is an abandoned pile.';
+        titleKey = 'Waste Description';
+        descKey = 'waste_desc_body';
         break;
       case 'chemical':
-        title = 'Chemical / Hazardous Material Description';
-        desc =
-            'Provide details on the chemical or hazardous material (labels if visible), estimated quantity, and any immediate danger (smoke, spills, fumes). Avoid close contact.';
+        titleKey = 'Chemical / Hazardous Material Description';
+        descKey = 'chemical_desc_body';
         break;
       default:
-        title = 'Sound Description';
-        desc =
-            'Provide a clear description of the issue, including location, time observed, and any other details that can help inspection teams.';
+        titleKey = 'Sound Description';
+        descKey = 'sound_desc_body';
     }
 
     return Card(
@@ -42,7 +39,7 @@ class ReportTypeDescriptionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              title,
+              titleKey.tr,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -50,7 +47,7 @@ class ReportTypeDescriptionCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              desc,
+              descKey.tr,
               style: const TextStyle(
                 fontSize: 13,
                 color: Colors.black54,
