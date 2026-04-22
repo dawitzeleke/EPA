@@ -222,13 +222,13 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                        Text(
-                                          'Save'.tr,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                      child: Text(
+                                        'Save'.tr,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
                                         ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -465,13 +465,13 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                        Text(
-                                          'Save'.tr,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                      child: Text(
+                                        'Save'.tr,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
                                         ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -685,13 +685,13 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                        Text(
-                                          'Yes'.tr,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                      child: Text(
+                                        'Yes'.tr,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
                                         ),
+                                      ),
                                     ),
                                   ),
                                 ],

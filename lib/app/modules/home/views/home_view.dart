@@ -19,6 +19,14 @@ import 'package:eprs/app/routes/app_pages.dart';
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
+  String _getTranslatedImagePath(String baseName) {
+    final lang = Get.locale?.languageCode ?? 'en';
+    if (lang == 'om') return "assets/oromo_$baseName.png";
+    if (lang == 'so') return "assets/somali_$baseName.png";
+    // Fallback to english if language is amharic or anything else, since there are no amharic-specific pngs
+    return "assets/english_$baseName.png";
+  }
+
   // Carousel page controller
   @override
   Widget build(BuildContext context) {
@@ -86,14 +94,14 @@ class HomeView extends GetView<HomeController> {
                         childAspectRatio: 1.4,
                         children: [
                           _ReportTile(
-                            image: "assets/pollution.png",
+                            image: _getTranslatedImagePath('pollution'),
                             url: Routes.REPORT,
                             reportType: ReportTypeEnum.pollution.name,
                           ),
                           // _ReportTile(image: "assets/waste.png", url: Routes.REPORT, reportType: ReportTypeEnum.waste.name),
                           // _ReportTile(image: "assets/chemical.png", url: Routes.REPORT, reportType: ReportTypeEnum.chemical.name),
                           _ReportTile(
-                            image: "assets/sound.png",
+                            image: _getTranslatedImagePath('sound'),
                             url: Routes.REPORT,
                             reportType: ReportTypeEnum.sound.name,
                           ),
@@ -152,7 +160,7 @@ class _ReportTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: Image.asset(
             image,
-            fit: BoxFit.contain, // avoid zooming in; keep full image visible
+            fit: BoxFit.fill, // stretch or scale to fill the entire box
             width: double.infinity,
             height: double.infinity,
           ),

@@ -107,10 +107,14 @@ flutter:
     - assets/awareness.png
     - assets/awareness.svg
     - assets/report.svg
-    - assets/pollution.png
+    - assets/english_pollution.png
+    - assets/oromo_pollution.png
+    - assets/somali_pollution.png
+    - assets/english_sound.png
+    - assets/oromo_sound.png
+    - assets/somali_sound.png
     - assets/waste.png
     - assets/chemical.png
-    - assets/sound.png
     - assets/navbarIcons/
     - assets/progress.png
     - EPA Project (1) (1) somali.json
