@@ -160,7 +160,7 @@ class _ReportTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: Image.asset(
             image,
-            fit: BoxFit.fill, // stretch or scale to fill the entire box
+            fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
           ),

@@ -89,7 +89,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              title,
+                              title.tr,
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,

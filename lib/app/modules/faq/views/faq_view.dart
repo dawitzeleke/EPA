@@ -13,26 +13,26 @@ class FaqView extends GetView<FaqController> {
   Widget build(BuildContext context) {
     final faqs = [
       {
-        'q': '1. What is the Clean Ethiopia App?',
-        'a': 'The Clean Ethiopia App is a civic reporting tool that allows citizens to report violations, track reports, and access services from the civil registration and citizenship agency.'
+        'q': '1. What is the Clean Ethiopia App?'.tr,
+        'a': 'The Clean Ethiopia App is a civic reporting tool that allows citizens to report violations, track reports, and access services from the civil registration and citizenship agency.'.tr
       },
-      {'q': '2. Who can use this app?', 'a': 'Any citizen or resident can use the app to report and follow up on community issues.'},
+      {'q': '2. Who can use this app?'.tr, 'a': 'Any citizen or resident can use the app to report and follow up on community issues.'.tr},
       {
-        'q': '3. How do I report a violation?',
-        'a': 'Open the report form, provide details, attach photos if available, and submit. You will get a tracking number.'
+        'q': '3. How do I report a violation?'.tr,
+        'a': 'Open the report form, provide details, attach photos if available, and submit. You will get a tracking number.'.tr
       },
       {
-        'q': '4. Can I submit a report anonymously?',
-        'a': 'Yes. You can report without revealing your identity. Simply choose the "Report Anonymously" option before submitting.'
+        'q': '4. Can I submit a report anonymously?'.tr,
+        'a': 'Yes. You can report without revealing your identity. Simply choose the "Report Anonymously" option before submitting.'.tr
       },
-      {'q': '5. How can I track my report?', 'a': 'Use the tracking number provided after submission to check status in the Status tab.'},
-      {'q': '6. What types of violations can I report?', 'a': 'You can report various civic and public service violations. Consult the FAQ categories for details.'},
-      {'q': '7. What happens after I submit a report?', 'a': 'The agency reviews the report and takes appropriate action; you can follow progress via the Status screen.'},
+      {'q': '5. How can I track my report?'.tr, 'a': 'Use the tracking number provided after submission to check status in the Status tab.'.tr},
+      {'q': '6. What types of violations can I report?'.tr, 'a': 'You can report various civic and public service violations. Consult the FAQ categories for details.'.tr},
+      {'q': '7. What happens after I submit a report?'.tr, 'a': 'The agency reviews the report and takes appropriate action; you can follow progress via the Status screen.'.tr},
     ];
 
     return Scaffold(
       backgroundColor: AppColors.onPrimary,
-      appBar: const CustomAppBar(title: 'FAQ'),
+      appBar: CustomAppBar(title: 'FAQ'.tr),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {},

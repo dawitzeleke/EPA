@@ -51,7 +51,7 @@ class _OfficeViewState extends State<OfficeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Offices',
       ),
       body: SizedBox.expand(

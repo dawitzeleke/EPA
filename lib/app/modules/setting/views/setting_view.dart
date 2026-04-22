@@ -192,8 +192,8 @@ class SettingView extends GetView<SettingController> {
                                         final newName = nameController.text.trim();
                                         if (newName.isEmpty) {
                                           Get.snackbar(
-                                            'Name required',
-                                            'Please enter a valid name to continue.',
+                                            'Name required'.tr,
+                                            'Please enter a valid name to continue.'.tr,
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
                                           return;
@@ -203,13 +203,13 @@ class SettingView extends GetView<SettingController> {
                                           await controller.updateUserName(newName);
                                           Get.back();
                                           Get.snackbar(
-                                            'Profile updated',
-                                            'Your name has been saved.',
+                                            'Profile updated'.tr,
+                                            'Your name has been saved.'.tr,
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
                                         } catch (e) {
                                           Get.snackbar(
-                                            'Update failed',
+                                            'Update failed'.tr,
                                             e.toString().replaceFirst('Exception: ', ''),
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
@@ -422,8 +422,8 @@ class SettingView extends GetView<SettingController> {
                                             newPwd.isEmpty ||
                                             confirmPwd.isEmpty) {
                                           Get.snackbar(
-                                            'Password required',
-                                            'All password fields are required.',
+                                            'Password required'.tr,
+                                            'All password fields are required.'.tr,
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
                                           return;
@@ -431,8 +431,8 @@ class SettingView extends GetView<SettingController> {
 
                                         if (newPwd != confirmPwd) {
                                           Get.snackbar(
-                                            'Mismatch',
-                                            'New password and confirmation must match.',
+                                            'Mismatch'.tr,
+                                            'New password and confirmation must match.'.tr,
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
                                           return;
@@ -446,13 +446,13 @@ class SettingView extends GetView<SettingController> {
                                           );
                                           Get.back();
                                           Get.snackbar(
-                                            'Password updated',
-                                            'Your password has been changed successfully.',
+                                            'Password updated'.tr,
+                                            'Your password has been changed successfully.'.tr,
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
                                         } catch (e) {
                                           Get.snackbar(
-                                            'Update failed',
+                                            'Update failed'.tr,
                                             e.toString().replaceFirst('Exception: ', ''),
                                             snackPosition: SnackPosition.BOTTOM,
                                           );
