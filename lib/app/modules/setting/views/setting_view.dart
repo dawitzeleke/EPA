@@ -54,6 +54,32 @@ class SettingView extends GetView<SettingController> {
     );
   }
 
+  void _showErrorMessage(BuildContext context, String message) {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.red.shade700,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+      ),
+    );
+  }
+
+  void _closeDialog(BuildContext context) {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    if (navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
+
   // Build user profile section (when logged in)
   Widget _buildUserProfileSection(BuildContext context) {
     return Column(
@@ -210,36 +236,33 @@ class SettingView extends GetView<SettingController> {
                                                 final newName =
                                                     nameController.text.trim();
                                                 if (newName.isEmpty) {
-                                                  Get.snackbar(
-                                                    'Name required'.tr,
+                                                  _showErrorMessage(
+                                                    context,
                                                     'Please enter a valid name to continue.'.tr,
-                                                    snackPosition: SnackPosition.BOTTOM,
                                                   );
                                                   return;
                                                 }
 
                                                 try {
+                                                  final scaffoldContext = Get.context ?? context;
                                                   await controller.updateUserName(
                                                     newName,
                                                   );
-                                                  if (Navigator.of(context, rootNavigator: true).canPop()) {
-                                                    Navigator.of(context, rootNavigator: true).pop();
-                                                    await Future<void>.delayed(
-                                                      const Duration(milliseconds: 120),
-                                                    );
-                                                  }
+                                                  _closeDialog(context);
+                                                  await Future<void>.delayed(
+                                                    const Duration(milliseconds: 120),
+                                                  );
                                                   _showSuccessMessage(
-                                                    context,
+                                                    scaffoldContext,
                                                     'Your name was updated successfully.'.tr,
                                                   );
                                                 } catch (e) {
-                                                  Get.snackbar(
-                                                    'Update failed'.tr,
+                                                  _showErrorMessage(
+                                                    context,
                                                     e.toString().replaceFirst(
                                                       'Exception: ',
                                                       '',
                                                     ),
-                                                    snackPosition: SnackPosition.BOTTOM,
                                                   );
                                                 }
                                               },
@@ -470,44 +493,40 @@ class SettingView extends GetView<SettingController> {
                                         if (currentPwd.isEmpty ||
                                             newPwd.isEmpty ||
                                             confirmPwd.isEmpty) {
-                                          Get.snackbar(
-                                            'Password required'.tr,
+                                          _showErrorMessage(
+                                            context,
                                             'All password fields are required.'.tr,
-                                            snackPosition: SnackPosition.BOTTOM,
                                           );
                                           return;
                                         }
 
                                         if (newPwd != confirmPwd) {
-                                          Get.snackbar(
-                                            'Mismatch'.tr,
+                                          _showErrorMessage(
+                                            context,
                                             'New password and confirmation must match.'.tr,
-                                            snackPosition: SnackPosition.BOTTOM,
                                           );
                                           return;
                                         }
 
                                         try {
+                                          final scaffoldContext = Get.context ?? context;
                                           await controller.updatePassword(
                                             currentPwd,
                                             newPwd,
                                             confirmPwd,
                                           );
-                                          if (Navigator.of(context, rootNavigator: true).canPop()) {
-                                            Navigator.of(context, rootNavigator: true).pop();
-                                            await Future<void>.delayed(
-                                              const Duration(milliseconds: 120),
-                                            );
-                                          }
+                                          _closeDialog(context);
+                                          await Future<void>.delayed(
+                                            const Duration(milliseconds: 120),
+                                          );
                                           _showSuccessMessage(
-                                            context,
+                                            scaffoldContext,
                                             'Your password was updated successfully.'.tr,
                                           );
                                         } catch (e) {
-                                          Get.snackbar(
-                                            'Update failed'.tr,
+                                          _showErrorMessage(
+                                            context,
                                             e.toString().replaceFirst('Exception: ', ''),
-                                            snackPosition: SnackPosition.BOTTOM,
                                           );
                                         }
                                       },
