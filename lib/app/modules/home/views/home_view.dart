@@ -180,7 +180,7 @@ class _ReportTile extends StatelessWidget {
                 child: Obx(() {
                   final name = controller.userName.value;
                   return Text(
-                    '${'Welcome'.tr}, ${name.isNotEmpty ? name : 'Guest'.tr}',
+                    '${'Welcome'.tr}, ${(name.isEmpty || name == 'Guest') ? 'Guest'.tr : name}',
                     style: const TextStyle(
                       color: AppColors.accentBlue,
                       fontWeight: FontWeight.w500,

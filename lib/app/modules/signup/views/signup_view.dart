@@ -92,7 +92,7 @@ class _SignUpOverlayState extends State<SignUpOverlay> {
                   ),
                   SizedBox(height: height * 0.03),
                   Text(
-                    'Create EPA PASS Account'.tr,
+                    'Create EPA Account'.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: isSmall ? 20 : 24,
