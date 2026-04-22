@@ -136,7 +136,17 @@ class LoginController extends GetxController {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.back(),
+              onPressed: () {
+                if (Get.isDialogOpen ?? false) {
+                  Get.back(closeOverlays: true);
+                  return;
+                }
+
+                final context = Get.overlayContext;
+                if (context != null && Navigator.of(context, rootNavigator: true).canPop()) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
