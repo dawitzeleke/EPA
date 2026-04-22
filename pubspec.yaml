@@ -113,6 +113,8 @@ flutter:
     - assets/english_sound.png
     - assets/oromo_sound.png
     - assets/somali_sound.png
+    - assets/amharic_pollution.png
+    - assets/amharic_sound.png
     - assets/waste.png
     - assets/chemical.png
     - assets/navbarIcons/

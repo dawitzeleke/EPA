@@ -17,7 +17,8 @@ class ReportOtpView extends GetView<ReportOtpController> {
 
     final phoneText = controller.phone.isNotEmpty
       ? controller.phone
-      : 'your phone number';
+      : 'your phone number'.tr;
+    final safeOtpIntroText = '${'Enter the 6-digit code sent to'.tr} $phoneText.';
     final size = MediaQuery.of(context).size;
     final boxSize = ((size.width - 80) / 6).clamp(48.0, 64.0);
     final inputFocusNode = FocusNode();
@@ -28,8 +29,8 @@ class ReportOtpView extends GetView<ReportOtpController> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6FA),
-      appBar: const CustomAppBar(
-        title: 'OTP',
+      appBar: CustomAppBar(
+        title: 'OTP'.tr,
         showBack: true,
       ),
       body: Column(
@@ -47,7 +48,7 @@ class ReportOtpView extends GetView<ReportOtpController> {
                     children: [
                       const SizedBox(height: 8),
                       Text(
-                        'We sent a one-time code to $phoneText. Check your phone and enter the code below.',
+                        safeOtpIntroText,
                         style: const TextStyle(
                           fontSize: 16,
                           height: 1.5,
@@ -104,15 +105,15 @@ class ReportOtpView extends GetView<ReportOtpController> {
                         () => Center(
                           child: Column(
                             children: [
-                              const Text(
-                                "Didn't receive code?",
+                               Text(
+                                "Didn't receive code?".tr,
                                 style: TextStyle(color: Colors.black87),
                               ),
                               const SizedBox(height: 8),
                               controller.seconds.value > 0
                                   ? RichText(
                                       text: TextSpan(
-                                        text: 'You can resend code in ',
+                                        text: 'You can resend code in '.tr,
                                         style: const TextStyle(
                                           color: Colors.black54,
                                         ),
@@ -140,8 +141,8 @@ class ReportOtpView extends GetView<ReportOtpController> {
                                                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3B82F6)),
                                               ),
                                             )
-                                          : const Text(
-                                              'Resend code',
+                                          :  Text(
+                                              'Resend Code'.tr,
                                               style: TextStyle(
                                                 color: Color(0xFF3B82F6),
                                               ),
@@ -177,8 +178,8 @@ class ReportOtpView extends GetView<ReportOtpController> {
                                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                     ),
                                   )
-                                : const Text(
-                                    'CONFIRM',
+                                : Text(
+                                  'Confirm'.tr,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
