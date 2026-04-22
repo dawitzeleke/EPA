@@ -40,6 +40,20 @@ class SettingView extends GetView<SettingController> {
     return const Divider(height: 1, thickness: 1, indent: 16, endIndent: 16);
   }
 
+  void _showSuccessMessage(BuildContext context, String message) {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green.shade700,
+        duration: const Duration(seconds: 2),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+      ),
+    );
+  }
+
   // Build user profile section (when logged in)
   Widget _buildUserProfileSection(BuildContext context) {
     return Column(
@@ -187,49 +201,84 @@ class SettingView extends GetView<SettingController> {
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        final newName = nameController.text.trim();
-                                        if (newName.isEmpty) {
-                                          Get.snackbar(
-                                            'Name required'.tr,
-                                            'Please enter a valid name to continue.'.tr,
-                                            snackPosition: SnackPosition.BOTTOM,
-                                          );
-                                          return;
-                                        }
+                                    child: Obx(() {
+                                      final isUpdating = controller.isUpdating.value;
+                                      return ElevatedButton(
+                                        onPressed: isUpdating
+                                            ? null
+                                            : () async {
+                                                final newName =
+                                                    nameController.text.trim();
+                                                if (newName.isEmpty) {
+                                                  Get.snackbar(
+                                                    'Name required'.tr,
+                                                    'Please enter a valid name to continue.'.tr,
+                                                    snackPosition: SnackPosition.BOTTOM,
+                                                  );
+                                                  return;
+                                                }
 
-                                        try {
-                                          await controller.updateUserName(newName);
-                                          Get.back();
-                                          Get.snackbar(
-                                            'Profile updated'.tr,
-                                            'Your name has been saved.'.tr,
-                                            snackPosition: SnackPosition.BOTTOM,
-                                          );
-                                        } catch (e) {
-                                          Get.snackbar(
-                                            'Update failed'.tr,
-                                            e.toString().replaceFirst('Exception: ', ''),
-                                            snackPosition: SnackPosition.BOTTOM,
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primary,
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                                try {
+                                                  await controller.updateUserName(
+                                                    newName,
+                                                  );
+                                                  if (Navigator.of(context, rootNavigator: true).canPop()) {
+                                                    Navigator.of(context, rootNavigator: true).pop();
+                                                    await Future<void>.delayed(
+                                                      const Duration(milliseconds: 120),
+                                                    );
+                                                  }
+                                                  _showSuccessMessage(
+                                                    context,
+                                                    'Your name was updated successfully.'.tr,
+                                                  );
+                                                } catch (e) {
+                                                  Get.snackbar(
+                                                    'Update failed'.tr,
+                                                    e.toString().replaceFirst(
+                                                      'Exception: ',
+                                                      '',
+                                                    ),
+                                                    snackPosition: SnackPosition.BOTTOM,
+                                                  );
+                                                }
+                                              },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColors.primary,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
                                         ),
-                                      ),
-                                      child: Text(
-                                        'Save'.tr,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
+                                        child: AnimatedSwitcher(
+                                          duration: const Duration(milliseconds: 200),
+                                          child: isUpdating
+                                              ? const SizedBox(
+                                                  key: ValueKey('loading'),
+                                                  width: 18,
+                                                  height: 18,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2.2,
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<Color>(
+                                                      Colors.white,
+                                                    ),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  'Save'.tr,
+                                                  key: const ValueKey('save'),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    }),
                                   ),
                                 ],
                               ),
@@ -444,11 +493,15 @@ class SettingView extends GetView<SettingController> {
                                             newPwd,
                                             confirmPwd,
                                           );
-                                          Get.back();
-                                          Get.snackbar(
-                                            'Password updated'.tr,
-                                            'Your password has been changed successfully.'.tr,
-                                            snackPosition: SnackPosition.BOTTOM,
+                                          if (Navigator.of(context, rootNavigator: true).canPop()) {
+                                            Navigator.of(context, rootNavigator: true).pop();
+                                            await Future<void>.delayed(
+                                              const Duration(milliseconds: 120),
+                                            );
+                                          }
+                                          _showSuccessMessage(
+                                            context,
+                                            'Your password was updated successfully.'.tr,
                                           );
                                         } catch (e) {
                                           Get.snackbar(
