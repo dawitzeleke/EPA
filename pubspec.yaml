@@ -108,13 +108,21 @@ flutter:
     - assets/awareness.svg
     - assets/report.svg
     - assets/english_pollution.png
+    - assets/english_waste.png
+    - assets/english_chemical.png
     - assets/oromo_pollution.png
     - assets/somali_pollution.png
     - assets/english_sound.png
     - assets/oromo_sound.png
+    - assets/oromo_waste.png
+    - assets/oromo_chemical.png
     - assets/somali_sound.png
+    - assets/somali_waste.png
+    - assets/somali_chemical.png
     - assets/amharic_pollution.png
     - assets/amharic_sound.png
+    - assets/amharic_waste.png
+    - assets/amharic_chemical.png
     - assets/waste.png
     - assets/chemical.png
     - assets/navbarIcons/

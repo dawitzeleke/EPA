@@ -23,8 +23,13 @@ class HomeView extends GetView<HomeController> {
     final lang = Get.locale?.languageCode ?? 'en';
     if (lang == 'om') return "assets/oromo_$baseName.png";
     if (lang == 'so') return "assets/somali_$baseName.png";
-    if (lang == 'am') return "assets/amharic_$baseName.png";
-    // Fallback to english if language is amharic or anything else, since there are no amharic-specific pngs
+    if (lang == 'am') {
+      if (baseName == 'pollution' || baseName == 'sound') {
+        return "assets/amharic_$baseName.png";
+      }
+      return "assets/english_$baseName.png";
+    }
+    // Fallback to english for any other language or missing localized asset.
     return "assets/english_$baseName.png";
   }
 
@@ -66,10 +71,10 @@ class HomeView extends GetView<HomeController> {
                     carouselController: controller.carouselCtrl,
                     controller: controller,
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 15),
 
                   _buildCheckStatusSection(controller),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 10),
 
                   // Report grid
                   Column(
@@ -99,8 +104,16 @@ class HomeView extends GetView<HomeController> {
                             url: Routes.REPORT,
                             reportType: ReportTypeEnum.pollution.name,
                           ),
-                          // _ReportTile(image: "assets/waste.png", url: Routes.REPORT, reportType: ReportTypeEnum.waste.name),
-                          // _ReportTile(image: "assets/chemical.png", url: Routes.REPORT, reportType: ReportTypeEnum.chemical.name),
+                          _ReportTile(
+                            image: _getTranslatedImagePath('waste'),
+                            url: Routes.REPORT,
+                            reportType: ReportTypeEnum.waste.name,
+                          ),
+                          _ReportTile(
+                            image: _getTranslatedImagePath('chemical'),
+                            url: Routes.REPORT,
+                            reportType: ReportTypeEnum.chemical.name,
+                          ),
                           _ReportTile(
                             image: _getTranslatedImagePath('sound'),
                             url: Routes.REPORT,
@@ -237,7 +250,7 @@ class _ReportTile extends StatelessWidget {
             color: AppColors.accentBlue,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         
         // White card with rounded corners containing the search section
         Container(

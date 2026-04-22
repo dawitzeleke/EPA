@@ -2138,8 +2138,8 @@ Future<void> pickTime(BuildContext context) async {
   Future<void> submitReport(bool isSound) async {
     if (isSubmitting.value) {
       _showSubmitFeedback(
-        'Please wait',
-        'Your report is being processed.',
+        'Please wait'.tr,
+        'Your report is being processed.'.tr,
       );
       return;
     }
@@ -2147,23 +2147,23 @@ Future<void> pickTime(BuildContext context) async {
     // Validation
     final specificAddress = specificLocationController.text.trim();
     if (specificAddress.isEmpty) {
-      _showSubmitFeedback('Error', 'Please provide a specific location', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please provide a specific location'.tr, isError: true);
       return;
     }
 
     final desc = descriptionController.text.trim();
     if (desc.isEmpty) {
-      _showSubmitFeedback('Error', 'Please provide a description', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please provide a description'.tr, isError: true);
       return;
     }
 
     if (desc.length < 30) {
-      _showSubmitFeedback('Error', 'Description must be at least 30 characters', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Description must be at least 30 characters'.tr, isError: true);
       return;
     }
 
     if (pickedImagesX.isEmpty && !isSound) {
-      _showSubmitFeedback('Error', 'Please add at least one photo or video or audio', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please add at least one photo or video or audio'.tr, isError: true);
       return;
     }
 
@@ -2171,7 +2171,7 @@ Future<void> pickTime(BuildContext context) async {
       // Ensure land use type is selected
       final soundArea = _getSelectedSoundArea();
       if (soundArea == null) {
-        _showSubmitFeedback('Error', 'Please select land use type', isError: true);
+        _showSubmitFeedback('Error'.tr, 'Please select land use type'.tr, isError: true);
         return;
       }
 
@@ -2184,40 +2184,40 @@ Future<void> pickTime(BuildContext context) async {
             name.contains('voice_note');
       });
       if (!hasAudio) {
-        _showSubmitFeedback('Error', 'Please add an audio recording', isError: true);
+        _showSubmitFeedback('Error'.tr, 'Please add an audio recording'.tr, isError: true);
         return;
       }
 
       showMinDecibelWarning.value = true;
       final minDb = minRequiredDecibel;
       if (minDb == null) {
-        _showSubmitFeedback('Error', 'Unable to determine minimum required dB. Please reselect land use type.', isError: true);
+        _showSubmitFeedback('Error'.tr, 'Unable to determine minimum required dB. Please reselect land use type.'.tr, isError: true);
         return;
       }
       if (!hasNoiseReading.value) {
-        _showSubmitFeedback('Error', 'No sound level reading detected. Please record again.', isError: true);
+        _showSubmitFeedback('Error'.tr, 'No sound level reading detected. Please record again.'.tr, isError: true);
         return;
       }
       if (maxDecibel.value < minDb) {
-        _showSubmitFeedback('Error', 'Recorded sound level is below the minimum required (${minDb.toStringAsFixed(0)} dB) for the selected land use type', isError: true);
+        _showSubmitFeedback('Error'.tr, 'Recorded sound level is below the minimum required'.trParams({'db': minDb.toStringAsFixed(0)}), isError: true);
         return;
       }
       showMinDecibelWarning.value = false;
     }
 
     if (!termsAccepted.value) {
-      _showSubmitFeedback('Error', 'Please accept the terms and conditions', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please accept the terms and conditions'.tr, isError: true);
       return;
     }
 
     if (selectedDate.value == null || selectedTime.value == null) {
-      _showSubmitFeedback('Error', 'Please select date and time', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please select date and time'.tr, isError: true);
       return;
     }
 
     // Validate "Are you in the spot" is selected
     if (!hasSelectedLocationOption.value || isInTheSpot.value == null) {
-      _showSubmitFeedback('Error', 'Please select "Are you in the spot"', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please select "Are you in the spot"'.tr, isError: true);
       return;
     }
 
@@ -2225,13 +2225,13 @@ Future<void> pickTime(BuildContext context) async {
     if (isInTheSpot.value == true) {
       // If "Yes", location should be detected or manually entered
       if (!autoDetectLocation.value && detectedPosition.value == null) {
-        _showSubmitFeedback('Error', 'Please enable location detection or provide location details', isError: true);
+        _showSubmitFeedback('Error'.tr, 'Please enable location detection or provide location details'.tr, isError: true);
         return;
       }
     } else {
       // If "No", region/zone/woreda should be selected
       if (selectedRegion.value == 'Select Region / City Administration') {
-        _showSubmitFeedback('Error', 'Please select a region/city', isError: true);
+        _showSubmitFeedback('Error'.tr, 'Please select a region/city'.tr, isError: true);
         return;
       }
     }
@@ -2239,7 +2239,7 @@ Future<void> pickTime(BuildContext context) async {
     // Validate pollution category is selected
     if (selectedPollutionCategoryId.value == null ||
         selectedPollutionCategoryId.value!.isEmpty) {
-      _showSubmitFeedback('Error', 'Please select a pollution category', isError: true);
+      _showSubmitFeedback('Error'.tr, 'Please select a pollution category'.tr, isError: true);
       return;
     }
 
@@ -2253,15 +2253,15 @@ Future<void> pickTime(BuildContext context) async {
     if (!isUserLoggedIn) {
       final phone = phoneController.text.trim();
       if (phone.isEmpty) {
-        phoneError.value = 'Phone number is required';
-        _showSubmitFeedback('Phone number required', 'Please enter your phone number to submit a report as a guest.', isError: true);
+        phoneError.value = 'Phone number is required'.tr;
+        _showSubmitFeedback('Phone number required'.tr, 'Please enter your phone number to submit a report as a guest.'.tr, isError: true);
         return;
       }
       final isValidPhone = phone.length == 10 &&
           (phone.startsWith('09') || phone.startsWith('07'));
       if (!isValidPhone) {
-        phoneError.value = 'Enter a valid 10-digit phone (09… or 07…)';
-        _showSubmitFeedback('Invalid phone number', 'Please enter a valid 10-digit phone number starting with 09 or 07.', isError: true);
+        phoneError.value = 'Enter a valid 10-digit phone (09… or 07…)'.tr;
+        _showSubmitFeedback('Invalid phone number'.tr, 'Please enter a valid 10-digit phone number starting with 09 or 07.'.tr, isError: true);
         return;
       }
     }
@@ -2384,8 +2384,8 @@ Future<void> pickTime(BuildContext context) async {
         formData.fields.add(MapEntry('pollution_category_id', categoryId));
       } else {
         Get.snackbar(
-          'Error',
-          'Please select a pollution category.',
+          'Error'.tr,
+          'Please select a pollution category'.tr,
           snackPosition: SnackPosition.BOTTOM,
         );
         isSubmitting.value = false;
@@ -2449,8 +2449,8 @@ Future<void> pickTime(BuildContext context) async {
           isSubmitting.value = false;
 
           Get.snackbar(
-            'OTP sent',
-            'A code was sent to $phone',
+            'OTP sent'.tr,
+            '${'A code was sent to'.tr} $phone',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: AppColors.primary,
             colorText: AppColors.onPrimary,
@@ -2466,7 +2466,7 @@ Future<void> pickTime(BuildContext context) async {
         } catch (e) {
           isSubmitting.value = false;
           secureLog('Guest OTP request failed: $e');
-          _showSubmitFeedback('Failed to send OTP', ErrorHelpers.cleanErrorMessage(e), isError: true);
+          _showSubmitFeedback('Failed to send OTP'.tr, ErrorHelpers.cleanErrorMessage(e), isError: true);
         }
         return;
       }
@@ -2481,7 +2481,7 @@ Future<void> pickTime(BuildContext context) async {
     } catch (e) {
       isSubmitting.value = false;
       secureLog('Error submitting report: $e');
-      _showSubmitFeedback('Error', 'Failed to submit report: ${ErrorHelpers.cleanErrorMessage(e)}', isError: true);
+      _showSubmitFeedback('Error'.tr, '${'Failed to submit report'.tr}: ${ErrorHelpers.cleanErrorMessage(e)}', isError: true);
     }
   }
 
