@@ -23,6 +23,7 @@ class HomeView extends GetView<HomeController> {
     final lang = Get.locale?.languageCode ?? 'en';
     if (lang == 'om') return "assets/oromo_$baseName.png";
     if (lang == 'so') return "assets/somali_$baseName.png";
+    if (lang == 'am') return "assets/amharic_$baseName.png";
     // Fallback to english if language is amharic or anything else, since there are no amharic-specific pngs
     return "assets/english_$baseName.png";
   }
