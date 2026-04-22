@@ -132,17 +132,17 @@ class SettingView extends GetView<SettingController> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Edit Profile',
-                                style: TextStyle(
+                              Text(
+                                'Edit Profile'.tr,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const Text(
-                                'Name',
-                                style: TextStyle(
+                              Text(
+                                'Name'.tr,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -152,7 +152,7 @@ class SettingView extends GetView<SettingController> {
                                 controller: nameController,
                                 autofocus: true,
                                 decoration: InputDecoration(
-                                  hintText: 'Enter your name',
+                                  hintText: 'Enter your name'.tr,
                                   isDense: true,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
@@ -177,8 +177,8 @@ class SettingView extends GetView<SettingController> {
                                         ),
                                       ),
                                       child: Text(
-                                        'Cancel',
-                                        style: TextStyle(
+                                        'Cancel'.tr,
+                                        style: const TextStyle(
                                           color: AppColors.primary,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -222,13 +222,13 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                      child: const Text(
-                                        'Save',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
+                                        Text(
+                                          'Save'.tr,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
                                     ),
                                   ),
                                 ],
@@ -259,8 +259,8 @@ class SettingView extends GetView<SettingController> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'edit_profile',
-                      style: TextStyle(
+                      'Edit Profile'.tr,
+                      style: const TextStyle(
                         fontFamily: AppFonts.primaryFont,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -306,17 +306,17 @@ class SettingView extends GetView<SettingController> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Update Password',
-                                style: TextStyle(
+                              Text(
+                                'Update Password'.tr,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const Text(
-                                'Current Password',
-                                style: TextStyle(
+                              Text(
+                                'Current Password'.tr,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -327,7 +327,7 @@ class SettingView extends GetView<SettingController> {
                                 autofocus: true,
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                  hintText: 'Enter current password',
+                                  hintText: 'Enter current password'.tr,
                                   isDense: true,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
@@ -339,9 +339,9 @@ class SettingView extends GetView<SettingController> {
                                 ),
                               ),
                               const SizedBox(height: 14),
-                              const Text(
-                                'New Password',
-                                style: TextStyle(
+                              Text(
+                                'New Password'.tr,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -351,7 +351,7 @@ class SettingView extends GetView<SettingController> {
                                 controller: newController,
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                  hintText: 'Enter new password',
+                                  hintText: 'Enter new password'.tr,
                                   isDense: true,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
@@ -363,9 +363,9 @@ class SettingView extends GetView<SettingController> {
                                 ),
                               ),
                               const SizedBox(height: 14),
-                              const Text(
-                                'Confirm Password',
-                                style: TextStyle(
+                              Text(
+                                'Confirm Password'.tr,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -375,7 +375,7 @@ class SettingView extends GetView<SettingController> {
                                 controller: confirmController,
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                  hintText: 'Confirm new password',
+                                  hintText: 'Confirm new password'.tr,
                                   isDense: true,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
@@ -400,8 +400,8 @@ class SettingView extends GetView<SettingController> {
                                         ),
                                       ),
                                       child: Text(
-                                        'Cancel',
-                                        style: TextStyle(
+                                        'Cancel'.tr,
+                                        style: const TextStyle(
                                           color: AppColors.primary,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -465,13 +465,13 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                      child: const Text(
-                                        'Save',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
+                                        Text(
+                                          'Save'.tr,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
                                     ),
                                   ),
                                 ],
@@ -502,8 +502,8 @@ class SettingView extends GetView<SettingController> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'update_password',
-                      style: TextStyle(
+                      'Update Password'.tr,
+                      style: const TextStyle(
                         fontFamily: AppFonts.primaryFont,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -538,8 +538,8 @@ class SettingView extends GetView<SettingController> {
           ),
           child: const Icon(Icons.person_outline, color: Colors.black),
         ),
-        title: const Text('Guest',
-            style: TextStyle(fontWeight: FontWeight.w600)),
+        title: Text('Guest'.tr,
+            style: const TextStyle(fontWeight: FontWeight.w600)),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
           // Navigate to login
@@ -560,7 +560,7 @@ class SettingView extends GetView<SettingController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: CustomAppBar(
-          title: 'Settings',
+          title: 'Settings'.tr,
           showBack: true,
           forceHomeOnBack: true, // ensure back always returns to home shell
         ),
@@ -595,28 +595,28 @@ class SettingView extends GetView<SettingController> {
                     shrinkWrap: true,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     children: [
-                      _buildOptionTile(Icons.language, 'Language',
+                      _buildOptionTile(Icons.language, 'Language'.tr,
                           () => Get.toNamed(Routes.LANGUAGE)),
                       _buildDivider(),
                       _buildOptionTile(Icons.help_outline,
-                          'FAQ', () => Get.toNamed(Routes.FAQ)),
+                          'FAQ'.tr, () => Get.toNamed(Routes.FAQ)),
                       _buildDivider(),
-                      _buildOptionTile(Icons.local_post_office, 'Office',
+                      _buildOptionTile(Icons.local_post_office, 'Office'.tr,
                           () => Get.toNamed(Routes.OFFICE)),
                       _buildDivider(),
-                      _buildOptionTile(Icons.privacy_tip_outlined, 'Privacy Policy',
+                      _buildOptionTile(Icons.privacy_tip_outlined, 'Privacy Policy'.tr,
                           () => Get.toNamed(Routes.Privacy_Policy)),
                       _buildDivider(),
                       _buildOptionTile(Icons.description_outlined,
-                          'Term and Conditions', () => Get.toNamed(Routes.TERM_AND_CONDITIONS)),
+                          'Terms & Conditions'.tr, () => Get.toNamed(Routes.TERM_AND_CONDITIONS)),
                       _buildDivider(),
-                      _buildOptionTile(Icons.info_outline, 'About EPA App',
+                      _buildOptionTile(Icons.info_outline, 'About EPA App'.tr,
                           () => Get.toNamed(Routes.ABOUT)),
                       _buildDivider(),
-                      _buildOptionTile(Icons.star_rate_outlined, 'Rate Us', () {}),
+                      _buildOptionTile(Icons.star_rate_outlined, 'Rate Us'.tr, () {}),
                       _buildDivider(),
                       
-                      _buildOptionTile(Icons.logout, "Logout", () {
+                      _buildOptionTile(Icons.logout, "Logout".tr, () {
                         // Confirm logout
                         Get.defaultDialog(
                           title: '',
@@ -631,7 +631,7 @@ class SettingView extends GetView<SettingController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Are you sure you want to logout?',
+                                'Are you sure you want to logout?'.tr,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -651,8 +651,8 @@ class SettingView extends GetView<SettingController> {
                                         ),
                                       ),
                                       child: Text(
-                                        'Cancel',
-                                        style: TextStyle(
+                                        'Cancel'.tr,
+                                        style: const TextStyle(
                                           color: AppColors.primary,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -685,13 +685,13 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                      child: const Text(
-                                        'Yes',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
+                                        Text(
+                                          'Yes'.tr,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
                                     ),
                                   ),
                                 ],
