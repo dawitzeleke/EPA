@@ -52,7 +52,7 @@ class _OfficeViewState extends State<OfficeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Offices',
+        title: 'Office'.tr,
       ),
       body: SizedBox.expand(
         child: Stack(
@@ -138,12 +138,12 @@ class _OfficeViewState extends State<OfficeView> {
                                 );
                                 _focusOffice(match);
                               },
-                              decoration: const InputDecoration(
-                                hintText: 'Search for Location',
-                                hintStyle: TextStyle(fontSize: 14),
-                                prefixIcon: Icon(Icons.search, color: Color(0xFF9BA5B1), size: 14),
+                              decoration: InputDecoration(
+                                hintText: 'Search for Location'.tr,
+                                hintStyle: const TextStyle(fontSize: 14),
+                                prefixIcon: const Icon(Icons.search, color: Color(0xFF9BA5B1), size: 14),
                                 border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                               ),
                             ),
                           ),
@@ -162,10 +162,10 @@ class _OfficeViewState extends State<OfficeView> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
-                              children: const [
-                                Icon(Icons.info_outline, color: Colors.grey),
-                                SizedBox(width: 8),
-                                Expanded(child: Text('No offices match that search.')),
+                              children: [
+                                const Icon(Icons.info_outline, color: Colors.grey),
+                                const SizedBox(width: 8),
+                                Expanded(child: Text('No offices match that search.'.tr)),
                               ],
                             ),
                           ),
@@ -309,7 +309,7 @@ class _OfficeInfoCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('PHONE', style: labelStyle),
+                      Text('PHONE'.tr, style: labelStyle),
                       const SizedBox(height: 2),
                       Text(office.phone, style: valueStyle),
                     ],
@@ -328,7 +328,7 @@ class _OfficeInfoCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('EMAIL', style: labelStyle),
+                      Text('EMAIL'.tr, style: labelStyle),
                       const SizedBox(height: 2),
                       Text(
                         office.email,

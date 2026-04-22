@@ -16,8 +16,8 @@ class TermAndConditionsView extends GetView<TermAndConditionsController> {
 
     return Scaffold(
       backgroundColor: AppColors.onPrimary,
-      appBar: const CustomAppBar(
-        title: 'Term and Conditions',
+      appBar: CustomAppBar(
+        title: 'Term and Conditions'.tr,
         showBack: true,
       ),
       body: SafeArea(
@@ -32,39 +32,39 @@ class TermAndConditionsView extends GetView<TermAndConditionsController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _sectionTitle('Effective Date: [Month, Day, Year]', titleStyle),
+                  _sectionTitle('Effective Date: [Month, Day, Year]'.tr, titleStyle),
                   const SizedBox(height: 8),
                   Text(
-                    'Welcome to the Clean Ethiopia App. Please read these Terms and Conditions carefully before using our services.',
+                    'Welcome to the Clean Ethiopia App. Please read these Terms and Conditions carefully before using our services.'.tr,
                     style: paragraphStyle,
                   ),
                   const SizedBox(height: 16),
 
                   _numberedSection(
                     1,
-                    'Acceptance of Terms',
-                    'By accessing or using the Clean Ethiopia application, you agree to comply with these Terms and all applicable laws and regulations. If you do not agree, please do not use the application.',
+                    'Acceptance of Terms'.tr,
+                    'By accessing or using the Clean Ethiopia application, you agree to comply with these Terms and all applicable laws and regulations. If you do not agree, please do not use the application.'.tr,
                     titleStyle,
                     paragraphStyle,
                   ),
 
                   _numberedSection(
                     2,
-                    'Purpose of the App',
-                    'This app is designed to help citizens report environmental violations such as pollution, illegal dumping, and deforestation. EPA staff will review, verify, and take necessary action based on the reports submitted.',
+                    'Purpose of the App'.tr,
+                    'This app is designed to help citizens report environmental violations such as pollution, illegal dumping, and deforestation. EPA staff will review, verify, and take necessary action based on the reports submitted.'.tr,
                     titleStyle,
                     paragraphStyle,
                   ),
 
                   _numberedSectionWithBullets(
                     3,
-                    'User Responsibilities',
-                    'By using this app, you agree to:',
+                    'User Responsibilities'.tr,
+                    'By using this app, you agree to:'.tr,
                     [
-                      'Provide accurate and truthful information.',
-                      'Avoid uploading harmful, false, or illegal content.',
-                      'Respect other users and public privacy.',
-                      'Use the platform only for environmental reporting purposes.'
+                      'Provide accurate and truthful information.'.tr,
+                      'Avoid uploading harmful, false, or illegal content.'.tr,
+                      'Respect other users and public privacy.'.tr,
+                      'Use the platform only for environmental reporting purposes.'.tr
                     ],
                     titleStyle,
                     paragraphStyle,
@@ -72,12 +72,12 @@ class TermAndConditionsView extends GetView<TermAndConditionsController> {
 
                   _numberedSectionWithBullets(
                     4,
-                    'Prohibited Actions',
-                    'You are strictly prohibited from:',
+                    'Prohibited Actions'.tr,
+                    'You are strictly prohibited from:'.tr,
                     [
-                      'Submitting false or misleading reports.',
-                      'Misusing the app for political or personal disputes.',
-                      'Uploading offensive, violent, or copyrighted material.'
+                      'Submitting false or misleading reports.'.tr,
+                      'Misusing the app for political or personal disputes.'.tr,
+                      'Uploading offensive, violent, or copyrighted material.'.tr
                     ],
                     titleStyle,
                     paragraphStyle,
@@ -85,20 +85,20 @@ class TermAndConditionsView extends GetView<TermAndConditionsController> {
 
                   _numberedSection(
                     5,
-                    'Intellectual Property',
-                    'All design, content, and software used in the Clean Ethiopia app are property of the Environmental Protection Authority. You may not copy, modify, or redistribute without written permission.',
+                    'Intellectual Property'.tr,
+                    'All design, content, and software used in the Clean Ethiopia app are property of the Environmental Protection Authority. You may not copy, modify, or redistribute without written permission.'.tr,
                     titleStyle,
                     paragraphStyle,
                   ),
 
                   _numberedSectionWithBullets(
                     6,
-                    'Limitation of Liability',
-                    'The Environmental Protection Authority is not responsible for:',
+                    'Limitation of Liability'.tr,
+                    'The Environmental Protection Authority is not responsible for:'.tr,
                     [
-                      'Technical issues or service interruptions.',
-                      'Actions taken by third parties based on submitted reports.',
-                      'Any loss or damage arising from misuse of the app.'
+                      'Technical issues or service interruptions.'.tr,
+                      'Actions taken by third parties based on submitted reports.'.tr,
+                      'Any loss or damage arising from misuse of the app.'.tr
                     ],
                     titleStyle,
                     paragraphStyle,
@@ -106,20 +106,20 @@ class TermAndConditionsView extends GetView<TermAndConditionsController> {
 
                   _numberedSection(
                     7,
-                    'Account and Data',
-                    'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.',
+                    'Account and Data'.tr,
+                    'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.'.tr,
                     titleStyle,
                     paragraphStyle,
                   ),
 
                   const SizedBox(height: 12),
                   Text(
-                    'Contact',
+                    'Contact'.tr,
                     style: titleStyle,
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.',
+                    'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.'.tr,
                     style: paragraphStyle,
                   ),
                   const SizedBox(height: 24),

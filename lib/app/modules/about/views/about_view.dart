@@ -19,7 +19,7 @@ class AboutView extends GetView<AboutController> {
 
     return Scaffold(
       backgroundColor: AppColors.onPrimary,
-      appBar: const CustomAppBar(title: 'About Us', showBack: true),
+      appBar: CustomAppBar(title: 'About Us'.tr, showBack: true),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -41,7 +41,7 @@ class AboutView extends GetView<AboutController> {
               const SizedBox(height: 8),
 
               Text(
-                '1. Introduction',
+                '1. Introduction'.tr,
                 style: const TextStyle(
                   fontWeight: FontWeight.w700,
                 fontSize: 15,
@@ -49,35 +49,35 @@ class AboutView extends GetView<AboutController> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Clean Ethiopia is a digital initiative by the Environmental Protection Authority (EPA) designed to make environmental protection accessible to everyone. Our goal is simple — to empower citizens to report pollution, illegal waste disposal, deforestation, and other environmental violations directly from their mobile devices.',
+                'Clean Ethiopia is a digital initiative by the Environmental Protection Authority (EPA) designed to make environmental protection accessible to everyone. Our goal is simple — to empower citizens to report pollution, illegal waste disposal, deforestation, and other environmental violations directly from their mobile devices.'.tr,
                 style: paragraphStyle,
               ),
 
               const SizedBox(height: 12),
               Text(
-                'We believe that protecting the environment starts with awareness and participation. Through technology, Clean Ethiopia connects the public with the Environmental Protection Authority, ensuring that every report is seen, tracked, and acted upon.',
+                'We believe that protecting the environment starts with awareness and participation. Through technology, Clean Ethiopia connects the public with the Environmental Protection Authority, ensuring that every report is seen, tracked, and acted upon.'.tr,
                 style: paragraphStyle,
               ),
 
               const SizedBox(height: 12),
-              Text('Our system promotes:', style: paragraphStyle),
+              Text('Our system promotes:'.tr, style: paragraphStyle),
               const SizedBox(height: 8),
               _bullet(
-                'Transparency — Every report is traceable from submission to resolution.',
+                'Transparency — Every report is traceable from submission to resolution.'.tr,
                 paragraphStyle,
               ),
               _bullet(
-                'Accountability — Each action is logged and monitored to ensure proper follow-up.',
+                'Accountability — Each action is logged and monitored to ensure proper follow-up.'.tr,
                 paragraphStyle,
               ),
               _bullet(
-                'Community Engagement — Citizens, communities, and institutions collaborate to keep Ethiopia clean and green.',
+                'Community Engagement — Citizens, communities, and institutions collaborate to keep Ethiopia clean and green.'.tr,
                 paragraphStyle,
               ),
 
               const SizedBox(height: 12),
               Text(
-                'Clean Ethiopia is part of the nation’s effort to build a sustainable, safe, and environmentally responsible future for all Ethiopians. Together, we can create a cleaner and greener Ethiopia — one report at a time.',
+                'Clean Ethiopia is part of the nation’s effort to build a sustainable, safe, and environmentally responsible future for all Ethiopians. Together, we can create a cleaner and greener Ethiopia — one report at a time.'.tr,
                 style: paragraphStyle,
               ),
 

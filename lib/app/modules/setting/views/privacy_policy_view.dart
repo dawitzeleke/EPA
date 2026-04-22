@@ -4,6 +4,7 @@ import 'package:eprs/app/modules/bottom_nav/widgets/bottom_nav_footer.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PrivacyPolicyView extends StatelessWidget {
   const PrivacyPolicyView({super.key});
@@ -12,7 +13,7 @@ class PrivacyPolicyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.onPrimary, 
-      appBar: const CustomAppBar(title: 'Privacy Policy'),
+      appBar: CustomAppBar(title: 'Privacy Policy'.tr),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -25,41 +26,41 @@ class PrivacyPolicyView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _sectionTitle('1. Introduction'),
+                  _sectionTitle('1. Introduction'.tr),
                   _sectionParagraph(
-                      'Clean Ethiopia ("we," "our," "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard the information you provide when using our mobile application or web system. By using this app, you agree to the terms of this Privacy Policy.'),
+                      'Clean Ethiopia ("we," "our," "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard the information you provide when using our mobile application or web system. By using this app, you agree to the terms of this Privacy Policy.'.tr),
 
-                  _sectionTitle('2. Information We Collect'),
+                  _sectionTitle('2. Information We Collect'.tr),
                   _bulletedParagraph([
-                    'Personal Information: such as your name, phone number, and location (when provided).',
-                    'Report Details: description, media uploads (photo, video, audio, or documents).',
-                    'Location Data: if you enable GPS to help identify environmental violation sites.',
-                    'Device Information: including device type and operating system (for app performance).',
+                    'Personal Information: such as your name, phone number, and location (when provided).'.tr,
+                    'Report Details: description, media uploads (photo, video, audio, or documents).'.tr,
+                    'Location Data: if you enable GPS to help identify environmental violation sites.'.tr,
+                    'Device Information: including device type and operating system (for app performance).'.tr,
                   ]),
 
-                  _sectionTitle('3. How We Use Your Information'),
+                  _sectionTitle('3. How We Use Your Information'.tr),
                   _bulletedParagraph([
-                    'Process and manage your environmental violation reports.',
-                    'Communicate updates about the status of your reports.',
-                    'Improve our service, system performance, and reporting accuracy.',
-                    'Generate anonymized analytics to support research and decision-making.',
+                    'Process and manage your environmental violation reports.'.tr,
+                    'Communicate updates about the status of your reports.'.tr,
+                    'Improve our service, system performance, and reporting accuracy.'.tr,
+                    'Generate anonymized analytics to support research and decision-making.'.tr,
                   ]),
 
-                  _sectionTitle('4. Information Sharing'),
+                  _sectionTitle('4. Information Sharing'.tr),
                   _sectionParagraph(
-                      'Your personal data will not be shared with unauthorized parties. Data may only be shared with authorized EPA departments and stakeholders involved in report investigation, and law enforcement agencies when required by law.'),
+                      'Your personal data will not be shared with unauthorized parties. Data may only be shared with authorized EPA departments and stakeholders involved in report investigation, and law enforcement agencies when required by law.'.tr),
 
-                  _sectionTitle('5. Data Security'),
+                  _sectionTitle('5. Data Security'.tr),
                   _sectionParagraph(
-                      'We apply security measures such as encryption, role-based access, and audit logs to protect your data from unauthorized access, loss, or misuse.'),
+                      'We apply security measures such as encryption, role-based access, and audit logs to protect your data from unauthorized access, loss, or misuse.'.tr),
 
-                  _sectionTitle('6. User Choices'),
+                  _sectionTitle('6. User Choices'.tr),
                   _sectionParagraph(
-                      'You can choose to report anonymously. You can request data deletion or correction by contacting us at: [support@epa.gov.et]'),
+                      'You can choose to report anonymously. You can request data deletion or correction by contacting us at: [support@epa.gov.et]'.tr),
 
-                  _sectionTitle('7. Policy Updates'),
+                  _sectionTitle('7. Policy Updates'.tr),
                   _sectionParagraph(
-                      'We may update this Privacy Policy occasionally. Changes will be posted in the app with a revised "Effective Date."'),
+                      'We may update this Privacy Policy occasionally. Changes will be posted in the app with a revised "Effective Date."'.tr),
 
                   const SizedBox(height: 8),
                 ],
