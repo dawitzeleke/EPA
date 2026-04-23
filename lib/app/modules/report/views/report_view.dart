@@ -1609,6 +1609,15 @@ class _ReportViewState extends State<ReportView> {
       return;
     }
 
+    if (isAudio) {
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        builder: (_) => _AudioPreviewDialog(filePath: file.path, title: file.name),
+      );
+      return;
+    }
+
     final typeLabel = isVideo
         ? 'video'
         : isAudio
@@ -1828,6 +1837,186 @@ class _VideoPreviewDialogState extends State<_VideoPreviewDialog> {
                     },
                   ),
                 ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AudioPreviewDialog extends StatefulWidget {
+  final String filePath;
+  final String title;
+
+  const _AudioPreviewDialog({
+    required this.filePath,
+    required this.title,
+  });
+
+  @override
+  State<_AudioPreviewDialog> createState() => _AudioPreviewDialogState();
+}
+
+class _AudioPreviewDialogState extends State<_AudioPreviewDialog> {
+  VideoPlayerController? _audioController;
+  String? _error;
+
+  String _formatDuration(Duration d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    final s = d.inSeconds.remainder(60);
+    return h > 0 ? '${two(h)}:${two(m)}:${two(s)}' : '${two(m)}:${two(s)}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initAudio();
+  }
+
+  Future<void> _initAudio() async {
+    try {
+      final controller = kIsWeb
+          ? VideoPlayerController.networkUrl(Uri.parse(widget.filePath))
+          : VideoPlayerController.file(File(widget.filePath));
+
+      await controller.initialize();
+
+      if (!mounted) {
+        controller.dispose();
+        return;
+      }
+
+      setState(() {
+        _audioController = controller;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _audioController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+      backgroundColor: Colors.white,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: size.width * 0.92,
+          maxHeight: 320,
+          minHeight: 220,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 12, 14),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.title.isNotEmpty ? widget.title : 'Audio Preview',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: Center(
+                  child: _error != null
+                      ? Text(
+                          'Could not open audio: $_error',
+                          textAlign: TextAlign.center,
+                        )
+                      : _audioController == null
+                          ? const CircularProgressIndicator()
+                          : ValueListenableBuilder<VideoPlayerValue>(
+                              valueListenable: _audioController!,
+                              builder: (context, value, _) {
+                                final position = value.position;
+                                final duration = value.duration;
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.audiotrack,
+                                      size: 64,
+                                      color: Color(0xFF63557F),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    VideoProgressIndicator(
+                                      _audioController!,
+                                      allowScrubbing: true,
+                                      colors: const VideoProgressColors(
+                                        playedColor: Color(0xFF4CAF50),
+                                        bufferedColor: Color(0xFFB0B0B0),
+                                        backgroundColor: Color(0xFFE0E0E0),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          _formatDuration(position),
+                                          style: const TextStyle(
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        Text(
+                                          _formatDuration(duration),
+                                          style: const TextStyle(
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    IconButton(
+                                      onPressed: () {
+                                        if (value.isPlaying) {
+                                          _audioController!.pause();
+                                        } else {
+                                          _audioController!.play();
+                                        }
+                                      },
+                                      icon: Icon(
+                                        value.isPlaying
+                                            ? Icons.pause_circle_filled
+                                            : Icons.play_circle_fill,
+                                        size: 38,
+                                        color: const Color(0xFF63557F),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                ),
+              ),
             ],
           ),
         ),
