@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
 import '../../models/login_model.dart';
 import '../../models/signup_model.dart';
@@ -23,6 +24,53 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   AuthRemoteDataSourceImpl({required this.dio, GetStorage? storage})
       : storage = storage ?? GetStorage();
+
+  String _extractErrorMessage(dynamic data, String fallback) {
+    if (data == null) {
+      return fallback;
+    }
+
+    if (data is String) {
+      final trimmed = data.trim();
+      if (trimmed.isEmpty) {
+        return fallback;
+      }
+
+      try {
+        final decoded = jsonDecode(trimmed);
+        if (decoded is Map<String, dynamic>) {
+          return _extractErrorMessage(decoded, fallback);
+        }
+      } catch (_) {
+        // Not JSON, use the raw string.
+      }
+
+      return trimmed;
+    }
+
+    if (data is Map) {
+      final map = Map<String, dynamic>.from(data);
+
+      for (final key in const ['message', 'error', 'detail', 'title']) {
+        final value = map[key];
+        if (value is String && value.trim().isNotEmpty) {
+          return value.trim();
+        }
+      }
+
+      final nestedData = map['data'];
+      if (nestedData != null && nestedData != data) {
+        final nestedMessage = _extractErrorMessage(nestedData, '');
+        if (nestedMessage.isNotEmpty) {
+          return nestedMessage;
+        }
+      }
+
+      return fallback;
+    }
+
+    return data.toString().trim().isNotEmpty ? data.toString().trim() : fallback;
+  }
 
   @override
   Future<LoginResponseModel> login(LoginModel loginModel) async {
@@ -78,6 +126,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<SignupResponseModel> signup(SignupModel signupModel) async {
     try {
+        print("email here: ${signupModel.email}");
+
       final response = await dio.post(
         ApiConstants.registerEndpoint,
         data: signupModel.toJson(),
@@ -115,18 +165,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           e.type == DioExceptionType.sendTimeout) {
         throw Exception('Connection timeout. Please check your internet connection.');
       } else if (e.type == DioExceptionType.badResponse) {
-        final statusCode = e.response?.statusCode;
-        final errorMessage = e.response?.data['message'] ?? 
-                            e.response?.data['error'] ?? 
-                            'Signup failed. Please try again.';
-        
-        if (statusCode == 400) {
-          throw Exception(errorMessage);
-        } else if (statusCode == 409) {
-          throw Exception('Email already exists. Please use a different email.');
-        } else {
-          throw Exception(errorMessage);
-        }
+        final errorMessage = _extractErrorMessage(
+          e.response?.data,
+          'Signup failed. Please try again.',
+        );
+        throw Exception(errorMessage);
       } else if (e.type == DioExceptionType.connectionError) {
         throw Exception('No internet connection. Please check your network.');
       } else {

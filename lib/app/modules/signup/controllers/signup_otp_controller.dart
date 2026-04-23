@@ -217,6 +217,16 @@ class SignupOtpController extends GetxController {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
+                final context = Get.overlayContext;
+
+                if (context != null) {
+                  final navigator = Navigator.of(context, rootNavigator: true);
+                  if (navigator.canPop()) {
+                    navigator.pop();
+                    return;
+                  }
+                }
+
                 if (Get.isDialogOpen ?? false) {
                   Get.back();
                 }
