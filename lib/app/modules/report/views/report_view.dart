@@ -33,6 +33,29 @@ class ReportView extends StatefulWidget {
 class _ReportViewState extends State<ReportView> {
   // Get controller instance
   ReportController get controller => Get.find<ReportController>();
+  final ScrollController _scrollController = ScrollController();
+
+  Future<void> _submitWithInlineFocus(bool isSoundReport) async {
+    await controller.submitReport(isSoundReport);
+
+    final hasInlineErrors = controller.pollutionCategoryError.value.isNotEmpty ||
+        controller.landUseError.value.isNotEmpty ||
+        controller.evidenceError.value.isNotEmpty ||
+        controller.dateTimeError.value.isNotEmpty ||
+        controller.locationError.value.isNotEmpty ||
+        controller.specificLocationError.value.isNotEmpty ||
+        controller.descriptionError.value.isNotEmpty ||
+        controller.termsError.value.isNotEmpty ||
+        controller.phoneError.value.isNotEmpty;
+
+    if (hasInlineErrors && _scrollController.hasClients) {
+      await _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOut,
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -54,6 +77,12 @@ class _ReportViewState extends State<ReportView> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Set report type in controller
     controller.reportType = widget.reportType;
@@ -70,6 +99,7 @@ class _ReportViewState extends State<ReportView> {
       backgroundColor: const Color(0xFFF6F6FA),
       body: SafeArea(
         child: SingleChildScrollView(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,21 +119,49 @@ class _ReportViewState extends State<ReportView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Pollution Category'.tr,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Pollution Category'.tr,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          const Text(
+                            '*',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 12),
                       Obx(() {
                         if (controller.isLoadingPollutionCategories.value) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: CircularProgressIndicator(),
-                            ),
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              if (controller.pollutionCategoryError.value.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    controller.pollutionCategoryError.value,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           );
                         }
 
@@ -121,6 +179,17 @@ class _ReportViewState extends State<ReportView> {
                                 onPressed: controller.fetchPollutionCategories,
                                 child: Text('Retry'.tr),
                               ),
+                              if (controller.pollutionCategoryError.value.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    controller.pollutionCategoryError.value,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
                             ],
                           );
                         }
@@ -135,7 +204,7 @@ class _ReportViewState extends State<ReportView> {
                             .map((entry) => entry['id'])
                             .whereType<String>()
                             .toSet();
-                        if (!validValues.contains(value)) {
+                        if (value != null && !validValues.contains(value)) {
                           // Clear stale selection after rebuild to satisfy dropdown constraint
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             controller.selectPollutionCategory(null);
@@ -144,89 +213,117 @@ class _ReportViewState extends State<ReportView> {
                         }
 
                         if (relevantItems.isEmpty) {
-                          return Text(
-                            'No pollution categories available for this report type'.tr,
-                            style: const TextStyle(color: Colors.black54),
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'No pollution categories available for this report type'.tr,
+                                style: const TextStyle(color: Colors.black54),
+                              ),
+                              if (controller.pollutionCategoryError.value.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    controller.pollutionCategoryError.value,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           );
                         }
 
-                        return DropdownButtonFormField<String?>(
-                          initialValue: value,
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          alignment: AlignmentDirectional.centerStart,
-                          itemHeight: 48,
-                          menuMaxHeight: 260,
-                          borderRadius: BorderRadius.circular(8),
-                          items: [
-                            DropdownMenuItem<String?>(
-                              value: null,
-                              child: Text(
-                                'Select pollution category'.tr,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: Colors.black54),
-                              ),
-                            ),
-                            ...relevantItems.map((category) {
-                              final id = category['id'];
-                              final name = category['name'] ?? '';
-                              return DropdownMenuItem<String?>(
-                                value: id,
-                                child: Text(
-                                  name,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black87,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DropdownButtonFormField<String?>(
+                              initialValue: value,
+                              isExpanded: true,
+                              dropdownColor: Colors.white,
+                              alignment: AlignmentDirectional.centerStart,
+                              itemHeight: 48,
+                              menuMaxHeight: 260,
+                              borderRadius: BorderRadius.circular(8),
+                              items: [
+                                DropdownMenuItem<String?>(
+                                  value: null,
+                                  child: Text(
+                                    'Select pollution category'.tr,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(color: Colors.black54),
                                   ),
                                 ),
-                              );
-                            }),
+                                ...relevantItems.map((category) {
+                                  final id = category['id'];
+                                  final name = category['name'] ?? '';
+                                  return DropdownMenuItem<String?>(
+                                    value: id,
+                                    child: Text(
+                                      name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ],
+                              onChanged: (value) {
+                                if (controller.pollutionCategoryError.value.isNotEmpty) {
+                                  controller.pollutionCategoryError.value = '';
+                                }
+                                controller.selectPollutionCategory(value);
+                              },
+                              decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(212, 212, 212, 1),
+                                    width: 1,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(212, 212, 212, 1),
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(212, 212, 212, 1),
+                                    width: 1.1,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: 'Select pollution category'.tr,
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            if (controller.pollutionCategoryError.value.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  controller.pollutionCategoryError.value,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
                           ],
-                          onChanged: (value) {
-                            if (controller.pollutionCategoryError.value.isNotEmpty) {
-                              controller.pollutionCategoryError.value = '';
-                            }
-                            controller.selectPollutionCategory(value);
-                          },
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 14,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Color.fromRGBO(212, 212, 212, 1),
-                                width: 1,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Color.fromRGBO(212, 212, 212, 1),
-                                width: 1,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Color.fromRGBO(212, 212, 212, 1),
-                                width: 1.1,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            errorText: controller.pollutionCategoryError.value
-                                    .isNotEmpty
-                                ? controller.pollutionCategoryError.value
-                                : null,
-                            hintText: 'Select pollution category'.tr,
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                         );
                       }),
                     ],
@@ -951,7 +1048,7 @@ class _ReportViewState extends State<ReportView> {
               Obx(() => SizedBox(
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () => controller.submitReport(isSoundReport),
+                  onPressed: () => _submitWithInlineFocus(isSoundReport),
                   style: ButtonStyle(
                     // Keep the button green for all states (including disabled)
                     backgroundColor: WidgetStateProperty.all<Color>(AppColors.primary),

@@ -582,7 +582,7 @@ final isLoadingPollutionCategories = false.obs;
 
   void selectPollutionCategory(String? id) {
     selectedPollutionCategoryId.value = id;
-    if (pollutionCategoryError.value.isNotEmpty) {
+    if ((id != null && id.isNotEmpty) && pollutionCategoryError.value.isNotEmpty) {
       pollutionCategoryError.value = '';
     }
   }
@@ -2441,11 +2441,7 @@ Future<void> pickTime(BuildContext context) async {
       if (categoryId != null && categoryId.isNotEmpty) {
         formData.fields.add(MapEntry('pollution_category_id', categoryId));
       } else {
-        Get.snackbar(
-          'Error'.tr,
-          'Please select a pollution category'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        pollutionCategoryError.value = 'Please select a pollution category'.tr;
         isSubmitting.value = false;
         return;
       }
