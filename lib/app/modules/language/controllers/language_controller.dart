@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class LanguageOption {
-  final String key;
+  final String label;
   final Locale locale;
 
   const LanguageOption({
-    required this.key,
+    required this.label,
     required this.locale,
   });
 }
@@ -25,10 +25,10 @@ class LanguageController extends GetxController {
   }
 
   static const List<LanguageOption> _allLanguages = [
-    LanguageOption(key: 'English', locale: Locale('en', 'US')),
-    LanguageOption(key: 'Amharic', locale: Locale('am', 'ET')),
-    LanguageOption(key: 'Afaan Oromo', locale: Locale('om', 'ET')),
-    LanguageOption(key: 'Somali', locale: Locale('so', 'ET')),
+    LanguageOption(label: 'English', locale: Locale('en', 'US')),
+    LanguageOption(label: 'አማርኛ', locale: Locale('am', 'ET')),
+    LanguageOption(label: 'Afaan Oromoo', locale: Locale('om', 'ET')),
+    LanguageOption(label: 'Soomaali', locale: Locale('so', 'ET')),
   ];
 
   List<LanguageOption> get availableLanguages => _allLanguages;

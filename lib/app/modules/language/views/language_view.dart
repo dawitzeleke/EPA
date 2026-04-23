@@ -31,7 +31,7 @@ class LanguageView extends GetView<LanguageController> {
                 return Obx(() {
                   final selected = controller.isSelected(option.locale);
                   return ListTile(
-                    title: Text(option.key.tr),
+                    title: Text(option.label),
                     trailing: selected
                         ? const Icon(Icons.check, color: Colors.green)
                         : null,

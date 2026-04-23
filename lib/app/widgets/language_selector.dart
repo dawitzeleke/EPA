@@ -66,7 +66,7 @@ class LanguageSelector extends StatelessWidget {
                 ...languageController.availableLanguages.map((option) {
                   final selected = languageController.isSelected(option.locale);
                   return ListTile(
-                    title: Text(option.key.tr),
+                    title: Text(option.label),
                     trailing:
                         selected ? const Icon(Icons.check, color: Colors.green) : null,
                     onTap: () {
