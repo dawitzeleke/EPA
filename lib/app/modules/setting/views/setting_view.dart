@@ -685,7 +685,11 @@ class SettingView extends GetView<SettingController> {
                       _buildOptionTile(Icons.info_outline, 'About EPA App'.tr,
                           () => Get.toNamed(Routes.ABOUT)),
                       _buildDivider(),
-                      _buildOptionTile(Icons.star_rate_outlined, 'Rate Us'.tr, () {}),
+                      _buildOptionTile(Icons.star_rate_outlined, 'Rate Us'.tr, () {
+                        // Open app page on store (placeholder link)
+                        const url = 'https://play.google.com/store/apps/details?id=et.aii.eprs';
+                        // controller.launchURL(url);
+                      }),
                       _buildDivider(),
                       
                       _buildOptionTile(Icons.logout, "Logout".tr, () {

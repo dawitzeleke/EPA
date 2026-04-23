@@ -90,6 +90,9 @@ final isLoadingPollutionCategories = false.obs;
   // Helper to add a file
   void addPickedImage(XFile file) {
     pickedImagesX.add(file);
+    if (evidenceError.value.isNotEmpty) {
+      evidenceError.value = '';
+    }
     // Force update - RxList should auto-update but ensure it does
     pickedImagesX.refresh();
     secureLog(
@@ -136,6 +139,9 @@ final isLoadingPollutionCategories = false.obs;
   void removePickedImageAt(int index) {
     if (index >= 0 && index < pickedImagesX.length) {
       pickedImagesX.removeAt(index);
+      if (pickedImagesX.isNotEmpty && evidenceError.value.isNotEmpty) {
+        evidenceError.value = '';
+      }
     }
   }
 
@@ -158,6 +164,14 @@ final isLoadingPollutionCategories = false.obs;
   // Form controllers
   final specificLocationController = TextEditingController();
   final descriptionController = TextEditingController();
+  final specificLocationError = ''.obs;
+  final descriptionError = ''.obs;
+  final pollutionCategoryError = ''.obs;
+  final landUseError = ''.obs;
+  final evidenceError = ''.obs;
+  final dateTimeError = ''.obs;
+  final termsError = ''.obs;
+  final locationError = ''.obs;
   final phoneController = TextEditingController();
   final obscurePhoneNumber = false.obs;
   final phoneError = ''.obs;
@@ -363,6 +377,14 @@ final isLoadingPollutionCategories = false.obs;
     // Clear text fields
     specificLocationController.clear();
     descriptionController.clear();
+    specificLocationError.value = '';
+    descriptionError.value = '';
+    pollutionCategoryError.value = '';
+    landUseError.value = '';
+    evidenceError.value = '';
+    dateTimeError.value = '';
+    termsError.value = '';
+    locationError.value = '';
     phoneController.clear();
     phoneError.value = '';
 
@@ -552,11 +574,17 @@ final isLoadingPollutionCategories = false.obs;
   /// Update selected sound area
   void selectSoundArea(String? id) {
     selectedSoundAreaId.value = id;
+    if (landUseError.value.isNotEmpty) {
+      landUseError.value = '';
+    }
     _updateMinRequiredDecibel();
   }
 
   void selectPollutionCategory(String? id) {
     selectedPollutionCategoryId.value = id;
+    if (pollutionCategoryError.value.isNotEmpty) {
+      pollutionCategoryError.value = '';
+    }
   }
   // Private method for internal use (calls public resetForm)
   void _resetForm() => resetForm();
@@ -669,7 +697,12 @@ final isLoadingPollutionCategories = false.obs;
       },
     );
 
-    if (picked != null) selectedDate.value = picked;
+    if (picked != null) {
+      selectedDate.value = picked;
+      if (dateTimeError.value.isNotEmpty) {
+        dateTimeError.value = '';
+      }
+    }
   }
 
   // ----------------------------
@@ -949,6 +982,9 @@ Future<void> pickTime(BuildContext context) async {
 
   if (picked != null) {
     selectedTime.value = picked;
+    if (dateTimeError.value.isNotEmpty) {
+      dateTimeError.value = '';
+    }
   }
 }
 
@@ -2144,35 +2180,46 @@ Future<void> pickTime(BuildContext context) async {
       return;
     }
 
+    // Clear inline field errors before validating again
+    specificLocationError.value = '';
+    descriptionError.value = '';
+    pollutionCategoryError.value = '';
+    landUseError.value = '';
+    evidenceError.value = '';
+    dateTimeError.value = '';
+    termsError.value = '';
+    locationError.value = '';
+    phoneError.value = '';
+
+    var hasValidationErrors = false;
+
     // Validation
     final specificAddress = specificLocationController.text.trim();
     if (specificAddress.isEmpty) {
-      _showSubmitFeedback('Error'.tr, 'Please provide a specific location'.tr, isError: true);
-      return;
+      specificLocationError.value = 'Please provide a specific location'.tr;
+      hasValidationErrors = true;
     }
 
     final desc = descriptionController.text.trim();
     if (desc.isEmpty) {
-      _showSubmitFeedback('Error'.tr, 'Please provide a description'.tr, isError: true);
-      return;
-    }
-
-    if (desc.length < 30) {
-      _showSubmitFeedback('Error'.tr, 'Description must be at least 30 characters'.tr, isError: true);
-      return;
+      descriptionError.value = 'Please provide a description'.tr;
+      hasValidationErrors = true;
+    } else if (desc.length < 30) {
+      descriptionError.value = 'Description must be at least 30 characters'.tr;
+      hasValidationErrors = true;
     }
 
     if (pickedImagesX.isEmpty && !isSound) {
-      _showSubmitFeedback('Error'.tr, 'Please add at least one photo or video or audio'.tr, isError: true);
-      return;
+      evidenceError.value = 'Please add at least one photo or video or audio'.tr;
+      hasValidationErrors = true;
     }
 
     if (isSound) {
       // Ensure land use type is selected
       final soundArea = _getSelectedSoundArea();
       if (soundArea == null) {
-        _showSubmitFeedback('Error'.tr, 'Please select land use type'.tr, isError: true);
-        return;
+        landUseError.value = 'Please select land use type'.tr;
+        hasValidationErrors = true;
       }
 
       // Ensure at least one audio file is attached
@@ -2184,86 +2231,97 @@ Future<void> pickTime(BuildContext context) async {
             name.contains('voice_note');
       });
       if (!hasAudio) {
-        _showSubmitFeedback('Error'.tr, 'Please add an audio recording'.tr, isError: true);
-        return;
+        evidenceError.value = 'Please add an audio recording'.tr;
+        hasValidationErrors = true;
       }
 
       showMinDecibelWarning.value = true;
       final minDb = minRequiredDecibel;
       if (minDb == null) {
-        _showSubmitFeedback('Error'.tr, 'Unable to determine minimum required dB. Please reselect land use type.'.tr, isError: true);
-        return;
+        landUseError.value =
+            'Unable to determine minimum required dB. Please reselect land use type.'.tr;
+        hasValidationErrors = true;
       }
       if (!hasNoiseReading.value) {
-        _showSubmitFeedback('Error'.tr, 'No sound level reading detected. Please record again.'.tr, isError: true);
-        return;
+        evidenceError.value =
+            'No sound level reading detected. Please record again.'.tr;
+        hasValidationErrors = true;
       }
-      if (maxDecibel.value < minDb) {
-        _showSubmitFeedback('Error'.tr, 'Recorded sound level is below the minimum required'.trParams({'db': minDb.toStringAsFixed(0)}), isError: true);
-        return;
+      if (minDb != null && maxDecibel.value < minDb) {
+        evidenceError.value =
+            'Recorded sound level is below the minimum required'.trParams({
+          'db': minDb.toStringAsFixed(0),
+        });
+        hasValidationErrors = true;
       }
-      showMinDecibelWarning.value = false;
+
+      if (!hasValidationErrors) {
+        showMinDecibelWarning.value = false;
+      }
     }
 
     if (!termsAccepted.value) {
-      _showSubmitFeedback('Error'.tr, 'Please accept the terms and conditions'.tr, isError: true);
-      return;
+      termsError.value = 'Please accept the terms and conditions'.tr;
+      hasValidationErrors = true;
     }
 
     if (selectedDate.value == null || selectedTime.value == null) {
-      _showSubmitFeedback('Error'.tr, 'Please select date and time'.tr, isError: true);
-      return;
+      dateTimeError.value = 'Please select date and time'.tr;
+      hasValidationErrors = true;
     }
 
     // Validate "Are you in the spot" is selected
     if (!hasSelectedLocationOption.value || isInTheSpot.value == null) {
-      _showSubmitFeedback('Error'.tr, 'Please select "Are you in the spot"'.tr, isError: true);
-      return;
+      locationError.value = 'Please select "Are you in the spot"'.tr;
+      hasValidationErrors = true;
     }
 
     // Validate location based on selection
     if (isInTheSpot.value == true) {
       // If "Yes", location should be detected or manually entered
       if (!autoDetectLocation.value && detectedPosition.value == null) {
-        _showSubmitFeedback('Error'.tr, 'Please enable location detection or provide location details'.tr, isError: true);
-        return;
+        locationError.value =
+            'Please enable location detection or provide location details'.tr;
+        hasValidationErrors = true;
       }
     } else {
       // If "No", region/zone/woreda should be selected
       if (selectedRegion.value == 'Select Region / City Administration') {
-        _showSubmitFeedback('Error'.tr, 'Please select a region/city'.tr, isError: true);
-        return;
+        locationError.value = 'Please select a region/city'.tr;
+        hasValidationErrors = true;
       }
     }
 
     // Validate pollution category is selected
     if (selectedPollutionCategoryId.value == null ||
         selectedPollutionCategoryId.value!.isEmpty) {
-      _showSubmitFeedback('Error'.tr, 'Please select a pollution category'.tr, isError: true);
-      return;
+      pollutionCategoryError.value = 'Please select a pollution category'.tr;
+      hasValidationErrors = true;
     }
 
     // Validate phone number BEFORE heavy form building (guest only)
     final token = box.read('auth_token')?.toString();
-    final storedUsername = box.read('username')?.toString().trim().toLowerCase();
+    final storedUsername =
+        box.read('username')?.toString().trim().toLowerCase();
     final isUserLoggedIn =
-      token != null &&
-      token.isNotEmpty &&
-      storedUsername != 'guest';
+        token != null && token.isNotEmpty && storedUsername != 'guest';
     if (!isUserLoggedIn) {
       final phone = phoneController.text.trim();
       if (phone.isEmpty) {
         phoneError.value = 'Phone number is required'.tr;
-        _showSubmitFeedback('Phone number required'.tr, 'Please enter your phone number to submit a report as a guest.'.tr, isError: true);
-        return;
-      }
-      final isValidPhone = phone.length == 10 &&
-          (phone.startsWith('09') || phone.startsWith('07'));
-      if (!isValidPhone) {
+        hasValidationErrors = true;
+      } else {
+        final isValidPhone = phone.length == 10 &&
+            (phone.startsWith('09') || phone.startsWith('07'));
+        if (!isValidPhone) {
         phoneError.value = 'Enter a valid 10-digit phone (09… or 07…)'.tr;
-        _showSubmitFeedback('Invalid phone number'.tr, 'Please enter a valid 10-digit phone number starting with 09 or 07.'.tr, isError: true);
-        return;
+        hasValidationErrors = true;
+        }
       }
+    }
+
+    if (hasValidationErrors) {
+      return;
     }
 
     isSubmitting.value = true;

@@ -85,30 +85,46 @@ class LanguageSelector extends StatelessWidget {
 
     return InkWell(
       onTap: showLanguageSheet,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Obx(() => Text(
-                languageController.currentLabel,
-                style: usePoppins
-                    ? GoogleFonts.poppins(
-                        fontSize: fontSize ?? 12,
-                        color: color ?? Colors.grey.shade700,
-                        fontWeight: FontWeight.w500,
-                      )
-                    : TextStyle(
-                        fontSize: fontSize ?? 12,
-                        color: color ?? Colors.grey.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
-              )),
-          const SizedBox(width: 6),
-          Icon(
-            Icons.language,
-            color: color ?? Colors.grey.shade700,
-            size: iconSize ?? 18,
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Obx(() => FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          languageController.currentLabel,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: usePoppins
+                              ? GoogleFonts.poppins(
+                                  fontSize: fontSize ?? 12,
+                                  color: color ?? Colors.grey.shade700,
+                                  fontWeight: FontWeight.w500,
+                                )
+                              : TextStyle(
+                                  fontSize: fontSize ?? 12,
+                                  color: color ?? Colors.grey.shade700,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                        ),
+                      )),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Icon(
+                Icons.language,
+                color: color ?? Colors.grey.shade700,
+                size: iconSize ?? 18,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

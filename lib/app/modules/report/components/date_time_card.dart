@@ -7,6 +7,7 @@ class DateTimeCard extends StatelessWidget {
   final Rxn<TimeOfDay> selectedTime;
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
+  final String? errorText;
 
   const DateTimeCard({
     super.key,
@@ -14,6 +15,7 @@ class DateTimeCard extends StatelessWidget {
     required this.selectedTime,
     required this.onPickDate,
     required this.onPickTime,
+    this.errorText,
   });
 
   @override
@@ -115,6 +117,13 @@ class DateTimeCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (errorText != null && errorText!.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                errorText!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ],
           ],
         ),
       ),

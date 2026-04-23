@@ -6,6 +6,8 @@ class LabeledTextFieldCard extends StatelessWidget {
   final int maxLines;
   final TextEditingController? controller;
   final bool requiredField;
+  final String? errorText;
+  final ValueChanged<String>? onChanged;
 
   const LabeledTextFieldCard({
     super.key,
@@ -13,6 +15,8 @@ class LabeledTextFieldCard extends StatelessWidget {
     this.maxLines = 1,
     this.controller,
     this.requiredField = true,
+    this.errorText,
+    this.onChanged,
   });
 
   @override
@@ -52,8 +56,12 @@ class LabeledTextFieldCard extends StatelessWidget {
             TextFormField(
               controller: controller,
               maxLines: maxLines,
+              onChanged: onChanged,
               decoration: InputDecoration(
                 hintStyle: const TextStyle(fontSize: 13),
+                errorText: (errorText != null && errorText!.isNotEmpty)
+                    ? errorText
+                    : null,
                 fillColor: const Color.fromRGBO(202, 213, 226, 0.2),
                 filled: true,
                 border: OutlineInputBorder(

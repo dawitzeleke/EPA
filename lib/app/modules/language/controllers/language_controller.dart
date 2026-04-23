@@ -60,13 +60,13 @@ class LanguageController extends GetxController {
   String get currentLabel {
     switch (locale.value.languageCode) {
       case 'am':
-        return 'AM';
+        return 'አማርኛ';
       case 'om':
-        return 'OM';
+        return 'Afaan Oromoo';
       case 'so':
-        return 'SO';
+        return 'Soomaali';
       default:
-        return 'EN';
+        return 'English';
     }
   }
 

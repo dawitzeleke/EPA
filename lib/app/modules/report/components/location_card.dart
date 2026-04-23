@@ -70,6 +70,9 @@ class LocationCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () async {
+                        if (controller.locationError.value.isNotEmpty) {
+                          controller.locationError.value = '';
+                        }
                         controller.hasSelectedLocationOption.value = true;
                         controller.isInTheSpot.value = true;
                         controller.selectedRegion.value =
@@ -114,6 +117,9 @@ class LocationCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
+                        if (controller.locationError.value.isNotEmpty) {
+                          controller.locationError.value = '';
+                        }
                         controller.hasSelectedLocationOption.value = true;
                         controller.isInTheSpot.value = false;
                         controller.autoDetectLocation.value = false;
@@ -241,6 +247,9 @@ class LocationCard extends StatelessWidget {
                       value: controller.selectedRegion.value,
                       enabled: true,
                       onChanged: (v) {
+                        if (controller.locationError.value.isNotEmpty) {
+                          controller.locationError.value = '';
+                        }
                         final selected =
                             v ?? 'Select Region / City Administration';
                         controller.selectedRegion.value = selected;
@@ -363,6 +372,17 @@ class LocationCard extends StatelessWidget {
                     );
                   }),
                 ],
+              );
+            }),
+            Obx(() {
+              final err = controller.locationError.value;
+              if (err.isEmpty) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  err,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
               );
             }),
           ],

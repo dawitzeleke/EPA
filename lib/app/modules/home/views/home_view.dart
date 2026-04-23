@@ -214,7 +214,7 @@ class _ReportTile extends StatelessWidget {
             // Language selector positioned at specified location
             Positioned(
               top: 10, // Adjusted for smaller header
-              right: -15, // Shift slightly more to the right edge
+              right: 20, // Shift slightly more to the right edge
               child: SizedBox(
                 width: 60,
                 height: 35,

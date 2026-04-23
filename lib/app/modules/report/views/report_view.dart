@@ -182,7 +182,12 @@ class _ReportViewState extends State<ReportView> {
                               );
                             }),
                           ],
-                          onChanged: controller.selectPollutionCategory,
+                          onChanged: (value) {
+                            if (controller.pollutionCategoryError.value.isNotEmpty) {
+                              controller.pollutionCategoryError.value = '';
+                            }
+                            controller.selectPollutionCategory(value);
+                          },
                           decoration: InputDecoration(
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
@@ -212,6 +217,10 @@ class _ReportViewState extends State<ReportView> {
                             ),
                             filled: true,
                             fillColor: Colors.white,
+                            errorText: controller.pollutionCategoryError.value
+                                    .isNotEmpty
+                                ? controller.pollutionCategoryError.value
+                                : null,
                             hintText: 'Select pollution category'.tr,
                             hintStyle: TextStyle(
                               color: Colors.grey.shade600,
@@ -314,7 +323,12 @@ class _ReportViewState extends State<ReportView> {
                                 ),
                               ),
                             ],
-                            onChanged: controller.selectSoundArea,
+                            onChanged: (value) {
+                              if (controller.landUseError.value.isNotEmpty) {
+                                controller.landUseError.value = '';
+                              }
+                              controller.selectSoundArea(value);
+                            },
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -344,6 +358,10 @@ class _ReportViewState extends State<ReportView> {
                               ),
                               filled: true,
                               fillColor: Colors.white,
+                              errorText:
+                                  controller.landUseError.value.isNotEmpty
+                                      ? controller.landUseError.value
+                                      : null,
                               hintText: 'Select sound area'.tr,
                               hintStyle: TextStyle(
                                 color: Colors.grey.shade600,
@@ -366,12 +384,13 @@ class _ReportViewState extends State<ReportView> {
               const SizedBox(height: 12),
 
               // Time & Date Card
-              DateTimeCard(
+              Obx(() => DateTimeCard(
                 selectedDate: controller.selectedDate,
                 selectedTime: controller.selectedTime,
                 onPickDate: () => controller.pickDate(context),
                 onPickTime: () => controller.pickTime(context),
-              ),
+                errorText: controller.dateTimeError.value,
+              )),
 
               const SizedBox(height: 12),
               // Evidence Card
@@ -606,6 +625,20 @@ class _ReportViewState extends State<ReportView> {
                           ],
                         );
                       }),
+                      Obx(() {
+                        final err = controller.evidenceError.value;
+                        if (err.isEmpty) return const SizedBox.shrink();
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            err,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -622,17 +655,29 @@ class _ReportViewState extends State<ReportView> {
 
               const SizedBox(height: 12),
 
-              LabeledTextFieldCard(
+              Obx(() => LabeledTextFieldCard(
                 title: 'Specific Location'.tr,
                 maxLines: 1,
                 controller: controller.specificLocationController,
-              ),
+                errorText: controller.specificLocationError.value,
+                onChanged: (_) {
+                  if (controller.specificLocationError.value.isNotEmpty) {
+                    controller.specificLocationError.value = '';
+                  }
+                },
+              )),
               const SizedBox(height: 12),
-              LabeledTextFieldCard(
+              Obx(() => LabeledTextFieldCard(
                 title: 'Description'.tr,
                 maxLines: 3,
                 controller: controller.descriptionController,
-              ),
+                errorText: controller.descriptionError.value,
+                onChanged: (_) {
+                  if (controller.descriptionError.value.isNotEmpty) {
+                    controller.descriptionError.value = '';
+                  }
+                },
+              )),
 
               const SizedBox(height: 12),
               // Phone Number Card
@@ -856,8 +901,12 @@ class _ReportViewState extends State<ReportView> {
                       Checkbox(
                         activeColor: AppColors.primary,
                         value: controller.termsAccepted.value,
-                        onChanged: (v) =>
-                            controller.termsAccepted.value = v ?? false,
+                        onChanged: (v) {
+                          controller.termsAccepted.value = v ?? false;
+                          if (controller.termsError.value.isNotEmpty) {
+                            controller.termsError.value = '';
+                          }
+                        },
                       ),
                       Expanded(
                         child: Text.rich(
@@ -884,6 +933,17 @@ class _ReportViewState extends State<ReportView> {
                       ),
                     ],
                   )),
+              Obx(() {
+                final err = controller.termsError.value;
+                if (err.isEmpty) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(left: 12, top: 4),
+                  child: Text(
+                    err,
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                );
+              }),
 
               const SizedBox(height: 12),
 
