@@ -9,6 +9,7 @@ import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:eprs/core/enums/report_type_enum.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:eprs/core/utils/secure_log.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 import '../components/sound_gauge_painter.dart';
 import '../controllers/report_controller.dart';
 
@@ -1598,6 +1600,15 @@ class _ReportViewState extends State<ReportView> {
       }
     }
 
+    if (isVideo) {
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        builder: (_) => _VideoPreviewDialog(filePath: file.path, title: file.name),
+      );
+      return;
+    }
+
     final typeLabel = isVideo
         ? 'video'
         : isAudio
@@ -1630,6 +1641,197 @@ class _ReportViewState extends State<ReportView> {
           ],
         );
       },
+    );
+  }
+}
+
+class _VideoPreviewDialog extends StatefulWidget {
+  final String filePath;
+  final String title;
+
+  const _VideoPreviewDialog({
+    required this.filePath,
+    required this.title,
+  });
+
+  @override
+  State<_VideoPreviewDialog> createState() => _VideoPreviewDialogState();
+}
+
+class _VideoPreviewDialogState extends State<_VideoPreviewDialog> {
+  VideoPlayerController? _videoController;
+  String? _error;
+
+  String _formatDuration(Duration d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    final s = d.inSeconds.remainder(60);
+    return h > 0 ? '${two(h)}:${two(m)}:${two(s)}' : '${two(m)}:${two(s)}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initVideo();
+  }
+
+  Future<void> _initVideo() async {
+    try {
+      final controller = kIsWeb
+          ? VideoPlayerController.networkUrl(Uri.parse(widget.filePath))
+          : VideoPlayerController.file(File(widget.filePath));
+
+      await controller.initialize();
+      controller.setLooping(true);
+
+      if (!mounted) {
+        controller.dispose();
+        return;
+      }
+
+      setState(() {
+        _videoController = controller;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+      backgroundColor: Colors.black,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: size.width * 0.96,
+          maxHeight: size.height * 0.9,
+          minHeight: 280,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 10, 6, 6),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.title.isNotEmpty ? widget.title : 'Video Preview',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: _error != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            'Could not open video: $_error',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : _videoController == null
+                          ? const CircularProgressIndicator()
+                          : ValueListenableBuilder<VideoPlayerValue>(
+                              valueListenable: _videoController!,
+                              builder: (context, value, _) {
+                                final aspect =
+                                    value.aspectRatio > 0 ? value.aspectRatio : 16 / 9;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: AspectRatio(
+                                    aspectRatio: aspect,
+                                    child: VideoPlayer(_videoController!),
+                                  ),
+                                );
+                              },
+                            ),
+                ),
+              ),
+              if (_videoController != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 8, 14, 14),
+                  child: ValueListenableBuilder<VideoPlayerValue>(
+                    valueListenable: _videoController!,
+                    builder: (context, value, _) {
+                      final position = value.position;
+                      final duration = value.duration;
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          VideoProgressIndicator(
+                            _videoController!,
+                            allowScrubbing: true,
+                            colors: const VideoProgressColors(
+                              playedColor: Color(0xFF4CAF50),
+                              bufferedColor: Color(0xFF757575),
+                              backgroundColor: Color(0xFF424242),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                _formatDuration(position),
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  if (value.isPlaying) {
+                                    _videoController!.pause();
+                                  } else {
+                                    _videoController!.play();
+                                  }
+                                },
+                                icon: Icon(
+                                  value.isPlaying
+                                      ? Icons.pause_circle_filled
+                                      : Icons.play_circle_fill,
+                                  color: Colors.white,
+                                  size: 36,
+                                ),
+                              ),
+                              Text(
+                                _formatDuration(duration),
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

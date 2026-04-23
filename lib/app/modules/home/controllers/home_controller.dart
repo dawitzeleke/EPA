@@ -170,7 +170,7 @@ String _monthName(int month) {
     if (userName.value != 'Guest') {
       Future.delayed(const Duration(seconds: 1), () {
         Get.snackbar(
-          'Welcome back!',
+          'Welcome!',
           userName.value,
           backgroundColor: const Color(0xFF22C55E),
           colorText: Colors.white,

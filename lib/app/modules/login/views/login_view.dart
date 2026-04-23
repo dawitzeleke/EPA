@@ -44,7 +44,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
 
     final args = Get.arguments;
     final isFirstLogin = args is Map && args['firstTimeLogin'] == true;
-    final welcomeTitle = isFirstLogin ? 'Welcome'.tr : 'Welcome Back'.tr;
+    final welcomeTitle = 'Welcome'.tr ;
     
     // Responsive calculations
     final isSmall = height < 700;
