@@ -266,7 +266,7 @@ class _ReportViewState extends State<ReportView> {
                                 const SizedBox(height: 8),
                                 TextButton(
                                   onPressed: controller.fetchSoundAreas,
-                                  child: const Text('Retry'),
+                                  child:  Text('Retry'.tr),
                                 ),
                               ],
                             );

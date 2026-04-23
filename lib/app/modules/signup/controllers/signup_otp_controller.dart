@@ -73,8 +73,8 @@ class SignupOtpController extends GetxController {
   Future<void> verifyOtp() async {
     if (code.value.length < 6) {
       _showErrorDialog(
-        'Incomplete OTP',
-        'Please enter the complete 6-digit OTP code',
+        'Incomplete OTP'.tr,
+        'Please enter the complete 6-digit OTP code'.tr,
       );
       return;
     }

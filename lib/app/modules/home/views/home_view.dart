@@ -23,14 +23,11 @@ class HomeView extends GetView<HomeController> {
     final lang = Get.locale?.languageCode ?? 'en';
     if (lang == 'om') return "assets/oromo_$baseName.png";
     if (lang == 'so') return "assets/somali_$baseName.png";
-    if (lang == 'am') {
-      if (baseName == 'pollution' || baseName == 'sound') {
-        return "assets/amharic_$baseName.png";
-      }
+    if (lang == 'am') return "assets/amharic_$baseName.png";
+      
       return "assets/english_$baseName.png";
-    }
+    
     // Fallback to english for any other language or missing localized asset.
-    return "assets/english_$baseName.png";
   }
 
   // Carousel page controller
