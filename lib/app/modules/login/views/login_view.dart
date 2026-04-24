@@ -43,8 +43,6 @@ class _LoginOverlayState extends State<LoginOverlay> {
     final height = size.height;
     final width = size.width;
 
-    final args = Get.arguments;
-    final isFirstLogin = args is Map && args['firstTimeLogin'] == true;
     final welcomeTitle = 'Welcome'.tr;
 
     // Responsive calculations

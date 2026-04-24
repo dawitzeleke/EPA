@@ -10,19 +10,25 @@ class AwarenessView extends GetView<AwarenessController> {
   const AwarenessView({super.key});
   
   /// Build network image with fallback URL patterns
-  Widget _buildNetworkImageWithFallback(String primaryUrl, AwarenessModel awareness, double size) {
+  Widget _buildNetworkImageWithFallback(
+    String primaryUrl,
+    AwarenessModel awareness, {
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.cover,
+  }) {
     // For now, just use the primary URL
     // If it fails, we'll need to check with backend team about the correct route
     return Image.network(
       primaryUrl,
-      width: size,
-      height: size,
-      fit: BoxFit.cover,
+      width: width,
+      height: height,
+      fit: fit,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
         return Container(
-          width: size,
-          height: size,
+          width: width,
+          height: height,
           color: Colors.grey[200],
           child: const Center(
             child: CircularProgressIndicator(
@@ -33,13 +39,13 @@ class AwarenessView extends GetView<AwarenessController> {
       },
       errorBuilder: (c, e, s) {
         return Container(
-          width: size,
-          height: size,
+          width: width,
+          height: height,
           color: Colors.grey[200],
           child: Icon(
             Icons.image_not_supported,
             color: Colors.grey,
-            size: size * 0.4,
+            size: (height ?? width ?? 80) * 0.25,
           ),
         );
       },
@@ -71,11 +77,6 @@ class AwarenessView extends GetView<AwarenessController> {
       isLandscape ? 240 : 280,
       isLandscape ? 460 : 540,
     );
-    final imageSize = clampDouble(
-      (isTablet ? 110 : 78) * scale,
-      66,
-      isTablet ? 140 : 110,
-    );
     final horizontalPadding = clampDouble(
       (isTablet ? 28 : 18) * scale,
       14,
@@ -95,11 +96,6 @@ class AwarenessView extends GetView<AwarenessController> {
       (isTablet ? 22 : 16) * scale,
       14,
       26,
-    );
-    final headerSubSize = clampDouble(
-      (isTablet ? 17 : 14) * scale,
-      12,
-      22,
     );
     final backIconSize = clampDouble(
       (isTablet ? 28 : 23) * scale,
@@ -256,104 +252,134 @@ class AwarenessView extends GetView<AwarenessController> {
                     children: List.generate(controller.awarenessList.length, (i) {
                       final awareness = controller.awarenessList[i];
                       final imageUrl = controller.getImageUrl(awareness);
+                      final cardImageHeight = clampDouble(
+                        isTablet ? width * 0.32 : width * 0.48,
+                        160,
+                        isTablet ? 280 : 240,
+                      );
+
                       return Padding(
                         padding: EdgeInsets.only(
                           bottom: i == controller.awarenessList.length - 1 ? 24.0 : 18.0,
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: imageSize,
-                              height: imageSize,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFE9EEF3)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: imageUrl.isNotEmpty
-                                    ? _buildNetworkImageWithFallback(imageUrl, awareness, imageSize)
-                                    : Container(
-                                        color: Colors.grey[200],
-                                        child: Icon(
-                                          Icons.image_not_supported,
-                                          color: Colors.grey,
-                                          size: imageSize * 0.4,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                            SizedBox(width: isTablet ? 20 : 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    awareness.title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: titleFontSize,
-                                      color: const Color.fromRGBO(0, 0, 0, 1),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Obx(() {
-                                    final description =
-                                        awareness.awarenessDescription.trim();
-                                    final isLong = description.length > 160;
-                                    final expanded =
-                                        controller.isDescriptionExpanded(i);
-
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          description,
-                                          style: TextStyle(
-                                            color: const Color.fromRGBO(
-                                                99, 85, 127, 1),
-                                            height: 1.45,
-                                            fontSize: descFontSize,
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: cardImageHeight,
+                                  child: imageUrl.isNotEmpty
+                                      ? _buildNetworkImageWithFallback(
+                                          imageUrl,
+                                          awareness,
+                                          width: double.infinity,
+                                          height: cardImageHeight,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Container(
+                                          color: Colors.grey[200],
+                                          child: Icon(
+                                            Icons.image_not_supported,
+                                            color: Colors.grey,
+                                            size: cardImageHeight * 0.22,
                                           ),
-                                          maxLines: expanded ? null : 3,
-                                          overflow: expanded
-                                              ? TextOverflow.visible
-                                              : TextOverflow.ellipsis,
                                         ),
-                                        if (isLong)
-                                          TextButton(
-                                            onPressed: () =>
-                                                controller.toggleDescription(i),
-                                            style: TextButton.styleFrom(
-                                              padding: const EdgeInsets.only(
-                                                  top: 4),
-                                              minimumSize: Size.zero,
-                                              tapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  isTablet ? 18 : 14,
+                                  isTablet ? 14 : 12,
+                                  isTablet ? 18 : 14,
+                                  isTablet ? 12 : 10,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      awareness.title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: titleFontSize,
+                                        color: const Color.fromRGBO(0, 0, 0, 1),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Obx(() {
+                                      final description =
+                                          awareness.awarenessDescription.trim();
+                                      final isLong = description.length > 160;
+                                      final expanded =
+                                          controller.isDescriptionExpanded(i);
+
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            description,
+                                            style: TextStyle(
+                                              color: const Color.fromRGBO(
+                                                  99, 85, 127, 1),
+                                              height: 1.45,
+                                              fontSize: descFontSize,
                                             ),
-                                            child: Text(
-                                              expanded
-                                                  ? 'Show less'.tr
-                                                  : 'Read more'.tr,
-                                              style: TextStyle(
-                                                color: AppColors.primary,
-                                                fontSize:
-                                                    (descFontSize - 0.5)
-                                                        .clamp(10, 14),
-                                                fontWeight: FontWeight.w600,
+                                            maxLines: expanded ? null : 3,
+                                            overflow: expanded
+                                                ? TextOverflow.visible
+                                                : TextOverflow.ellipsis,
+                                          ),
+                                          if (isLong)
+                                            TextButton(
+                                              onPressed: () =>
+                                                  controller.toggleDescription(i),
+                                              style: TextButton.styleFrom(
+                                                padding: const EdgeInsets.only(
+                                                    top: 6),
+                                                minimumSize: Size.zero,
+                                                tapTargetSize:
+                                                    MaterialTapTargetSize
+                                                        .shrinkWrap,
+                                              ),
+                                              child: Text(
+                                                expanded
+                                                    ? 'Show less'.tr
+                                                    : 'Read more'.tr,
+                                                style: TextStyle(
+                                                  color: AppColors.primary,
+                                                  fontSize:
+                                                      (descFontSize - 0.5)
+                                                          .clamp(10, 14),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                      ],
-                                    );
-                                  }),
-                                ],
+                                        ],
+                                      );
+                                    }),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     }),

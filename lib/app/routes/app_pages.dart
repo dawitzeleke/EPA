@@ -131,10 +131,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SIGNUP_OTP,
-      page: () {
-        final arg = Get.arguments;
-        return SignupOtpView();
-      },
+      page: () => SignupOtpView(),
       binding: BindingsBuilder(() {
         final arg = Get.arguments;
         final email = (arg is Map && arg['email'] is String)
