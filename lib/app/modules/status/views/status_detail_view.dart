@@ -18,6 +18,7 @@ class StatusDetailView extends StatefulWidget {
 class _StatusDetailViewState extends State<StatusDetailView> {
   ReportItem? _fullReport;
   bool _isLoading = true;
+  bool _isDescriptionExpanded = false;
 
   @override
   void initState() {
@@ -158,14 +159,56 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                       ),
                     ),
                     // Description
-                    Text(
-                      report.description,
-                      style: TextStyle(
-                        fontFamily: AppFonts.primaryFont,
-                        fontSize: 14,
-                        color: const Color(0xFF8A8F95),
-                        height: 1.5,
-                      ),
+                    Builder(
+                      builder: (context) {
+                        final description = report.description.trim();
+                        final isLong = description.length > 220;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              description,
+                              maxLines: _isDescriptionExpanded ? null : 4,
+                              overflow: _isDescriptionExpanded
+                                  ? TextOverflow.visible
+                                  : TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: AppFonts.primaryFont,
+                                fontSize: 14,
+                                color: const Color(0xFF8A8F95),
+                                height: 1.5,
+                              ),
+                            ),
+                            if (isLong)
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isDescriptionExpanded =
+                                        !_isDescriptionExpanded;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: Text(
+                                  _isDescriptionExpanded
+                                      ? 'Show less'.tr
+                                      : 'Read more'.tr,
+                                  style: TextStyle(
+                                    fontFamily: AppFonts.primaryFont,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
                     ),
                     
                     const SizedBox(height: 16),
