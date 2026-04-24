@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:eprs/core/network/dio_client.dart';
+import 'package:eprs/core/network/guest_dio_factory.dart';
 import 'package:eprs/core/constants/api_constants.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:eprs/core/utils/secure_log.dart';
@@ -219,30 +219,14 @@ String _monthName(int month) {
     isSearchingReport.value = true;
 
     try {
-      final storage = Get.find<GetStorage>();
-      final userId = storage.read('userId') ?? storage.read('user_id');
-      final token = storage.read('auth_token');
+      // Use a guest-safe Dio instance so auth failures here never trigger a global logout.
+      final httpClient = GuestDioFactory.create();
 
-      if (userId == null || token == null) {
-        Get.snackbar(
-          'Error',
-          'Please login to search for reports',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        isSearchingReport.value = false;
-        return;
-      }
-
-      final httpClient = Get.find<DioClient>().dio;
-
-      // Fetch all complaints and find the one with matching report_id
+      // Fetch complaint directly by report ID
       final response = await httpClient.get(
-        ApiConstants.complaintsEndpoint,
+        ApiConstants.complaintByReportId(reportId.trim()),
         options: dio.Options(
           headers: {
-            'Authorization': 'Bearer $token',
             'accept': '*/*',
           },
         ),
@@ -250,45 +234,29 @@ String _monthName(int month) {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
-        
-        // Handle different response formats
-        List<dynamic> complaintsList = [];
-        
-        if (data is List) {
-          complaintsList = data;
-        } else if (data is Map) {
-          if (data['data'] is List) {
-            complaintsList = data['data'];
-          } else if (data['complaints'] is List) {
-            complaintsList = data['complaints'];
+
+        // Normalize possible shapes: {data: {...}}, {complaint: {...}}, list, or direct object
+        Map<String, dynamic>? foundComplaint;
+        if (data is Map) {
+          if (data['data'] is Map) {
+            foundComplaint = Map<String, dynamic>.from(data['data']);
+          } else if (data['complaint'] is Map) {
+            foundComplaint = Map<String, dynamic>.from(data['complaint']);
+          } else if (data.isNotEmpty) {
+            foundComplaint = Map<String, dynamic>.from(data);
+          }
+        } else if (data is List && data.isNotEmpty) {
+          final first = data.first;
+          if (first is Map<String, dynamic>) {
+            foundComplaint = first;
+          } else if (first is Map) {
+            foundComplaint = Map<String, dynamic>.from(first);
           }
         }
 
-        // Find complaint with matching report_id that belongs to current user
-        dynamic foundComplaint;
-        try {
-          foundComplaint = complaintsList.firstWhere(
-            (complaint) {
-              if (complaint is! Map) return false;
-              final complaintReportId = complaint['report_id']?.toString() ?? '';
-              final complaintCustomerId = complaint['customer_id']?.toString();
-              
-              // Match report_id and verify it belongs to current user
-              return complaintReportId.toLowerCase().trim() == reportId.toLowerCase().trim() &&
-                     complaintCustomerId == userId.toString();
-            },
-          );
-        } catch (e) {
-          foundComplaint = null;
-        }
-
-        if (foundComplaint != null) {
+        if (foundComplaint != null && foundComplaint.isNotEmpty) {
           // Convert to ReportItem and navigate to detail view
-          final reportItem = ReportItem.fromJson(
-            foundComplaint is Map<String, dynamic> 
-                ? foundComplaint 
-                : Map<String, dynamic>.from(foundComplaint)
-          );
+          final reportItem = ReportItem.fromJson(foundComplaint);
           
           // Navigate to status detail view
           reportIdController.clear();
@@ -296,7 +264,7 @@ String _monthName(int month) {
         } else {
           Get.snackbar(
             'Not Found',
-            'Report ID not found or you do not have access to this report',
+            'Report ID not found',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
