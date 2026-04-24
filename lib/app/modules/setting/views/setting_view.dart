@@ -690,91 +690,102 @@ class SettingView extends GetView<SettingController> {
                         // controller.launchURL('https://play.google.com/store/apps/details?id=et.aii.eprs');
                       }),
                       _buildDivider(),
-                      
-                      _buildOptionTile(Icons.logout, "Logout".tr, () {
-                        // Confirm logout
-                        Get.defaultDialog(
-                          title: '',
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
-                          ),
-                          backgroundColor: Colors.white,
-                          radius: 12,
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Are you sure you want to logout?'.tr,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 18),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () => Get.back(),
-                                      style: OutlinedButton.styleFrom(
-                                        side: BorderSide(color: AppColors.primary),
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        'Cancel'.tr,
-                                        style: const TextStyle(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                      Obx(() {
+                        final isLoggedIn = controller.isLoggedIn.value;
+
+                        if (!isLoggedIn) {
+                          return _buildOptionTile(Icons.login, 'Sign In'.tr, () {
+                            Get.toNamed(Routes.LOGIN);
+                          });
+                        }
+
+                        return _buildOptionTile(Icons.logout, 'Logout'.tr, () {
+                          Get.defaultDialog(
+                            title: '',
+                            barrierDismissible: false,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
+                            ),
+                            backgroundColor: Colors.white,
+                            radius: 12,
+                            content: Builder(
+                              builder: (dialogContext) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Are you sure you want to logout?'.tr,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        // Reset bottom nav to home tab if controller exists
-                                        if (Get.isRegistered<BottomNavController>()) {
-                                          try {
-                                            final navCtrl = Get.find<BottomNavController>();
-                                            navCtrl.resetToHome();
-                                          } catch (_) {}
-                                        }
-
-                                        // Clear stored data and navigate to splash/login
-                                        final box = Get.find<GetStorage>();
-                                        await box.erase();
-
-                                        // After clearing storage, navigate to splash screen
-                                        Get.offAllNamed(Routes.SPLASH);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primary,
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                    const SizedBox(height: 18),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(dialogContext, rootNavigator: true).pop();
+                                            },
+                                            style: OutlinedButton.styleFrom(
+                                              side: BorderSide(color: AppColors.primary),
+                                              padding: const EdgeInsets.symmetric(vertical: 12),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Cancel'.tr,
+                                              style: const TextStyle(
+                                                color: AppColors.primary,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      child: Text(
-                                        'Yes'.tr,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              if (Get.isRegistered<BottomNavController>()) {
+                                                try {
+                                                  final navCtrl = Get.find<BottomNavController>();
+                                                  navCtrl.resetToHome();
+                                                } catch (_) {}
+                                              }
+
+                                              final box = Get.find<GetStorage>();
+                                              await box.erase();
+                                              Get.offAllNamed(Routes.SPLASH);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: AppColors.primary,
+                                              padding: const EdgeInsets.symmetric(vertical: 12),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Yes'.tr,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      })
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        });
+                      }),
                     ],
                   ),
                 ),
