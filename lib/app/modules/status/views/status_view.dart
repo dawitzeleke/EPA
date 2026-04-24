@@ -43,19 +43,10 @@ class StatusView extends GetView<StatusController> {
                           child: Row(
                             children: [
                               const SizedBox(width: 6),
-                              _filterChip('All', sel == 'All'),
-                              const SizedBox(width: 10),
-                              _filterChip('Pending', sel == 'Pending'),
-                              const SizedBox(width: 10),
-                              _filterChip('Under Review', sel == 'Under Review'),
-                              const SizedBox(width: 10),
-                              _filterChip('Verified', sel == 'Verified'),
-                              const SizedBox(width: 10),
-                              _filterChip('Under Investigation', sel == 'Under Investigation'),
-                              const SizedBox(width: 10),
-                              _filterChip('Closed', sel == 'Closed'),
-                              const SizedBox(width: 10),
-                              _filterChip('Rejected', sel == 'Rejected'),
+                              ...controller.availableFilters.map((label) => Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _filterChip(label, sel == label),
+                              )),
                               const SizedBox(width: 6),
                             ],
                           ),
@@ -233,7 +224,7 @@ class StatusView extends GetView<StatusController> {
     if (n.contains('under review') || n.contains('in review') || n.contains('progress')) return 'Under Review';
     if (n.contains('investigation')) return 'Under Investigation'; // covers under_investigation, investigation_submitted
     if (n.contains('verified')) return 'Verified';
-    if (n.contains('complete') || n.contains('closed')) return 'Complete';
+    if (n.contains('complete') || n.contains('closed')) return 'Closed';
     if (n.contains('rejected')) return 'Rejected';
     if (n.contains('pending')) return 'Pending';
     return s;
@@ -279,9 +270,9 @@ class StatusView extends GetView<StatusController> {
       pillBg = const Color.fromRGBO(59, 161, 245, 1);
       pillText = AppColors.onPrimary;
       break;
+    case "closed":
     case "complete":
     case "completed":
-    case "closed":
       pillBg = const Color.fromRGBO(55, 165, 55, 1);
       pillText = AppColors.onPrimary;
       break;

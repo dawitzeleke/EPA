@@ -8,6 +8,8 @@ import '../../../../core/constants/api_constants.dart';
 class ReportItem {
   final String? id;
   final String? reportId; // Store report_id separately
+  final String? createdAt;
+  final String? updatedAt;
   final String title;
   final String? reportType;
   final String status;
@@ -19,6 +21,8 @@ class ReportItem {
   ReportItem({
     this.id,
     this.reportId,
+    this.createdAt,
+    this.updatedAt,
     required this.title,
     this.reportType,
     required this.status,
@@ -87,7 +91,7 @@ class ReportItem {
       } else if (normalized.contains('closed by pollutant not found')) {
         status = 'Closed by pollutant not found';
       } else if (normalized.contains('completed') || normalized.contains('closed') || normalized.contains('complete')) {
-        status = 'Complete';
+        status = 'Closed';
       } else if (normalized.contains('rejected')) {
         status = 'Rejected';
       } else {
@@ -136,6 +140,8 @@ class ReportItem {
           json['id']?.toString() ?? 
           json['complaintId']?.toString(),
       reportId: json['report_id']?.toString(), // Store report_id separately
+      createdAt: json['created_at']?.toString() ?? json['createdAt']?.toString(),
+      updatedAt: json['updated_at']?.toString() ?? json['updatedAt']?.toString(),
       title: json['title']?.toString() ?? 
              json['report_id']?.toString() ??
              pollutionCategory,
@@ -327,6 +333,34 @@ class StatusController extends GetxController {
   void setFilter(String filter) {
     selectedFilter.value = filter;
     applyFilter();
+  }
+
+  /// Returns the list of filter labels based on actual report statuses.
+  /// Always starts with 'All', followed by only statuses present in reports.
+  List<String> get availableFilters {
+    final statusSet = <String>{};
+    for (final r in allReports) {
+      statusSet.add(r.status);
+    }
+    // Preserve a logical display order for known statuses
+    const orderedKnown = [
+      'Pending',
+      'Under Review',
+      'Verified',
+      'Under Investigation',
+      'Closed',
+      'Rejected',
+    ];
+    final result = <String>['All'];
+    for (final s in orderedKnown) {
+      if (statusSet.contains(s)) {
+        result.add(s);
+        statusSet.remove(s);
+      }
+    }
+    // Append any remaining unknown statuses
+    result.addAll(statusSet);
+    return result;
   }
 
   void applyFilter() {

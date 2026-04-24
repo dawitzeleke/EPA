@@ -256,7 +256,7 @@ class _StatusDetailViewState extends State<StatusDetailView> {
     } else if (normalized == 'under investigation' || normalized.contains('under investigation')) {
       return 'under investigation';
     } else if (normalized == 'complete' || normalized == 'completed' || normalized == 'closed') {
-      return 'complete';
+      return 'closed';
     } else if (normalized == 'rejected' || normalized.contains('rejected')) {
       return 'rejected';
     }
@@ -290,107 +290,147 @@ class _StatusDetailViewState extends State<StatusDetailView> {
   }
 
   Widget _buildTimeline(ReportItem report) {
-    final status = report.status.toLowerCase();
-    final normalizedStatus = status.replaceAll('_', ' ');
-    final isRejected = status == 'rejected';
-    final statusDates = _buildStatusDates(report);
     final baseDateTimeLabel = _buildDateTimeLabel(report.date, report.time);
-
-    // Define timeline stages
-    final stages = [
-      {
-        'name': 'Pending',
-        'date': baseDateTimeLabel,
-      },
-      {'name': 'Under Review'},
-      {'name': 'Verified'},
-      {'name': 'Under Investigation'},
-      {'name': isRejected ? 'Rejected' : 'Complete'},
-    ];
-
-    // Determine which stages are completed based on status and activity logs
-    int completedStages = 0;
-    int activeStageIndex = -1;
-
-    // Status priority helper (ordered stages)
-    const stageOrder = [
-      'pending',
-      'under review',
-      'verified',
-      'under investigation',
-      'complete', // also closed / rejected treated as terminal
-    ];
-    int priority(String s) {
-      final normalized = s.trim().toLowerCase();
-      if (normalized == 'closed' || normalized == 'rejected') return 4;
-      return stageOrder.indexOf(normalized).clamp(0, 4);
-    }
-
-    // Collect achieved statuses from activity logs (chronological)
+    final statusDates = _buildStatusDates(report);
     final logs = report.activityLogs;
-    final achieved = <String>[];
+
+    // ─────────────────────────────────────────────────────
+    // Build stages dynamically from actual activity logs
+    // ─────────────────────────────────────────────────────
+
+    // Collect log entries sorted oldest → newest
+    final sortedLogs = <ActivityLog>[];
     if (logs != null && logs.isNotEmpty) {
-      final sortedLogs = List<ActivityLog>.from(logs);
+      sortedLogs.addAll(logs);
       sortedLogs.sort((a, b) {
         try {
-          final aTime = a.createdAt != null ? DateTime.parse(a.createdAt!).millisecondsSinceEpoch : 0;
-          final bTime = b.createdAt != null ? DateTime.parse(b.createdAt!).millisecondsSinceEpoch : 0;
+          final aTime = a.createdAt != null
+              ? DateTime.parse(a.createdAt!).millisecondsSinceEpoch
+              : 0;
+          final bTime = b.createdAt != null
+              ? DateTime.parse(b.createdAt!).millisecondsSinceEpoch
+              : 0;
           return aTime.compareTo(bTime); // oldest first
         } catch (_) {
           return 0;
         }
       });
-      for (final log in sortedLogs) {
-        final normalized = _normalizeStatusName(log.newStatus?.trim() ?? '');
-        if (normalized.isNotEmpty) {
-          achieved.add(normalized);
-        }
+    }
+
+    // Build the list of stages from logs (de-duplicated, preserving order)
+    final stages = <Map<String, String>>[];
+    final seenKeys = <String>{};
+
+    // Always start with "Pending" (report creation)
+    stages.add({'name': 'Pending', 'key': 'pending'});
+    seenKeys.add('pending');
+
+    // Add each activity log status as a stage
+    for (final log in sortedLogs) {
+      final rawStatus = log.newStatus?.trim() ?? '';
+      if (rawStatus.isEmpty) continue;
+      final normalizedKey = _normalizeStatusName(rawStatus);
+      if (seenKeys.contains(normalizedKey)) continue; // skip duplicates
+      seenKeys.add(normalizedKey);
+
+      // Determine display name
+      String displayName;
+      switch (normalizedKey) {
+        case 'under review':
+          displayName = 'Under Review';
+          break;
+        case 'verified':
+          displayName = 'Verified';
+          break;
+        case 'under investigation':
+          displayName = 'Under Investigation';
+          break;
+        case 'complete':
+          displayName = 'Closed';
+          break;
+        case 'rejected':
+          displayName = 'Rejected';
+          break;
+        default:
+          // Capitalize first letter of each word for unknown statuses
+          displayName = rawStatus
+              .replaceAll('_', ' ')
+              .split(' ')
+              .map((w) => w.isEmpty
+                  ? w
+                  : '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}')
+              .join(' ');
       }
+      stages.add({'name': displayName, 'key': normalizedKey});
     }
 
-    // Highest achieved priority from logs or current report status
-    int highestAchieved = priority(normalizedStatus);
-    for (final s in achieved) {
-      highestAchieved = highestAchieved > priority(s) ? highestAchieved : priority(s);
+    // If the current report.status is not yet represented, add it as the
+    // final (current / in-progress) stage
+    final currentKey = _normalizeStatusName(report.status);
+    if (!seenKeys.contains(currentKey)) {
+      String displayName;
+      switch (currentKey) {
+        case 'under review':
+          displayName = 'Under Review';
+          break;
+        case 'verified':
+          displayName = 'Verified';
+          break;
+        case 'under investigation':
+          displayName = 'Under Investigation';
+          break;
+        case 'complete':
+          displayName = 'Closed';
+          break;
+        case 'rejected':
+          displayName = 'Rejected';
+          break;
+        case 'pending':
+          displayName = 'Pending';
+          break;
+        default:
+          displayName = report.status;
+      }
+      stages.add({'name': displayName, 'key': currentKey});
     }
 
-    // If terminal, everything is completed and no active spinner
-    if (highestAchieved >= 4) {
+    // ─────────────────────────────────────────────────────
+    // Determine completed vs active stage
+    // ─────────────────────────────────────────────────────
+    final isTerminal =
+        currentKey == 'closed' || currentKey == 'rejected';
+    final isRejected = currentKey == 'rejected';
+
+    // All stages that came from activity logs are "completed".
+    // The number of completed stages = all stages if terminal,
+    // otherwise everything except the last one (which is current/active).
+    int completedStages;
+    int activeStageIndex;
+
+    if (isTerminal) {
       completedStages = stages.length;
-      activeStageIndex = -1;
+      activeStageIndex = -1; // no spinner
     } else {
-      // Spinner goes to the first stage NOT in achieved (i.e., next stage)
-      activeStageIndex = (highestAchieved + 1).clamp(0, stages.length - 1);
-      completedStages = activeStageIndex; // all before it are completed
-      // If we've achieved this active stage as well (rare), move spinner further
-      if (activeStageIndex < stages.length - 1 && achieved.contains(stageOrder[activeStageIndex])) {
-        completedStages = activeStageIndex + 1;
-        activeStageIndex = activeStageIndex + 1;
-      }
+      // The last stage is the "in-progress" one
+      completedStages = stages.length - 1;
+      activeStageIndex = stages.length - 1;
     }
 
     // Debug
-    secureLog('🔍 Status Debug: report=$normalizedStatus, logs=$achieved, highest=$highestAchieved, activeStage=$activeStageIndex, completed=$completedStages');
+    secureLog('🔍 Timeline Debug: stages=${stages.map((s) => s['name']).toList()}, '
+        'completed=$completedStages, activeStage=$activeStageIndex, '
+        'isTerminal=$isTerminal');
 
-    // Debug output
-    secureLog('🔍 Timeline Debug:');
-    secureLog('  - Completed stages: $completedStages');
-    secureLog('  - Active stage index: $activeStageIndex');
-    
     return Column(
       children: List.generate(stages.length, (index) {
         final stage = stages[index];
+        final stageName = stage['name']!;
+        final stageKey = stage['key']!;
         final isCompleted = index < completedStages;
         final isCurrent = index == activeStageIndex;
         final isLast = index == stages.length - 1;
         final showRejectionMessage = isRejected && isLast && isCompleted;
-        final stageKey = _normalizeStatusName(stage['name']!);
         final stageDate = statusDates[stageKey];
-        
-        // Debug for each stage
-        if (stage['name'] == 'Under Review' || stage['name'] == 'Verified') {
-          secureLog('  - ${stage['name']}: isCompleted=$isCompleted, isCurrent=$isCurrent, index=$index');
-        }
 
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,16 +482,16 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                   ),
               ],
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // Stage content
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    stage['name']!,
+                    stageName,
                     style: TextStyle(
                       fontFamily: AppFonts.primaryFont,
                       fontSize: 14,
@@ -493,9 +533,8 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                     ),
                   ],
                   const SizedBox(height: 4),
-                  // Show date/time for completed and current stages
-                  // Only use baseDateTimeLabel (report creation date) for Pending stage
-                  // For other stages, only show date if it exists in activity logs
+                  // Show date/time — use activity log date for non-pending,
+                  // report creation date for pending
                   if (isCompleted || isCurrent)
                     if (stageDate != null)
                       Text(
@@ -503,10 +542,13 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                         style: TextStyle(
                           fontFamily: AppFonts.primaryFont,
                           fontSize: 12,
-                          color: isRejected && isLast ? Colors.grey : AppColors.primary,
+                          color: isRejected && isLast
+                              ? Colors.grey
+                              : AppColors.primary,
                         ),
                       )
-                    else if (stageKey == 'pending' && baseDateTimeLabel.isNotEmpty)
+                    else if (stageKey == 'pending' &&
+                        baseDateTimeLabel.isNotEmpty)
                       Text(
                         baseDateTimeLabel,
                         style: TextStyle(
@@ -514,16 +556,7 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                           fontSize: 12,
                           color: AppColors.primary,
                         ),
-                      )
-                  else if (stageDate != null)
-                    Text(
-                      stageDate,
-                      style: TextStyle(
-                        fontFamily: AppFonts.primaryFont,
-                        fontSize: 12,
-                        color: const Color(0xFFAAAAAA),
                       ),
-                    ),
                   if (!isLast) const SizedBox(height: 16),
                 ],
               ),
