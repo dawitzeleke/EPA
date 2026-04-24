@@ -149,7 +149,14 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                     ),
                     
                     const SizedBox(height: 12),
-                    
+                    Text(
+                      "Description".tr,
+                      style: TextStyle(
+                        fontFamily: AppFonts.primaryFont,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                     // Description
                     Text(
                       report.description,
