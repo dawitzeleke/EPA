@@ -127,14 +127,18 @@ class AwarenessView extends GetView<AwarenessController> {
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: Image.asset(
-                        'assets/awareness.png',
-                        // Cover fills width/height while minimizing letterbox; small crop possible if ratios differ
-                        fit: BoxFit.cover,
+                      child: Container(
+                        color: const Color(0xFFEFF4F0),
                         alignment: Alignment.center,
-                        filterQuality: FilterQuality.medium,
-                        errorBuilder: (c, e, s) =>
-                            Container(color: Colors.grey[300]),
+                        child: Image.asset(
+                          'assets/awareness.png',
+                          // Use contain to keep the full image visible without cropping.
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,
+                          filterQuality: FilterQuality.high,
+                          errorBuilder: (c, e, s) =>
+                              Container(color: Colors.grey[300]),
+                        ),
                       ),
                     ),
                     // green gradient at bottom of banner for visual match
@@ -174,7 +178,7 @@ class AwarenessView extends GetView<AwarenessController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Awareness',
+                                'Awareness'.tr,
                                 style: TextStyle(
                                   color: AppColors.onPrimary,
                                   fontSize: headerTitleSize,
@@ -182,14 +186,6 @@ class AwarenessView extends GetView<AwarenessController> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(
-                                'Help improve your community',
-                                style: TextStyle(
-                                  color: AppColors.onPrimary,
-                                  fontSize: headerSubSize,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
                             ],
                           ),
                         ],
@@ -302,16 +298,58 @@ class AwarenessView extends GetView<AwarenessController> {
                                     ),
                                   ),
                                   const SizedBox(height: 6),
-                                  Text(
-                                    awareness.awarenessDescription,
-                                    style: TextStyle(
-                                      color: const Color.fromRGBO(99, 85, 127, 1),
-                                      height: 1.45,
-                                      fontSize: descFontSize,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  Obx(() {
+                                    final description =
+                                        awareness.awarenessDescription.trim();
+                                    final isLong = description.length > 160;
+                                    final expanded =
+                                        controller.isDescriptionExpanded(i);
+
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          description,
+                                          style: TextStyle(
+                                            color: const Color.fromRGBO(
+                                                99, 85, 127, 1),
+                                            height: 1.45,
+                                            fontSize: descFontSize,
+                                          ),
+                                          maxLines: expanded ? null : 3,
+                                          overflow: expanded
+                                              ? TextOverflow.visible
+                                              : TextOverflow.ellipsis,
+                                        ),
+                                        if (isLong)
+                                          TextButton(
+                                            onPressed: () =>
+                                                controller.toggleDescription(i),
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4),
+                                              minimumSize: Size.zero,
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                            ),
+                                            child: Text(
+                                              expanded
+                                                  ? 'Show less'.tr
+                                                  : 'Read more'.tr,
+                                              style: TextStyle(
+                                                color: AppColors.primary,
+                                                fontSize:
+                                                    (descFontSize - 0.5)
+                                                        .clamp(10, 14),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  }),
                                 ],
                               ),
                             ),

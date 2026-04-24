@@ -10,6 +10,7 @@ class AwarenessController extends GetxController {
   final RxList<AwarenessModel> awarenessList = <AwarenessModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxnString errorMessage = RxnString();
+  final RxSet<int> expandedDescriptionIndexes = <int>{}.obs;
 
   AwarenessController({required this.getAwarenessUseCase});
 
@@ -26,6 +27,7 @@ class AwarenessController extends GetxController {
     try {
       final awarenessItems = await getAwarenessUseCase.execute();
       awarenessList.assignAll(awarenessItems);
+      expandedDescriptionIndexes.clear();
     } catch (e) {
       errorMessage.value = _cleanErrorMessage(e);
       Get.snackbar(
@@ -60,6 +62,19 @@ String getImageUrl(AwarenessModel awareness) {
         .replaceAll(RegExp(r'^DioException[^:]*:\s*'), '')
         .trim();
     return cleaned.isEmpty ? 'Something went wrong' : cleaned;
+  }
+
+  bool isDescriptionExpanded(int index) {
+    return expandedDescriptionIndexes.contains(index);
+  }
+
+  void toggleDescription(int index) {
+    if (expandedDescriptionIndexes.contains(index)) {
+      expandedDescriptionIndexes.remove(index);
+    } else {
+      expandedDescriptionIndexes.add(index);
+    }
+    expandedDescriptionIndexes.refresh();
   }
 
 
