@@ -5,6 +5,8 @@ import '../controllers/status_controller.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:eprs/core/theme/app_fonts.dart';
 import 'package:get/get.dart';
+import 'package:eprs/core/constants/api_constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StatusDetailView extends StatefulWidget {
   final ReportItem report;
@@ -15,15 +17,24 @@ class StatusDetailView extends StatefulWidget {
   State<StatusDetailView> createState() => _StatusDetailViewState();
 }
 
-class _StatusDetailViewState extends State<StatusDetailView> {
+class _StatusDetailViewState extends State<StatusDetailView>
+    with SingleTickerProviderStateMixin {
   ReportItem? _fullReport;
   bool _isLoading = true;
   bool _isDescriptionExpanded = false;
+  late final TabController _sectionController;
 
   @override
   void initState() {
     super.initState();
+    _sectionController = TabController(length: 2, vsync: this);
     _fetchFullReport();
+  }
+
+  @override
+  void dispose() {
+    _sectionController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchFullReport() async {
@@ -41,7 +52,7 @@ class _StatusDetailViewState extends State<StatusDetailView> {
       
       setState(() {
         if (fullReport != null) {
-          _fullReport = fullReport;
+          _fullReport = fullReport.mergeWith(widget.report);
         } else {
           // If fetch fails, use the original report
           _fullReport = widget.report;
@@ -150,66 +161,29 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                     ),
                     
                     const SizedBox(height: 12),
-                    Text(
-                      "Description".tr,
-                      style: TextStyle(
-                        fontFamily: AppFonts.primaryFont,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF7FAFC),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: const Color(0xFFE6EAF0)),
+                      ),
+                      child: TabBar(
+                        controller: _sectionController,
+                        onTap: (_) => setState(() {}),
+                        labelColor: AppColors.primary,
+                        unselectedLabelColor: const Color(0xFF6B7280),
+                        indicatorColor: AppColors.primary,
+                        dividerColor: Colors.transparent,
+                        tabs: [
+                          Tab(text: 'Description'.tr),
+                          Tab(text: '${'Attachments'.tr} (${report.attachments?.length ?? 0})'),
+                        ],
                       ),
                     ),
-                    // Description
-                    Builder(
-                      builder: (context) {
-                        final description = report.description.trim();
-                        final isLong = description.length > 220;
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              description,
-                              maxLines: _isDescriptionExpanded ? null : 4,
-                              overflow: _isDescriptionExpanded
-                                  ? TextOverflow.visible
-                                  : TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: AppFonts.primaryFont,
-                                fontSize: 14,
-                                color: const Color(0xFF8A8F95),
-                                height: 1.5,
-                              ),
-                            ),
-                            if (isLong)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isDescriptionExpanded =
-                                        !_isDescriptionExpanded;
-                                  });
-                                },
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                child: Text(
-                                  _isDescriptionExpanded
-                                      ? 'Show less'.tr
-                                      : 'Read more'.tr,
-                                  style: TextStyle(
-                                    fontFamily: AppFonts.primaryFont,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
+                    const SizedBox(height: 12),
+                    _sectionController.index == 0
+                        ? _buildDescriptionSection(report)
+                        : _buildAttachmentsSection(report),
                     
                     const SizedBox(height: 16),
                     
@@ -224,6 +198,272 @@ class _StatusDetailViewState extends State<StatusDetailView> {
                     // Timeline
                     _buildTimeline(report),
                   ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDescriptionSection(ReportItem report) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Description'.tr,
+          style: TextStyle(
+            fontFamily: AppFonts.primaryFont,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Builder(
+          builder: (context) {
+            final description = report.description.trim();
+            final isLong = description.length > 220;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  description,
+                  maxLines: _isDescriptionExpanded ? null : 4,
+                  overflow: _isDescriptionExpanded
+                      ? TextOverflow.visible
+                      : TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: AppFonts.primaryFont,
+                    fontSize: 14,
+                    color: const Color(0xFF8A8F95),
+                    height: 1.5,
+                  ),
+                ),
+                if (isLong)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isDescriptionExpanded = !_isDescriptionExpanded;
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.only(top: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      _isDescriptionExpanded ? 'Show less'.tr : 'Read more'.tr,
+                      style: TextStyle(
+                        fontFamily: AppFonts.primaryFont,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAttachmentsSection(ReportItem report) {
+    final attachments = report.attachments ?? [];
+    if (attachments.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: Center(
+          child: Text(
+            'No attachments available'.tr,
+            style: TextStyle(
+              fontFamily: AppFonts.primaryFont,
+              fontSize: 13,
+              color: const Color(0xFF6B7280),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: attachments.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.92,
+          ),
+          itemBuilder: (context, index) {
+            final attachment = attachments[index];
+            final fileUrl = attachment.getFileUrl(ApiConstants.fileBaseUrl);
+            final canPreview = attachment.isImage && fileUrl.isNotEmpty;
+            return InkWell(
+              onTap: fileUrl.isNotEmpty
+                  ? () => canPreview
+                      ? _showAttachmentPreview(context, attachment, fileUrl)
+                      : _openAttachmentFile(fileUrl)
+                  : null,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFE6EAF0)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          color: const Color(0xFFF5F7FA),
+                          child: canPreview
+                              ? Image.network(
+                                  fileUrl,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, progress) {
+                                    if (progress == null) return child;
+                                    return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                  },
+                                  errorBuilder: (_, __, ___) => const Center(
+                                    child: Icon(Icons.broken_image_outlined, color: Colors.grey, size: 34),
+                                  ),
+                                )
+                              : const Center(
+                                  child: Icon(Icons.insert_drive_file_outlined, color: Colors.grey, size: 34),
+                                ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            attachment.fileName,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: AppFonts.primaryFont,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            canPreview ? 'Tap to preview'.tr : 'Tap to open'.tr,
+                            style: TextStyle(
+                              fontFamily: AppFonts.primaryFont,
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Future<void> _openAttachmentFile(String fileUrl) async {
+    final uri = Uri.tryParse(fileUrl);
+    if (uri == null) {
+      Get.snackbar(
+        'Error',
+        'Unable to open file',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      Get.snackbar(
+        'Error',
+        'Unable to open file',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+  void _showAttachmentPreview(BuildContext context, ComplaintAttachment attachment, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        insetPadding: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700, maxHeight: 700),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        attachment.fileName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: AppFonts.primaryFont,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(
+                child: InteractiveViewer(
+                  minScale: 0.6,
+                  maxScale: 4.0,
+                  child: Center(
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.contain,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (_, __, ___) => const Center(
+                        child: Icon(Icons.broken_image_outlined, size: 48, color: Colors.grey),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

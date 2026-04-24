@@ -17,6 +17,7 @@ class ReportItem {
   final String date; // date display (e.g., Sep 12, 2022)
   final String? time; // time display (e.g., 09:10:22 PM)
   final List<ActivityLog>? activityLogs;
+  final List<ComplaintAttachment>? attachments;
 
   ReportItem({
     this.id,
@@ -30,6 +31,7 @@ class ReportItem {
     required this.date,
     this.time = '',
     this.activityLogs,
+    this.attachments,
   });
 
   // Factory constructor to create ReportItem from API response
@@ -135,6 +137,16 @@ class ReportItem {
       }
     }
 
+    // Parse attachments if present
+    final List<ComplaintAttachment> complaintAttachments = [];
+    if (json['attachments'] is List) {
+      for (final attachment in json['attachments']) {
+        if (attachment is Map<String, dynamic>) {
+          complaintAttachments.add(ComplaintAttachment.fromJson(attachment));
+        }
+      }
+    }
+
     return ReportItem(
       id: json['complaint_id']?.toString() ?? 
           json['id']?.toString() ?? 
@@ -151,6 +163,28 @@ class ReportItem {
       date: dateStr,
       time: timeStr,
       activityLogs: logs,
+      attachments: complaintAttachments,
+    );
+  }
+
+  ReportItem mergeWith(ReportItem fallback) {
+    return ReportItem(
+      id: id ?? fallback.id,
+      reportId: reportId ?? fallback.reportId,
+      createdAt: createdAt ?? fallback.createdAt,
+      updatedAt: updatedAt ?? fallback.updatedAt,
+      title: title.isNotEmpty ? title : fallback.title,
+      reportType: reportType ?? fallback.reportType,
+      status: status.isNotEmpty ? status : fallback.status,
+      description: description.isNotEmpty ? description : fallback.description,
+      date: date.isNotEmpty ? date : fallback.date,
+      time: (time ?? '').isNotEmpty ? time : fallback.time,
+      activityLogs: activityLogs != null && activityLogs!.isNotEmpty
+          ? activityLogs
+          : fallback.activityLogs,
+      attachments: attachments != null && attachments!.isNotEmpty
+          ? attachments
+          : fallback.attachments,
     );
   }
 
@@ -220,6 +254,75 @@ class ActivityLog {
     );
   }
 }
+
+class ComplaintAttachment {
+  final String? id;
+  final String? complaintId;
+  final String filePath;
+  final String fileName;
+  final String? createdAt;
+  final String? updatedAt;
+
+  const ComplaintAttachment({
+    this.id,
+    this.complaintId,
+    required this.filePath,
+    required this.fileName,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory ComplaintAttachment.fromJson(Map<String, dynamic> json) {
+    return ComplaintAttachment(
+      id: json['compliant_attachement_id']?.toString() ?? json['attachment_id']?.toString() ?? json['id']?.toString(),
+      complaintId: json['complaint_id']?.toString(),
+      filePath: json['file_path']?.toString() ?? '',
+      fileName: json['file_name']?.toString() ?? 'Attachment',
+      createdAt: json['created_at']?.toString() ?? json['createdAt']?.toString(),
+      updatedAt: json['updated_at']?.toString() ?? json['updatedAt']?.toString(),
+    );
+  }
+
+  String getImageUrl(String baseUrl) {
+    if (filePath.trim().isEmpty) return '';
+    final rawPath = filePath.trim();
+
+    if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+      final uri = Uri.tryParse(rawPath);
+      if (uri != null && uri.path.isNotEmpty) {
+        final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+        var urlPath = uri.path.replaceAll('\\', '/').replaceAll('//', '/');
+        if (urlPath.startsWith('/')) {
+          urlPath = urlPath.substring(1);
+        }
+        if (urlPath.startsWith('public/')) {
+          urlPath = urlPath.substring('public/'.length);
+        }
+        final encodedPath = urlPath.split('/').map(Uri.encodeComponent).join('/');
+        return '$normalizedBase$encodedPath';
+      }
+    }
+
+    var urlPath = rawPath.replaceAll('\\', '/').replaceAll('//', '/');
+    if (urlPath.startsWith('/')) {
+      urlPath = urlPath.substring(1);
+    }
+    if (urlPath.startsWith('public/')) {
+      urlPath = urlPath.substring('public/'.length);
+    }
+    final encodedPath = urlPath.split('/').map(Uri.encodeComponent).join('/');
+    final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+    return '$normalizedBase$encodedPath';
+  }
+
+  String getFileUrl(String baseUrl) => getImageUrl(baseUrl);
+
+  bool get isImage {
+    final extension = fileName.split('.').last.toLowerCase();
+    return const {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'heic'}.contains(extension);
+  }
+}
+
 class StatusController extends GetxController {
   // simple counter left for possible future use
   final count = 0.obs;
