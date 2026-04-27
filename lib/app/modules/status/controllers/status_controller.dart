@@ -283,39 +283,56 @@ class ComplaintAttachment {
     );
   }
 
-  String getImageUrl(String baseUrl) {
+  /// Fetch a pre-signed download URL for this attachment from the API.
+  /// Uses the [filePath] as the `key` query parameter.
+  /// Returns the signed URL string, or empty string on failure.
+  static Future<String> fetchSignedUrl(String filePath) async {
     if (filePath.trim().isEmpty) return '';
-    final rawPath = filePath.trim();
+    
+    // Clean the file path according to rules
+    String cleanedPath = filePath.trim()
+        .replaceAll('\\', '/')
+        .replaceFirst(RegExp(r'^/?public/'), '')
+        .replaceFirst(RegExp(r'^/?epa/'), '')
+        .replaceFirst(RegExp(r'^/?/'), '')
+        .replaceFirst(RegExp(r'^https?://epa\.obsv3\.gov\.aii\.et/'), '');
 
-    if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
-      final uri = Uri.tryParse(rawPath);
-      if (uri != null && uri.path.isNotEmpty) {
-        final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
-        var urlPath = uri.path.replaceAll('\\', '/').replaceAll('//', '/');
-        if (urlPath.startsWith('/')) {
-          urlPath = urlPath.substring(1);
+    try {
+      final storage = GetStorage();
+      final token = storage.read('auth_token');
+      final httpClient = Get.find<DioClient>().dio;
+
+      final response = await httpClient.get(
+        ApiConstants.signedUrlEndpoint,
+        queryParameters: {'key': cleanedPath},
+        options: Options(
+          headers: {
+            if (token != null) 'Authorization': 'Bearer $token',
+            'accept': '*/*',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+        if (data is Map && data['signedUrl'] != null) {
+          String url = data['signedUrl'].toString();
+          if (url.startsWith('https://')) {
+            url = url.replaceFirst('https://', 'http://');
+          }
+          return url;
         }
-        if (urlPath.startsWith('public/')) {
-          urlPath = urlPath.substring('public/'.length);
-        }
-        final encodedPath = urlPath.split('/').map(Uri.encodeComponent).join('/');
-        return '$normalizedBase$encodedPath';
       }
+      return '';
+    } catch (e) {
+      secureLog('Error fetching signed URL for $filePath: $e');
+      return '';
     }
-
-    var urlPath = rawPath.replaceAll('\\', '/').replaceAll('//', '/');
-    if (urlPath.startsWith('/')) {
-      urlPath = urlPath.substring(1);
-    }
-    if (urlPath.startsWith('public/')) {
-      urlPath = urlPath.substring('public/'.length);
-    }
-    final encodedPath = urlPath.split('/').map(Uri.encodeComponent).join('/');
-    final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
-    return '$normalizedBase$encodedPath';
   }
 
-  String getFileUrl(String baseUrl) => getImageUrl(baseUrl);
+  /// Legacy helper – returns the raw file path.
+  /// Actual displayable URL must be obtained via [fetchSignedUrl].
+  String getFileUrl(String baseUrl) => filePath;
 
   bool get isImage {
     final extension = fileName.split('.').last.toLowerCase();

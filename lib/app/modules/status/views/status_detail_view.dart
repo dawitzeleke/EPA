@@ -5,7 +5,6 @@ import '../controllers/status_controller.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:eprs/core/theme/app_fonts.dart';
 import 'package:get/get.dart';
-import 'package:eprs/core/constants/api_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StatusDetailView extends StatefulWidget {
@@ -24,6 +23,10 @@ class _StatusDetailViewState extends State<StatusDetailView>
   bool _isDescriptionExpanded = false;
   late final TabController _sectionController;
 
+  /// Cache of signed URLs keyed by attachment filePath
+  final Map<String, String> _signedUrlCache = {};
+  bool _isLoadingSignedUrls = false;
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +38,27 @@ class _StatusDetailViewState extends State<StatusDetailView>
   void dispose() {
     _sectionController.dispose();
     super.dispose();
+  }
+
+  /// Fetch signed URLs for all attachments and cache them.
+  Future<void> _fetchSignedUrls(List<ComplaintAttachment> attachments) async {
+    if (_isLoadingSignedUrls) return;
+    // Skip if all URLs are already cached
+    final uncached = attachments.where((a) => a.filePath.trim().isNotEmpty && !_signedUrlCache.containsKey(a.filePath)).toList();
+    if (uncached.isEmpty) return;
+
+    setState(() => _isLoadingSignedUrls = true);
+
+    // Fetch all signed URLs in parallel
+    final futures = uncached.map((a) async {
+      final url = await ComplaintAttachment.fetchSignedUrl(a.filePath);
+      _signedUrlCache[a.filePath] = url;
+    });
+    await Future.wait(futures);
+
+    if (mounted) {
+      setState(() => _isLoadingSignedUrls = false);
+    }
   }
 
   Future<void> _fetchFullReport() async {
@@ -289,6 +313,17 @@ class _StatusDetailViewState extends State<StatusDetailView>
       );
     }
 
+    // Trigger signed URL fetch if not already cached
+    _fetchSignedUrls(attachments);
+
+    // Show a loading indicator while signed URLs are being fetched
+    if (_isLoadingSignedUrls && _signedUrlCache.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 24),
+        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -304,13 +339,14 @@ class _StatusDetailViewState extends State<StatusDetailView>
           ),
           itemBuilder: (context, index) {
             final attachment = attachments[index];
-            final fileUrl = attachment.getFileUrl(ApiConstants.fileBaseUrl);
-            final canPreview = attachment.isImage && fileUrl.isNotEmpty;
+            final signedUrl = _signedUrlCache[attachment.filePath] ?? '';
+            final canPreview = attachment.isImage && signedUrl.isNotEmpty;
+            final hasUrl = signedUrl.isNotEmpty;
             return InkWell(
-              onTap: fileUrl.isNotEmpty
+              onTap: hasUrl
                   ? () => canPreview
-                      ? _showAttachmentPreview(context, attachment, fileUrl)
-                      : _openAttachmentFile(fileUrl)
+                      ? _showAttachmentPreview(context, attachment, signedUrl)
+                      : _openAttachmentFile(signedUrl)
                   : null,
               borderRadius: BorderRadius.circular(12),
               child: Container(
@@ -333,7 +369,7 @@ class _StatusDetailViewState extends State<StatusDetailView>
                           color: const Color(0xFFF5F7FA),
                           child: canPreview
                               ? Image.network(
-                                  fileUrl,
+                                  signedUrl,
                                   fit: BoxFit.cover,
                                   loadingBuilder: (context, child, progress) {
                                     if (progress == null) return child;
@@ -343,8 +379,10 @@ class _StatusDetailViewState extends State<StatusDetailView>
                                     child: Icon(Icons.broken_image_outlined, color: Colors.grey, size: 34),
                                   ),
                                 )
-                              : const Center(
-                                  child: Icon(Icons.insert_drive_file_outlined, color: Colors.grey, size: 34),
+                              : Center(
+                                  child: _isLoadingSignedUrls && !hasUrl
+                                      ? const CircularProgressIndicator(strokeWidth: 2)
+                                      : const Icon(Icons.insert_drive_file_outlined, color: Colors.grey, size: 34),
                                 ),
                         ),
                       ),
@@ -367,7 +405,9 @@ class _StatusDetailViewState extends State<StatusDetailView>
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            canPreview ? 'Tap to preview'.tr : 'Tap to open'.tr,
+                            hasUrl
+                                ? (canPreview ? 'Tap to preview'.tr : 'Tap to open'.tr)
+                                : 'Loading...'.tr,
                             style: TextStyle(
                               fontFamily: AppFonts.primaryFont,
                               fontSize: 11,

@@ -52,6 +52,9 @@ class ApiConstants {
   static const String soundAreasEndpoint = '${baseUrl}sound-areas';
 
 
+  // Object storage signed URL endpoint (hosted on eprs domain, not cleanethiopia)
+  static const String signedUrlEndpoint = 'https://eprs.epa.gov.et/api/obs/signed-url';
+
   //News endpoint
   static const String newsEndpoint = '${baseUrl}news';
 
