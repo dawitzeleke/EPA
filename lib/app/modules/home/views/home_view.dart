@@ -24,7 +24,7 @@ class HomeView extends GetView<HomeController> {
     if (lang == 'om') return "assets/oromo_$baseName.png";
     if (lang == 'so') return "assets/somali_$baseName.png";
     if (lang == 'am') return "assets/amharic_$baseName.png";
-      
+    if (lang == 'ti') return "assets/tigrigna_$baseName.png";
       return "assets/english_$baseName.png";
     
     // Fallback to english for any other language or missing localized asset.

@@ -114,6 +114,10 @@ flutter:
     - assets/english_chemical.png
     - assets/oromo_pollution.png
     - assets/somali_pollution.png
+    - assets/tigrigna_pollution.png
+    - assets/tigrigna_sound.png
+    - assets/tigrigna_waste.png
+    - assets/tigrigna_chemical.png
     - assets/english_sound.png
     - assets/oromo_sound.png
     - assets/oromo_waste.png
