@@ -1,4 +1,5 @@
 import 'package:eprs/app/routes/app_pages.dart';
+import 'package:eprs/app/modules/bottom_nav/controllers/bottom_nav_controller.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:eprs/domain/usecases/login_usecase.dart';
 import 'package:get/get.dart';
@@ -68,8 +69,14 @@ class LoginController extends GetxController {
           storage.write('userId', response.userId);
         }
 
-        // Navigate to home screen
-        Get.offNamed(
+        // Ensure the app lands on Home tab after login.
+        if (Get.isRegistered<BottomNavController>()) {
+          Get.find<BottomNavController>().resetToHome();
+        }
+
+        // Navigate to home screen and clear intermediate history
+        // (e.g., when login was opened from Settings).
+        Get.offAllNamed(
           Routes.HOME,
           arguments: {
             'username': response.username ?? 'Guest',
