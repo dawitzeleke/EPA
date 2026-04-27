@@ -14,6 +14,7 @@ class AppTranslations extends Translations {
     Locale('en', 'US'),
     Locale('am', 'ET'),
     Locale('om', 'ET'),
+    Locale('ti', 'ET'),
     Locale('so', 'ET'),
   ];
 
@@ -1075,11 +1076,57 @@ class AppTranslations extends Translations {
     'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.': 'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.',
   };
 
+  static const Map<String, String> _ti = {
+    'Track Report Status': 'ኩነታት ሪፖርት ተኸታተል',
+    'Search': 'ድለ',
+    'Welcome Back': 'እንቋዕ ብደሓን ተመለስኩም',
+    'Welcome Back!': 'እንቋዕ ብደሓን ተመለስኩም!',
+    'Welcome!': 'እንቋዕ ብደሓን መጻእኩም!',
+    'Email': 'ኢሜይል',
+    'Password': 'መሕለፊ ቃል',
+    'Remember Me': 'ኣዘክረኒ',
+    'Forgot Password': 'መሕለፊ ቃል ረሲዕካ?',
+    'Sign In': 'እቶ',
+    'Continue as Guest': 'ከም ኣጋሪ ቀጽል',
+    "Don't have an account?": 'ኣካውንት የብልካን?',
+    'Sign Up': 'ተመዝገብ',
+    'Confirm': 'ኣረጋግጽ',
+    'Success': 'ተሳኺዑ',
+    'Home': 'ቤት',
+    'Report': 'ሪፖርት',
+    'Awareness': 'ግንዛቤ',
+    'Status': 'ኩነታት',
+    'Settings': 'ቅንብራት',
+    'Report Status': 'ኩነታት ሪፖርት',
+    'All': 'ኩሉ',
+    'Pending': 'ተጸቢዩ',
+    'Under Review': 'ኣብ ግምገማ',
+    'Verified': 'ተረጋጊጹ',
+    'Under Investigation': 'ኣብ ምርመራ',
+    'Complete': 'ተወዲኡ',
+    'Language': 'ቋንቋ',
+    'English': 'እንግሊዝኛ',
+    'Amharic': 'አማርኛ',
+    'Afaan Oromo': 'Afaan Oromo',
+    'Tigrinya': 'ትግርኛ',
+    'Somali': 'ሶማሊ',
+    'Search for Location': 'ቦታ ድለ',
+    'Complaint Status': 'ኩነታት ጥርዓን',
+    'Status history timeline': 'ታሪኽ ኩነታት',
+    'Current:': 'ሕጂ:',
+    'Description': 'መግለጺ',
+    'Attachments': 'ኣባሪታት',
+    'Read more': 'ተወሳኺ ኣንብብ',
+    'Show less': 'ዝውሑድ ኣርኢ',
+    'No attachments available': 'ኣባሪ የለን',
+  };
+
   static Future<AppTranslations> load() async {
     final keys = <String, Map<String, String>>{
       'en_US': Map<String, String>.from(_en),
       'am_ET': Map<String, String>.from(_am),
       'om_ET': Map<String, String>.from(_om),
+      'ti_ET': Map<String, String>.from(_en)..addAll(_ti),
       'so_ET': Map<String, String>.from(_soLegacy),
     };
 
@@ -1095,6 +1142,13 @@ class AppTranslations extends Translations {
     );
     if (amFromFile.isNotEmpty) {
       keys['am_ET']!.addAll(amFromFile);
+    }
+
+    final tiFromFile = await _loadFlattenedJson(
+      'EPA Project ትግርኛ.txt',
+    );
+    if (tiFromFile.isNotEmpty) {
+      keys['ti_ET']!.addAll(tiFromFile);
     }
 
     return AppTranslations(keys);

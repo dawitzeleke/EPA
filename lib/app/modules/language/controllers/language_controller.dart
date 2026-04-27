@@ -28,6 +28,7 @@ class LanguageController extends GetxController {
     LanguageOption(label: 'English', locale: Locale('en', 'US')),
     LanguageOption(label: 'አማርኛ', locale: Locale('am', 'ET')),
     LanguageOption(label: 'Afaan Oromoo', locale: Locale('om', 'ET')),
+    LanguageOption(label: 'ትግርኛ', locale: Locale('ti', 'ET')),
     LanguageOption(label: 'Soomaali', locale: Locale('so', 'ET')),
   ];
 
@@ -63,6 +64,8 @@ class LanguageController extends GetxController {
         return 'አማርኛ';
       case 'om':
         return 'Afaan Oromoo';
+      case 'ti':
+        return 'ትግርኛ';
       case 'so':
         return 'Soomaali';
       default:
