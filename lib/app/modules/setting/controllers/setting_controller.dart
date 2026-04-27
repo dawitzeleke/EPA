@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:eprs/domain/usecases/update_profile_usecase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingController extends GetxController {
   final UpdateProfileUseCase updateProfileUseCase;
@@ -118,4 +119,25 @@ class SettingController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  Future<void> launchURL(String s) async {
+    final value = s.trim();
+    if (value.isEmpty) {
+      throw Exception('URL is empty');
+    }
+
+    final uri = Uri.tryParse(value);
+    if (uri == null || (!uri.hasScheme)) {
+      throw Exception('Invalid URL: $s');
+    }
+
+    final didLaunch = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+
+    if (!didLaunch) {
+      throw Exception('Could not launch URL: $s');
+    }
+  }
 }

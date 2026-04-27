@@ -687,7 +687,7 @@ class SettingView extends GetView<SettingController> {
                       _buildDivider(),
                       _buildOptionTile(Icons.star_rate_outlined, 'Rate Us'.tr, () {
                         // Open app page on store (placeholder link)
-                        // controller.launchURL('https://play.google.com/store/apps/details?id=et.aii.eprs');
+                        controller.launchURL('https://play.google.com/store/apps/details?id=et.aii.eprs');
                       }),
                       _buildDivider(),
                       Obx(() {
