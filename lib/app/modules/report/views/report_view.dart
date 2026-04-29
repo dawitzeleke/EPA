@@ -345,7 +345,7 @@ class _ReportViewState extends State<ReportView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Land Use Type'.tr,
+                          'Sound Area'.tr,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
