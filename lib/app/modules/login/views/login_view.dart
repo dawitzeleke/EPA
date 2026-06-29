@@ -384,7 +384,98 @@ class _LoginOverlayState extends State<LoginOverlay> {
                               ),
                             ),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    backgroundColor: Colors.white,
+                                  title: Text(
+                                    'Forgot Password'.tr,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: isSmall ? 16 : 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Enter your registered phone number to receive an OTP for password reset.'.tr,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: isSmall ? 12 : 13,
+                                          color: darkText,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      TextField(
+                                        onChanged: (val) => controller.resetPhoneNumber.value = val,
+                                        decoration: InputDecoration(
+                                          hintText: '+251912345678 | 0912345678'.tr,
+                                          hintStyle: GoogleFonts.poppins(
+                                            color: hintText,
+                                            fontSize: isSmall ? 13 : 15,
+                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 12,
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                              color: borderColor,
+                                              width: 1.1,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                              color: greenColor,
+                                              width: 1.3,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    Obx(() => ElevatedButton(
+                                      onPressed: controller.isSendingOtp.value ? null : () async {
+                                        bool success = await controller.sendOTP();
+                                        if (success) {
+                                          Get.back();
+                                          _showResetPasswordDialog(context, controller, isSmall);
+                                        }
+                                      },
+                                      child: controller.isSendingOtp.value
+                                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                                        : Text(
+                                        'Send OTP'.tr,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: isSmall ? 13 : 14,
+                                          color: greenColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    )),
+                                    TextButton(
+                                      onPressed: () => Get.back(),
+                                      child: Text(
+                                        'Close'.tr,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: isSmall ? 13 : 14,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  ),
+                                );
+                              },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
                                 minimumSize: Size.zero,
@@ -1114,6 +1205,145 @@ class _LoginOverlayState extends State<LoginOverlay> {
           return Icons.radio_button_unchecked;
       }
     }
+
+  void _showResetPasswordDialog(BuildContext context, LoginController controller, bool isSmall) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Forgot Password'.tr,
+          style: GoogleFonts.poppins(
+            fontSize: isSmall ? 16 : 18,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF2E63B4), 
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Enter your new password below.'.tr,
+                style: GoogleFonts.poppins(
+                  fontSize: isSmall ? 12 : 13,
+                  color: Colors.white,
+                  backgroundColor: const Color(0xFF2E63B4),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // OTP Field
+              TextField(
+                onChanged: (val) => controller.resetOtp.value = val,
+                decoration: InputDecoration(
+                  hintText: 'Enter OTP sent to your Phone Number'.tr,
+                  hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 13),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1.1),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // New Password Field
+              Obx(() => TextField(
+                onChanged: (val) => controller.newPassword.value = val,
+                obscureText: controller.obscurePassword.value,
+                decoration: InputDecoration(
+                  hintText: 'New Password'.tr,
+                  hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 13),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1.1),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () => controller.togglePasswordVisibility(),
+                  ),
+                ),
+              )),
+              const SizedBox(height: 12),
+              // Confirm Password Field
+              Obx(() => TextField(
+                onChanged: (val) => controller.confirmPassword.value = val,
+                obscureText: controller.obscurePassword.value,
+                decoration: InputDecoration(
+                  hintText: 'Confirm Password'.tr,
+                  hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 13),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300, width: 1.1),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      controller.obscurePassword.value ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () => controller.togglePasswordVisibility(),
+                  ),
+                ),
+              )),
+              const SizedBox(height: 24),
+              // Reset Button
+              SizedBox(
+                width: double.infinity,
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isResettingPassword.value ? null : () async {
+                    bool success = await controller.resetPassword();
+                    if (success) {
+                      Get.back(); // close dialog
+                      Get.snackbar(
+                        'Success',
+                        'Password reset successfully!',
+                        backgroundColor: AppColors.primary,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.TOP,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF388E3C), // Green color matching screenshot
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  child: controller.isResettingPassword.value 
+                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                    : Text(
+                    'Reset Password'.tr,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )),
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(
+                    'Cancel'.tr,
+                    style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
     _StatusVisual _statusVisual(String key) {
       switch (_normalizeStatus(key)) {

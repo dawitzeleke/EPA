@@ -5,7 +5,7 @@ import 'package:eprs/domain/usecases/login_usecase.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
-
+import 'package:dio/dio.dart';
 class LoginController extends GetxController {
   final LoginUseCase loginUseCase;
 
@@ -16,12 +16,84 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   var obscurePassword = true.obs;
   var phoneNumber = ''.obs;
+  var resetPhoneNumber = ''.obs;
 
   /// Toggle password visibility
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
   }
 
+  var isSendingOtp = false.obs;
+  var isResettingPassword = false.obs;
+  var resetOtp = ''.obs;
+  var newPassword = ''.obs;
+  var confirmPassword = ''.obs;
+
+  Future<bool> sendOTP() async {
+    if (resetPhoneNumber.value.trim().isEmpty) {
+      _showErrorDialog('Missing Phone Number', 'Please enter your phone number.');
+      return false;
+    }
+
+    isSendingOtp.value = true;
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        'https://eprs.epa.gov.et/api/customer-accounts/request-password-otp',
+        data: {'phone_number': resetPhoneNumber.value.trim()},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        _showErrorDialog('Error', 'Failed to send OTP. Please try again.');
+        return false;
+      }
+    } catch (e) {
+      _showErrorDialog('Error', 'An error occurred. Please try again.');
+      return false;
+    } finally {
+      isSendingOtp.value = false;
+    }
+  }
+
+  Future<bool> resetPassword() async {
+    if (resetOtp.value.trim().isEmpty || newPassword.value.trim().isEmpty || confirmPassword.value.trim().isEmpty) {
+      _showErrorDialog('Error', 'Please fill all fields.');
+      return false;
+    }
+
+    if (newPassword.value != confirmPassword.value) {
+      _showErrorDialog('Error', 'Passwords do not match.');
+      return false;
+    }
+
+    isResettingPassword.value = true;
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        'https://eprs.epa.gov.et/api/customer-accounts/reset-password-otp',
+        data: {
+          'phone_number': resetPhoneNumber.value.trim(),
+          'otp': resetOtp.value.trim(),
+          'newPassword': newPassword.value.trim(),
+          'confirmPassword': confirmPassword.value.trim(),
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        _showErrorDialog('Error', 'Failed to reset password.');
+        return false;
+      }
+    } catch (e) {
+      _showErrorDialog('Error', 'An error occurred. Please try again.');
+      return false;
+    } finally {
+      isResettingPassword.value = false;
+    }
+  }
   /// Handle login submission
   Future<void> submitLogin() async {
     // Validate inputs
