@@ -351,6 +351,12 @@ class SettingView extends GetView<SettingController> {
                   final newController = TextEditingController();
                   final confirmController = TextEditingController();
 
+                  final obscureCurrent = true.obs;
+                  final obscureNew = true.obs;
+                  final obscureConfirm = true.obs;
+                  final errorMessage = ''.obs;
+                  final isLoading = false.obs;
+
                   final size = MediaQuery.of(context).size;
                   final maxDialogHeight =
                       (size.height * 0.55).clamp(300.0, 560.0);
@@ -386,6 +392,36 @@ class SettingView extends GetView<SettingController> {
                                 ),
                               ),
                               const SizedBox(height: 12),
+                              // Inline error message
+                              Obx(() => errorMessage.value.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.shade50,
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(color: Colors.red.shade200),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.error_outline, color: Colors.red.shade700, size: 18),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                errorMessage.value,
+                                                style: TextStyle(
+                                                  color: Colors.red.shade700,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()),
                               Text(
                                 'Current Password'.tr,
                                 style: const TextStyle(
@@ -394,10 +430,10 @@ class SettingView extends GetView<SettingController> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              TextField(
+                              Obx(() => TextField(
                                 controller: currentController,
                                 autofocus: true,
-                                obscureText: true,
+                                obscureText: obscureCurrent.value,
                                 decoration: InputDecoration(
                                   hintText: 'Enter current password'.tr,
                                   isDense: true,
@@ -408,8 +444,16 @@ class SettingView extends GetView<SettingController> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscureCurrent.value ? Icons.visibility_off : Icons.visibility,
+                                      color: Colors.grey,
+                                      size: 20,
+                                    ),
+                                    onPressed: () => obscureCurrent.toggle(),
+                                  ),
                                 ),
-                              ),
+                              )),
                               const SizedBox(height: 14),
                               Text(
                                 'New Password'.tr,
@@ -419,9 +463,9 @@ class SettingView extends GetView<SettingController> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              TextField(
+                              Obx(() => TextField(
                                 controller: newController,
-                                obscureText: true,
+                                obscureText: obscureNew.value,
                                 decoration: InputDecoration(
                                   hintText: 'Enter new password'.tr,
                                   isDense: true,
@@ -432,8 +476,16 @@ class SettingView extends GetView<SettingController> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscureNew.value ? Icons.visibility_off : Icons.visibility,
+                                      color: Colors.grey,
+                                      size: 20,
+                                    ),
+                                    onPressed: () => obscureNew.toggle(),
+                                  ),
                                 ),
-                              ),
+                              )),
                               const SizedBox(height: 14),
                               Text(
                                 'Confirm Password'.tr,
@@ -443,9 +495,9 @@ class SettingView extends GetView<SettingController> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              TextField(
+                              Obx(() => TextField(
                                 controller: confirmController,
-                                obscureText: true,
+                                obscureText: obscureConfirm.value,
                                 decoration: InputDecoration(
                                   hintText: 'Confirm new password'.tr,
                                   isDense: true,
@@ -456,16 +508,24 @@ class SettingView extends GetView<SettingController> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscureConfirm.value ? Icons.visibility_off : Icons.visibility,
+                                      color: Colors.grey,
+                                      size: 20,
+                                    ),
+                                    onPressed: () => obscureConfirm.toggle(),
+                                  ),
                                 ),
-                              ),
+                              )),
                               const SizedBox(height: 18),
                               Row(
                                 children: [
                                   Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () => Get.back(closeOverlays: true),
+                                    child: Obx(() => OutlinedButton(
+                                      onPressed: isLoading.value ? null : () => Get.back(closeOverlays: true),
                                       style: OutlinedButton.styleFrom(
-                                        side: BorderSide(color: AppColors.primary),
+                                        side: BorderSide(color: isLoading.value ? Colors.grey : AppColors.primary),
                                         padding: const EdgeInsets.symmetric(vertical: 12),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8),
@@ -473,17 +533,18 @@ class SettingView extends GetView<SettingController> {
                                       ),
                                       child: Text(
                                         'Cancel'.tr,
-                                        style: const TextStyle(
-                                          color: AppColors.primary,
+                                        style: TextStyle(
+                                          color: isLoading.value ? Colors.grey : AppColors.primary,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                    ),
+                                    )),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
+                                    child: Obx(() => ElevatedButton(
+                                      onPressed: isLoading.value ? null : () async {
+                                        errorMessage.value = '';
                                         final currentPwd =
                                             currentController.text.trim();
                                         final newPwd = newController.text.trim();
@@ -493,23 +554,17 @@ class SettingView extends GetView<SettingController> {
                                         if (currentPwd.isEmpty ||
                                             newPwd.isEmpty ||
                                             confirmPwd.isEmpty) {
-                                          _showErrorMessage(
-                                            context,
-                                            'All password fields are required.'.tr,
-                                          );
+                                          errorMessage.value = 'All password fields are required.'.tr;
                                           return;
                                         }
 
                                         if (newPwd != confirmPwd) {
-                                          _showErrorMessage(
-                                            context,
-                                            'New password and confirmation must match.'.tr,
-                                          );
+                                          errorMessage.value = 'New password and confirmation must match.'.tr;
                                           return;
                                         }
 
+                                        isLoading.value = true;
                                         try {
-                                          final scaffoldContext = Get.context ?? context;
                                           await controller.updatePassword(
                                             currentPwd,
                                             newPwd,
@@ -520,14 +575,13 @@ class SettingView extends GetView<SettingController> {
                                             const Duration(milliseconds: 120),
                                           );
                                           _showSuccessMessage(
-                                            scaffoldContext,
+                                            context,
                                             'Your password was updated successfully.'.tr,
                                           );
                                         } catch (e) {
-                                          _showErrorMessage(
-                                            context,
-                                            e.toString().replaceFirst('Exception: ', ''),
-                                          );
+                                          errorMessage.value = e.toString().replaceFirst('Exception: ', '');
+                                        } finally {
+                                          isLoading.value = false;
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -537,14 +591,23 @@ class SettingView extends GetView<SettingController> {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                      child: Text(
-                                        'Save'.tr,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
+                                      child: isLoading.value
+                                          ? const SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                              ),
+                                            )
+                                          : Text(
+                                              'Save'.tr,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                    )),
                                   ),
                                 ],
                               ),
