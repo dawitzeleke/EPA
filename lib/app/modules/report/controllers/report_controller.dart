@@ -162,9 +162,7 @@ final isLoadingPollutionCategories = false.obs;
     }
   }
 
-  Future<void> fetchSubCities() async {
-   
-  }
+  
 
   /// Submit any pending guest report after OTP verification.
   Future<void> submitPendingReportAfterOtp({
