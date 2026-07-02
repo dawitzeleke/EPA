@@ -20,13 +20,14 @@ class ApiConstants {
   // Location endpoints (full URLs using baseUrl)
   static const String regionsEndpoint = '${baseUrl}regions';
   static const String citiesEndpoint = '${baseUrl}cities';
+  
   static const String zonesEndpoint = '${baseUrl}zones';
   // zones endpoint can be queried as '${zonesByRegionEndpoint}/region/{regionId}'
   static const String zonesByRegionEndpoint = '${baseUrl}zones/region';
   // woredas endpoint can be queried as '${woredasByLocationEndpoint}/location/{zoneId}'
   static const String woredasByLocationEndpoint = '${baseUrl}woredas/location';
 
-  static const String subCitiesEndpoint = '${baseUrl}sub-cities';
+  static const String subCitiesEndpoint = '${baseUrl}subcities';
   
   // Pollution categories endpoint
   static const String pollutionCategoriesEndpoint = '${baseUrl}pollution-categories';

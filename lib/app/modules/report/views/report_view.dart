@@ -67,6 +67,7 @@ class _ReportViewState extends State<ReportView> {
       controller.loadAuthState(); // Restore phone number if user is logged in
       controller.fetchRegions();
       controller.fetchPollutionCategories();
+      controller.fetchCities();
       if (controller.autoDetectLocation.value) {
         controller.detectLocation();
       }

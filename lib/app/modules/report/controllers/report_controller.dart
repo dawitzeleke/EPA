@@ -69,6 +69,8 @@ final isLoadingPollutionCategories = false.obs;
   // API-backed location lists (each item: {'id': '...', 'name': '...'})
   final regions = <Map<String, String>>[].obs;
   final cities = <Map<String, String>>[].obs;
+  final subCities = <Map<String, String>>[].obs;
+
   final regionsAndCities = <Map<String, String>>[].obs; // Combined list
   final zones = <Map<String, String>>[].obs;
   final woredas = <Map<String, String>>[].obs;
@@ -98,6 +100,70 @@ final isLoadingPollutionCategories = false.obs;
     secureLog(
       '📁 File added to list. Total: ${pickedImagesX.length}, Name: ${file.name}',
     );
+  }
+
+  Future<void> fetchSubCitiesForCity(String cityId) async {
+    isLoadingZones.value = true;
+    try {
+      final cachedSubCities = _regionZonesCache[cityId] ?? <Map<String, String>>[];
+      if (cachedSubCities.isNotEmpty) {
+        zones.clear();
+        selectedZone.value = 'Select Zone / Sub-City';
+        woredas.clear();
+        selectedWoreda.value = 'Select Woreda';
+        zones.addAll(cachedSubCities);
+        return;
+      }
+
+      final httpClient = _createLocationDio();
+      final res = await httpClient.get(ApiConstants.subCitiesEndpoint);
+      
+      final data = res.data;
+      List items = [];
+      if (data is Map && data['subcities'] is List) {
+        items = data['subcities'];
+      } else if (data is List) {
+        items = data;
+      }
+
+      final apiSubCities = items
+          .whereType<Map>()
+          .where((e) => e['city_id'] == cityId)
+          .map<Map<String, String>>((e) {
+            final id = e['subcity_id']?.toString() ?? e['id']?.toString() ?? '';
+            final name = e['name']?.toString() ?? e['sub_city_name']?.toString() ?? '';
+            return {
+              'id': id,
+              'name': name,
+              'type': 'subcity',
+              'region_id': cityId,
+            };
+          })
+          .where((m) => m['id']!.isNotEmpty && m['name']!.isNotEmpty)
+          .toList();
+
+      _regionZonesCache[cityId] = apiSubCities;
+
+      zones.clear();
+      selectedZone.value = 'Select Zone / Sub-City';
+      woredas.clear();
+      selectedWoreda.value = 'Select Woreda';
+
+      zones.addAll(apiSubCities);
+    } catch (e) {
+      secureLog('Error fetching subcities: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to load sub-cities: ${ErrorHelpers.cleanErrorMessage(e)}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoadingZones.value = false;
+    }
+  }
+
+  Future<void> fetchSubCities() async {
+   
   }
 
   /// Submit any pending guest report after OTP verification.
@@ -1273,6 +1339,12 @@ Future<void> pickTime(BuildContext context) async {
   }
 
   Future<void> fetchZonesForRegion(String regionId) async {
+    final isCity = regionsAndCities.any((e) => e['id'] == regionId && e['type'] == 'city');
+    if (isCity) {
+      await fetchSubCitiesForCity(regionId);
+      return;
+    }
+
     isLoadingZones.value = true;
     try {
       final cachedZones = _regionZonesCache[regionId] ?? <Map<String, String>>[];
