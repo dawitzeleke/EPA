@@ -33,6 +33,11 @@ class HomeView extends GetView<HomeController> {
   // Carousel page controller
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = 2; // User requested two rows (since there are 4 items, 2 per row = 2 rows)
+    final childAspectRatio = screenWidth >= 1024 ? 1.6 : (screenWidth >= 600 ? 1.5 : 1.4);
+    final horizontalPadding = screenWidth > 800 ? (screenWidth - 800) / 2 + 20 : 20.0; // Constrain to 800 max width instead of 1000 for better appearance
+
     // Ensure HomeController is available (defensive in case route bindings weren't set)
     if (!Get.isRegistered<HomeController>()) {
       Get.put(
@@ -58,10 +63,10 @@ class HomeView extends GetView<HomeController> {
         child: CustomScrollView(
           slivers: [
             // Header (green banner like the design)
-            _buildHeader(controller),
+            _buildHeader(controller, horizontalPadding),
 
             SliverPadding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   CarouselBanner(
@@ -88,13 +93,13 @@ class HomeView extends GetView<HomeController> {
                       ),
                       const SizedBox(height: 12),
                       GridView.count(
-                        crossAxisCount: 2,
+                        crossAxisCount: crossAxisCount,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
                         // Lower aspect ratio -> taller & wider tiles (images scale with the tile)
-                        childAspectRatio: 1.4,
+                        childAspectRatio: childAspectRatio,
                         children: [
                           _ReportTile(
                             image: _getTranslatedImagePath('pollution'),
@@ -141,6 +146,7 @@ class _ReportTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Material(
       color: AppColors.onPrimary,
       elevation: 4,
@@ -181,12 +187,12 @@ class _ReportTile extends StatelessWidget {
   }
 }
 
- Widget _buildHeader(HomeController controller) {
+ Widget _buildHeader(HomeController controller, double horizontalPadding) {
     return SliverToBoxAdapter(
       child: Container(
         width: double.infinity,
         height: 60, // Reduced height for header
-        padding: const EdgeInsets.symmetric(horizontal: 10), // Add horizontal padding
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding - 10 > 0 ? horizontalPadding - 10 : 10), // Add horizontal padding
         child: Stack(
           children: [
             // Welcome text (reads userName from HomeController)

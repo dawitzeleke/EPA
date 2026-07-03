@@ -18,8 +18,8 @@ class CarouselBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isNewsLoading.value) {
-        return const SizedBox(
-          height: 220,
+        return const AspectRatio(
+          aspectRatio: 16 / 9,
           child: Center(
             child: CircularProgressIndicator(),
           ),
@@ -27,8 +27,8 @@ class CarouselBanner extends StatelessWidget {
       }
 
       if (controller.imageUrls.isEmpty) {
-        return SizedBox(
-          height: 220,
+        return AspectRatio(
+          aspectRatio: 16 / 9,
           child: Center(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -56,7 +56,7 @@ class CarouselBanner extends StatelessWidget {
           CarouselSlider(
             carouselController: carouselController,
             options: CarouselOptions(
-              height: 220,
+              aspectRatio: 16 / 9,
               autoPlay: true,
               autoPlayInterval: const Duration(seconds: 3),
               viewportFraction: 1.0,
