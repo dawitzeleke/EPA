@@ -28,6 +28,7 @@ class ApiConstants {
   static const String woredasByLocationEndpoint = '${baseUrl}woredas/location';
 
   static const String subCitiesEndpoint = '${baseUrl}subcities';
+  static const String pollutionSourcesEndpoint = '${baseUrl}pollution-sources';
   
   // Pollution categories endpoint
   static const String pollutionCategoriesEndpoint = '${baseUrl}pollution-categories';

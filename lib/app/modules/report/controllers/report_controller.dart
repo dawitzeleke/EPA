@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:eprs/data/models/pollution_source_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -51,6 +52,7 @@ class ReportController extends GetxController {
 
   // Sound areas (for sound report type)
   final soundAreas = <SoundAreaModel>[].obs;
+  final pollutionSources = <PollutionSource>[].obs;
   final isLoadingSoundAreas = false.obs;
   final soundAreasError = RxnString();
   final selectedSoundAreaId = RxnString();
@@ -102,6 +104,30 @@ final isLoadingPollutionCategories = false.obs;
     );
   }
 
+Future<void> fetchPollutionSources() async {
+  // isLoadingPollutionSources.value = true;
+  try {
+    final httpClient = _createLocationDio();
+    final res = await httpClient.get(ApiConstants.pollutionSourcesEndpoint);
+    final data = res.data;
+    List items = [];
+    if (data is Map && data['pollution_sources'] is List) {
+      items = data['pollution_sources'];
+    } else if (data is List) {
+      items = data;
+    }
+    pollutionSources.assignAll(items.map((e) => PollutionSource.fromJson(e)).toList());
+  } catch (e) {
+    secureLog('Error fetching pollution sources: $e');
+    Get.snackbar(
+      'Error',
+      'Failed to load pollution sources: ${ErrorHelpers.cleanErrorMessage(e)}',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  } finally {
+    // isLoadingPollutionSources.value = false;
+  }
+}
   Future<void> fetchSubCitiesForCity(String cityId) async {
     isLoadingZones.value = true;
     try {
