@@ -70,7 +70,7 @@ class SignUpController extends GetxController {
     if (!isValidPhone) {
       _showErrorDialog(
         'Invalid Phone Number',
-        'Please enter a valid Ethiopian phone number (e.g. 0912345678)',
+        'Please enter a valid Ethiopian phone number (e.g. 09******** | +2519********)',
       );
       return;
     }

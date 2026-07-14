@@ -411,7 +411,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                       TextField(
                                         onChanged: (val) => controller.resetPhoneNumber.value = val,
                                         decoration: InputDecoration(
-                                          hintText: '+251912345678 | 0912345678'.tr,
+                                          hintText: '+2519******** | 09********'.tr,
                                           hintStyle: GoogleFonts.poppins(
                                             color: hintText,
                                             fontSize: isSmall ? 13 : 15,

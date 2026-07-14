@@ -40,7 +40,7 @@ class SignupUseCase {
     // Validate Ethiopian phone number format (starts with 09 and has 10 digits)
     final isValidPhone = RegExp(r'^09\d{8}$').hasMatch(phoneNumber.trim());
     if (!isValidPhone) {
-      throw Exception('Please enter a valid Ethiopian phone number (e.g. 0912345678)');
+      throw Exception('Please enter a valid Ethiopian phone number (e.g. 09******** | +2519********)');
     }
 
     if (password.trim().isEmpty) {
