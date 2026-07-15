@@ -56,6 +56,9 @@ class ReportController extends GetxController {
   final isLoadingSoundAreas = false.obs;
   final soundAreasError = RxnString();
   final selectedSoundAreaId = RxnString();
+  final selectedPollutionSource = RxnString();
+  final pollutionSourceError = RxnString();
+  
 
 // Polution category ID (for non-sound report types)
 final pollutionCategoriesError = RxnString();
@@ -67,6 +70,11 @@ final isLoadingPollutionCategories = false.obs;
   final RxMap<String, bool> pollutionCategoryIsSound = <String, bool>{}.obs;
   final RxList<Map<String, String>> pollutionCategoriesSound = <Map<String, String>>[].obs;
   final RxList<Map<String, String>> pollutionCategoriesNormal = <Map<String, String>>[].obs;
+
+  // === Pollution Sub Categories ===
+  final selectedSubPollutionCategoryId = RxnString();
+  final subPollutionCategoryError = ''.obs;
+  final pollutionSubCategoriesMap = <String, List<Map<String, dynamic>>>{}.obs;
 
   // API-backed location lists (each item: {'id': '...', 'name': '...'})
   final regions = <Map<String, String>>[].obs;
@@ -81,6 +89,7 @@ final isLoadingPollutionCategories = false.obs;
   final Map<String, List<Map<String, String>>> _regionZonesCache = {};
   final Map<String, List<Map<String, String>>> _zoneWoredasCache = {};
   final isLoadingRegions = false.obs;
+  final isLoadingPollutionSources = false.obs;
   final isLoadingCities = false.obs;
   final isLoadingZones = false.obs;
   final isLoadingWoredas = false.obs;
@@ -100,12 +109,12 @@ final isLoadingPollutionCategories = false.obs;
     // Force update - RxList should auto-update but ensure it does
     pickedImagesX.refresh();
     secureLog(
-      '📁 File added to list. Total: ${pickedImagesX.length}, Name: ${file.name}',
+      'File added to list. Total: ${pickedImagesX.length}, Name: ${file.name}',
     );
   }
 
 Future<void> fetchPollutionSources() async {
-  // isLoadingPollutionSources.value = true;
+  isLoadingPollutionSources.value = true;
   try {
     final httpClient = _createLocationDio();
     final res = await httpClient.get(ApiConstants.pollutionSourcesEndpoint);
@@ -125,7 +134,7 @@ Future<void> fetchPollutionSources() async {
       snackPosition: SnackPosition.BOTTOM,
     );
   } finally {
-    // isLoadingPollutionSources.value = false;
+    isLoadingPollutionSources.value = false;
   }
 }
   Future<void> fetchSubCitiesForCity(String cityId) async {
@@ -423,6 +432,7 @@ Future<void> fetchPollutionSources() async {
       fetchSoundAreas();
     }
     fetchPollutionCategories();
+    fetchPollutionSources();
   }
 
   void loadAuthState() {
@@ -540,6 +550,8 @@ Future<void> fetchPollutionSources() async {
     // Reset pollution category ID
     pollutionCategoryId = null;
     selectedPollutionCategoryId.value = null;
+    selectedSubPollutionCategoryId.value = null;
+    pollutionSubCategoriesMap.clear();
 
     secureLog('Form reset completed');
   }
@@ -607,6 +619,7 @@ Future<void> fetchPollutionSources() async {
       pollutionCategoryIsSound.clear();
       pollutionCategoriesSound.clear();
       pollutionCategoriesNormal.clear();
+      pollutionSubCategoriesMap.clear();
 
       final seenSoundIds = <String>{};
       final seenNormalIds = <String>{};
@@ -644,6 +657,21 @@ Future<void> fetchPollutionSources() async {
               pollutionCategories['air pollution'] = id;
             }
             
+            // Handle subcategories
+            if (item['subcategories'] != null && item['subcategories'] is List) {
+              final subCats = item['subcategories'] as List;
+              final parsedSubCats = subCats.map((subCat) {
+                return {
+                  'id': subCat['sub_pollution_category_id']?.toString() ?? '',
+                  'name': subCat['sub_pollution_category']?.toString() ?? '',
+                  'investigation_days': subCat['investigation_days'],
+                };
+              }).where((element) => element['id'].toString().isNotEmpty).toList();
+              pollutionSubCategoriesMap[id] = parsedSubCats;
+            } else {
+              pollutionSubCategoriesMap[id] = [];
+            }
+
             secureLog('📋 Loaded category: "$name" (ID: $id)');
             secureLog('   - Stored as: "$normalizedName", "${name.trim()}"');
           }
@@ -671,9 +699,26 @@ Future<void> fetchPollutionSources() async {
   }
 
   void selectPollutionCategory(String? id) {
+    if (selectedPollutionCategoryId.value != id) {
+      selectedSubPollutionCategoryId.value = null;
+    }
     selectedPollutionCategoryId.value = id;
     if ((id != null && id.isNotEmpty) && pollutionCategoryError.value.isNotEmpty) {
       pollutionCategoryError.value = '';
+    }
+  }
+
+  void selectSubPollutionCategory(String? id) {
+    selectedSubPollutionCategoryId.value = id;
+    if ((id != null && id.isNotEmpty) && subPollutionCategoryError.value.isNotEmpty) {
+      subPollutionCategoryError.value = '';
+    }
+  }
+
+  void selectPollutionSource(String? id) {
+    selectedPollutionSource.value = id;
+    if ((id != null && id.isNotEmpty) && (pollutionSourceError.value ?? '').isNotEmpty) {
+      pollutionSourceError.value = '';
     }
   }
   // Private method for internal use (calls public resetForm)
@@ -2393,6 +2438,22 @@ Future<void> pickTime(BuildContext context) async {
         selectedPollutionCategoryId.value!.isEmpty) {
       pollutionCategoryError.value = 'Please select a pollution category'.tr;
       hasValidationErrors = true;
+    } else {
+      // Validate sub pollution category if the selected category has any
+      final relevantSubCategories = pollutionSubCategoriesMap[selectedPollutionCategoryId.value!] ?? [];
+      if (relevantSubCategories.isNotEmpty) {
+        if (selectedSubPollutionCategoryId.value == null || selectedSubPollutionCategoryId.value!.isEmpty) {
+          subPollutionCategoryError.value = 'Please select a sub category'.tr;
+          hasValidationErrors = true;
+        }
+      }
+    }
+
+    // Validate pollution source is selected
+    if (selectedPollutionSource.value == null ||
+        selectedPollutionSource.value!.isEmpty) {
+      pollutionSourceError.value = 'Please select a pollution source'.tr;
+      hasValidationErrors = true;
     }
 
     // Validate phone number BEFORE heavy form building (guest only)
@@ -2540,6 +2601,20 @@ Future<void> pickTime(BuildContext context) async {
         pollutionCategoryError.value = 'Please select a pollution category'.tr;
         isSubmitting.value = false;
         return;
+      }
+
+      // Add sub pollution category ID if one is selected
+      final subCategoryId = selectedSubPollutionCategoryId.value;
+      if (subCategoryId != null && subCategoryId.isNotEmpty) {
+        formData.fields.add(MapEntry('sub_pollution_category_id', subCategoryId));
+        secureLog('Using sub pollution category ID: $subCategoryId');
+      }
+
+      // Add pollution source ID
+      final sourceId = selectedPollutionSource.value;
+      if (sourceId != null && sourceId.isNotEmpty) {
+        formData.fields.add(MapEntry('pollution_source_id', sourceId));
+        secureLog('Using pollution source ID: $sourceId');
       }
 
       // Add phone number to form data for guests

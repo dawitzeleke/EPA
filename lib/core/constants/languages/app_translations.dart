@@ -148,7 +148,8 @@ class AppTranslations extends Translations {
     'Current:': 'Current:',
     // --- Report Page ---
     'Report Issue': 'Report Issue',
-    'Pollution Category': 'Pollution Category',
+    'Report Category': 'Report Category',
+    'Report Sub Category': 'Report Sub Category',
     'Failed to Load Categories': 'Failed to Load Categories',
     'Retry': 'Retry',
     'Select pollution category': 'Select pollution category',
@@ -426,10 +427,11 @@ class AppTranslations extends Translations {
     'Current:': 'አሁን፡',
     // --- Report Page ---
     'Report Issue': 'ችግር ሪፖርት አድርጉ',
-    'Pollution Category': 'የብክለት ምድብ',
+    'Report Category': 'የሪፖርት ምድብ',
+    'Report Sub Category': 'የሪፖርት ንዑስ ምድብ',
     'Failed to Load Categories': 'ምድቦቹን መጫን አልተቻለም',
     'Retry': 'እንደገና ሞክር',
-    'Select pollution category': 'የብክለት ምድብ ይምረጡ',
+    'Select pollution category': 'የሪፖርት ምድብ ይምረጡ',
     'No pollution categories available for this report type': 'ለዚህ ሪፖርት አይነት ምድቦች አልተገኙም',
     'Land Use Type': 'የቦታ አጠቃቀም አይነት',
     'Failed to load areas': 'ቦታዎቹን መጫን አልተቻለም',
@@ -694,7 +696,8 @@ class AppTranslations extends Translations {
     'Current:': 'Amma:',
     // --- Report Page ---
     'Report Issue': 'Rakkoo gabaasi',
-    'Pollution Category': 'Gosa faalama',
+    'Report Category': 'Ramaddii Gabaasaa',
+    'Report Sub Category': 'Ramaddii-xiqqaa Gabaasaa',
     'Failed to Load Categories': "Gosawwan fe'uun hin milkoofne",
     'Retry': "Irra deebi'i yaalii",
     'Select pollution category': 'Gosa faalama filadhu',
@@ -926,7 +929,8 @@ class AppTranslations extends Translations {
     'Current:': 'Hadda:',
     // --- Report Page ---
     'Report Issue': 'Warbixin Dhibaatada',
-    'Pollution Category': 'Nooca Wasakhowga',
+    'Report Category': 'Nooca Wasakhowga',
+    'Report Sub Category': 'Nooca Wasakhowga',
     'Failed to Load Categories': 'Lagu guuldareystay inuu soo raro noocyada',
     'Retry': 'Isku day mar kale',
     'Select pollution category': 'Dooro nooca wasakhowga',

@@ -39,6 +39,8 @@ class _ReportViewState extends State<ReportView> {
     await controller.submitReport(isSoundReport);
 
     final hasInlineErrors = controller.pollutionCategoryError.value.isNotEmpty ||
+        controller.subPollutionCategoryError.value.isNotEmpty ||
+        (controller.pollutionSourceError.value ?? '').isNotEmpty ||
         controller.landUseError.value.isNotEmpty ||
         controller.evidenceError.value.isNotEmpty ||
         controller.dateTimeError.value.isNotEmpty ||
@@ -67,6 +69,7 @@ class _ReportViewState extends State<ReportView> {
       controller.loadAuthState(); // Restore phone number if user is logged in
       controller.fetchRegions();
       controller.fetchPollutionCategories();
+      controller.fetchPollutionSources();
       controller.fetchCities();
       if (controller.autoDetectLocation.value) {
         controller.detectLocation();
@@ -123,7 +126,7 @@ class _ReportViewState extends State<ReportView> {
                       Row(
                         children: [
                           Text(
-                            'Pollution Category'.tr,
+                            'Report Category'.tr,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -332,6 +335,339 @@ class _ReportViewState extends State<ReportView> {
                 ),
               ),
 
+              const SizedBox(height: 12),
+              // Pollution Sub Category Card
+              Card(
+                color: const Color(0xFFFFFFFF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Report Sub Category'.tr,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          const Text(
+                            '*',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Obx(() {
+                        final selectedCategoryId = controller.selectedPollutionCategoryId.value;
+                        if (selectedCategoryId == null) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Please select a pollution category first'.tr,
+                                style: const TextStyle(color: Colors.black54),
+                              ),
+                            ],
+                          );
+                        }
+
+                        final relevantItems = controller.pollutionSubCategoriesMap[selectedCategoryId] ?? [];
+
+                        String? value = controller.selectedSubPollutionCategoryId.value;
+                        final validValues = relevantItems
+                            .map((entry) => entry['id'])
+                            .whereType<String>()
+                            .toSet();
+                        if (value != null && !validValues.contains(value)) {
+                          // Clear stale selection after rebuild to satisfy dropdown constraint
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            controller.selectSubPollutionCategory(null);
+                          });
+                          value = null;
+                        }
+
+                        if (relevantItems.isEmpty) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'No sub categories available for this category'.tr,
+                                style: const TextStyle(color: Colors.black54),
+                              ),
+                              if (controller.subPollutionCategoryError.value.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    controller.subPollutionCategoryError.value,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DropdownButtonFormField<String?>(
+                              initialValue: value,
+                              isExpanded: true,
+                              dropdownColor: Colors.white,
+                              alignment: AlignmentDirectional.centerStart,
+                              itemHeight: 48,
+                              menuMaxHeight: 260,
+                              borderRadius: BorderRadius.circular(8),
+                              items: [
+                                DropdownMenuItem<String?>(
+                                  value: null,
+                                  child: Text(
+                                    'Select sub category'.tr,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(color: Colors.black54),
+                                  ),
+                                ),
+                                ...relevantItems.map((subCategory) {
+                                  final id = subCategory['id'];
+                                  final name = subCategory['name'] ?? '';
+                                  return DropdownMenuItem<String?>(
+                                    value: id,
+                                    child: Text(
+                                      name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ],
+                              onChanged: (value) {
+                                if (controller.subPollutionCategoryError.value.isNotEmpty) {
+                                  controller.subPollutionCategoryError.value = '';
+                                }
+                                controller.selectSubPollutionCategory(value);
+                              },
+                              decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                    color: Color.fromRGBO(212, 212, 212, 1),
+                                    width: 1,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                    color: Color.fromRGBO(212, 212, 212, 1),
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                    color: Color.fromRGBO(212, 212, 212, 1),
+                                    width: 1.1,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: 'Select sub category'.tr,
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            if (controller.subPollutionCategoryError.value.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  controller.subPollutionCategoryError.value,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+
+
+              const SizedBox(height: 12),
+              Card(
+                  color: const Color(0xFFFFFFFF),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                           Text(
+                          'Pollution Source'.tr,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                          const Text(
+                            '*',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                        ],),
+                       
+                        const SizedBox(height: 12),
+                        Obx(() {
+                          if (controller.isLoadingPollutionSources.value) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+
+                          if (controller.pollutionSourceError.value != null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.pollutionSourceError.value ??
+                                      'Failed to load areas',
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  onPressed: controller.fetchPollutionSources,
+                                  child:  Text('Retry'.tr),
+                                ),
+                              ],
+                            );
+                          }
+
+                          if (controller.pollutionSources.isEmpty) {
+                            return Text(
+                              'No pollution sources available'.tr,
+                              style: const TextStyle(color: Colors.black54),
+                            );
+                          }
+
+                          final items = controller.pollutionSources;
+                          final value = controller.selectedPollutionSource.value;
+
+                          return DropdownButtonFormField<String?>(
+                            initialValue: value,
+                            isExpanded: true,
+                            dropdownColor: Colors.white,
+                            alignment: AlignmentDirectional.centerStart,
+                            itemHeight: 48,
+                            menuMaxHeight: 260,
+                            borderRadius: BorderRadius.circular(8),
+                            items: [
+                              DropdownMenuItem<String?>(
+                                value: null,
+                                child: Text(
+                                  'Select pollution source'.tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(color: Colors.black54),
+                                ),
+                              ),
+                              ...items.map(
+                                (source) => DropdownMenuItem<String?>(
+                                  value: source.pollutionSourceId,
+                                  child: Text(
+                                    source.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if ((controller.pollutionSourceError.value ?? '').isNotEmpty) {
+                                controller.pollutionSourceError.value = '';
+                              }
+                              controller.selectPollutionSource(value);
+                            },
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(212, 212, 212, 1),
+                                  width: 1,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(212, 212, 212, 1),
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(212, 212, 212, 1),
+                                  width: 1.1,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              errorText:
+                                  (controller.pollutionSourceError.value ?? '').isNotEmpty
+                                      ? controller.pollutionSourceError.value
+                                      : null,
+                              hintText: 'Select pollution source'.tr,
+                              hintStyle: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+
+              
               const SizedBox(height: 12),
 
               if (isSoundReport)
