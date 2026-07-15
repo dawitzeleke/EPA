@@ -563,7 +563,7 @@ class _ReportViewState extends State<ReportView> {
                               children: [
                                 Text(
                                   controller.pollutionSourceError.value ??
-                                      'Failed to load areas',
+                                      'Failed to load areas'.tr,
                                   style: const TextStyle(color: Colors.red),
                                 ),
                                 const SizedBox(height: 8),

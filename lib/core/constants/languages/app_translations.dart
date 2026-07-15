@@ -295,6 +295,14 @@ class AppTranslations extends Translations {
     'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.': 'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.',
     'Contact': 'Contact',
     'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.': 'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.',
+    'Please select a sub category': 'Please select a sub category',
+    'Select sub category': 'Select sub category',
+    'No sub categories available for this category': 'No sub categories available for this category',
+    'Pollution Source': 'Pollution Source',
+    'Select pollution source': 'Select pollution source',
+    'No pollution sources available': 'No pollution sources available',
+    'Please select a pollution source': 'Please select a pollution source',
+    'Please select a pollution category first': 'Please select a pollution category first',
 };
 
   static const Map<String, String> _am = {
@@ -575,6 +583,14 @@ class AppTranslations extends Translations {
     'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.': 'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.',
     'Contact': 'አድራሻ',
     'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.': 'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.',
+    'Please select a sub category': 'እባክዎ ንዑስ ምድብ ይምረጡ',
+    'Select sub category': 'ንዑስ ምድብ ይምረጡ',
+    'No sub categories available for this category': 'ለዚህ ምድብ ምንም ንዑስ ምድቦች የሉም',
+    'Pollution Source': 'የብክለት ምንጭ',
+    'Select pollution source': 'የብክለት ምንጭ ይምረጡ',
+    'No pollution sources available': 'ምንም የብክለት ምንጭ የለም',
+    'Please select a pollution source': 'እባክዎ የብክለት ምንጭ ይምረጡ',
+    'Please select a pollution category first': 'እባክዎ መጀመሪያ የብክለት ምድብ ይምረጡ',
 };
 
   static const Map<String, String> _om = {
@@ -844,6 +860,14 @@ class AppTranslations extends Translations {
     'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.': 'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.',
     'Contact': 'Quunnamtii',
     'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.': 'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.',
+    'Please select a sub category': 'Maaloo gosa xiqqaa filadhu',
+    'Select sub category': 'Gosa xiqqaa filadhu',
+    'No sub categories available for this category': 'Gosni xiqqaa gosa kanaaf hin jiru',
+    'Pollution Source': 'Madda Faalamaa',
+    'Select pollution source': 'Madda faalamaa filadhu',
+    'No pollution sources available': 'Maddi faalamaa hin jiru',
+    'Please select a pollution source': 'Maaloo madda faalamaa filadhu',
+    'Please select a pollution category first': 'Maaloo dura gosa faalamaa filadhu',
 };
 
   static const Map<String, String> _soLegacy = {
@@ -1079,6 +1103,14 @@ class AppTranslations extends Translations {
     'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.': 'You are responsible for keeping your login details secure. If you suspect unauthorized access, notify the support team immediately.',
     'Contact': 'Xiriir',
     'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.': 'For questions about these Terms, please contact the Environmental Protection Authority through the Contact Us option in the Settings screen.',
+    'Please select a sub category': 'Fadlan dooro qayb hoosaad',
+    'Select sub category': 'Dooro qayb hoosaad',
+    'No sub categories available for this category': 'Lama hayo qayb hoosaadyo loogu talagalay qaybtan',
+    'Pollution Source': 'Isha wasakhowga',
+    'Select pollution source': 'Dooro isha wasakhowga',
+    'No pollution sources available': 'Ma jiraan ilo wasakhowga oo la heli karo',
+    'Please select a pollution source': 'Fadlan dooro isha wasakhowga',
+    'Please select a pollution category first': 'Fadlan horta dooro qaybta wasakhowga',
   };
 
   static const Map<String, String> _ti = {
@@ -1127,6 +1159,15 @@ class AppTranslations extends Translations {
     'Read more': 'ተወሳኺ ኣንብብ',
     'Show less': 'ዝውሑድ ኣርኢ',
     'No attachments available': 'ኣባሪ የለን',
+    'Please select a sub category': 'በጃኹም ንኡስ ምድብ ምረጹ',
+    'Select sub category': 'ንኡስ ምድብ ምረጽ',
+    'No sub categories available for this category': 'ነዚ ምድብ ዝኸውን ንኡስ ምድብ የለን',
+    'Report Sub Category': 'ንኡስ ምድብ ሪፖርት',
+    'Pollution Source': 'ምንጪ ብክለት',
+    'Select pollution source': 'ምንጪ ብክለት ምረጽ',
+    'No pollution sources available': 'ዝኾነ ምንጪ ብክለት የለን',
+    'Please select a pollution source': 'በጃኹም ምንጪ ብክለት ምረጹ',
+    'Please select a pollution category first': 'በጃኹም ቅድሚ ሕጂ ምድብ ብክለት ምረጹ',
   };
 
   static Future<AppTranslations> load() async {

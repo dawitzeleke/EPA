@@ -44,7 +44,7 @@ class LocationCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Are you in the spot'.tr,
+                  'Location'.tr,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
