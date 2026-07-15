@@ -2606,7 +2606,7 @@ Future<void> pickTime(BuildContext context) async {
       // Add sub pollution category ID if one is selected
       final subCategoryId = selectedSubPollutionCategoryId.value;
       if (subCategoryId != null && subCategoryId.isNotEmpty) {
-        formData.fields.add(MapEntry('sub_pollution_category_id', subCategoryId));
+        formData.fields.add(MapEntry('subpollution_category_id', subCategoryId));
         secureLog('Using sub pollution category ID: $subCategoryId');
       }
 
