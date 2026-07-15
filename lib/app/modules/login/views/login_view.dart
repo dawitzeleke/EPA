@@ -443,26 +443,34 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                   ),
                                   actions: [
                                     Obx(() => ElevatedButton(
-                                      onPressed: controller.isSendingOtp.value ? null : () async {
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      onPressed: (controller.isSendingOtp.value || controller.otpCooldownSeconds.value > 0) ? null : () async {
                                         bool success = await controller.sendOTP();
                                         if (success) {
-                                          Get.back();
+                                          Navigator.of(context).pop();
                                           _showResetPasswordDialog(context, controller, isSmall);
                                         }
                                       },
                                       child: controller.isSendingOtp.value
                                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
                                         : Text(
-                                        'Send OTP'.tr,
+                                        controller.otpCooldownSeconds.value > 0
+                                            ? 'Resend in ${controller.otpCooldownSeconds.value}s'
+                                            : 'Send OTP'.tr,
                                         style: GoogleFonts.poppins(
                                           fontSize: isSmall ? 13 : 14,
-                                          color: greenColor,
+                                          color: (controller.otpCooldownSeconds.value > 0) ? Colors.grey : greenColor,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     )),
                                     TextButton(
-                                      onPressed: () => Get.back(),
+                                      onPressed: () => Navigator.of(context).pop(),
                                       child: Text(
                                         'Close'.tr,
                                         style: GoogleFonts.poppins(
@@ -1229,8 +1237,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                 'Enter your new password below.'.tr,
                 style: GoogleFonts.poppins(
                   fontSize: isSmall ? 12 : 13,
-                  color: Colors.white,
-                  backgroundColor: const Color(0xFF2E63B4),
+                  color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 16),
@@ -1294,6 +1301,39 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   ),
                 ),
               )),
+              const SizedBox(height: 12),
+              // Resend OTP
+              Center(
+                child: Obx(() => TextButton(
+                  onPressed: (controller.otpCooldownSeconds.value > 0 || controller.isSendingOtp.value) ? null : () async {
+                    bool success = await controller.sendOTP();
+                    if (success) {
+                      Get.snackbar(
+                        'OTP Sent',
+                        'A new OTP has been sent to your phone.',
+                        backgroundColor: AppColors.primary,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.TOP,
+                      );
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                  child: controller.isSendingOtp.value
+                      ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                      : Text(
+                          controller.otpCooldownSeconds.value > 0
+                              ? 'Resend OTP in ${controller.otpCooldownSeconds.value}s'
+                              : 'Resend OTP'.tr,
+                          style: GoogleFonts.poppins(
+                            fontSize: isSmall ? 13 : 14,
+                            color: controller.otpCooldownSeconds.value > 0 ? Colors.grey : const Color(0xFF2E63B4),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                )),
+              ),
               const SizedBox(height: 24),
               // Reset Button
               SizedBox(
@@ -1302,7 +1342,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   onPressed: controller.isResettingPassword.value ? null : () async {
                     bool success = await controller.resetPassword();
                     if (success) {
-                      Get.back(); // close dialog
+                      Navigator.of(context).pop(); // close dialog
                       Get.snackbar(
                         'Success',
                         'Password reset successfully!',
@@ -1331,7 +1371,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
               const SizedBox(height: 12),
               Center(
                 child: TextButton(
-                  onPressed: () => Get.back(),
+                  onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     'Cancel'.tr,
                     style: GoogleFonts.poppins(color: Colors.grey.shade600),

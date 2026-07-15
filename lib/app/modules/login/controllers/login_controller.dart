@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:eprs/app/routes/app_pages.dart';
 import 'package:eprs/app/modules/bottom_nav/controllers/bottom_nav_controller.dart';
 import 'package:eprs/core/theme/app_colors.dart';
@@ -29,7 +30,43 @@ class LoginController extends GetxController {
   var newPassword = ''.obs;
   var confirmPassword = ''.obs;
 
+  // Cooldown and limit logic
+  var otpSendTimestamps = <DateTime>[].obs;
+  var otpCooldownSeconds = 0.obs;
+  Timer? _otpCooldownTimer;
+
+  @override
+  void onClose() {
+    _otpCooldownTimer?.cancel();
+    super.onClose();
+  }
+
+  void _startOtpCooldown() {
+    otpCooldownSeconds.value = 60;
+    _otpCooldownTimer?.cancel();
+    _otpCooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (otpCooldownSeconds.value > 0) {
+        otpCooldownSeconds.value--;
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
   Future<bool> sendOTP() async {
+    final now = DateTime.now();
+    otpSendTimestamps.removeWhere((t) => now.difference(t).inMinutes >= 5);
+
+    if (otpSendTimestamps.length >= 3) {
+      _showErrorDialog('Limit Reached', 'You have requested OTP 3 times recently. Please wait a few minutes before trying again.');
+      return false;
+    }
+
+    if (otpCooldownSeconds.value > 0) {
+      _showErrorDialog('Please Wait', 'You can request another OTP in ${otpCooldownSeconds.value} seconds.');
+      return false;
+    }
+
     if (resetPhoneNumber.value.trim().isEmpty) {
       _showErrorDialog('Missing Phone Number', 'Please enter your phone number.');
       return false;
@@ -44,6 +81,8 @@ class LoginController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        otpSendTimestamps.add(DateTime.now());
+        _startOtpCooldown();
         return true;
       } else {
         _showErrorDialog('Error', 'Failed to send OTP. Please try again.');
