@@ -303,6 +303,9 @@ class AppTranslations extends Translations {
     'No pollution sources available': 'No pollution sources available',
     'Please select a pollution source': 'Please select a pollution source',
     'Please select a pollution category first': 'Please select a pollution category first',
+    'Location Services Disabled': 'Location Services Disabled',
+    'Location services are turned off. Would you like to open settings to enable them?': 'Location services are turned off. Would you like to open settings to enable them?',
+    'Open Settings': 'Open Settings',
 };
 
   static const Map<String, String> _am = {
@@ -591,6 +594,9 @@ class AppTranslations extends Translations {
     'No pollution sources available': 'ምንም የብክለት ምንጭ የለም',
     'Please select a pollution source': 'እባክዎ የብክለት ምንጭ ይምረጡ',
     'Please select a pollution category first': 'እባክዎ መጀመሪያ የብክለት ምድብ ይምረጡ',
+    'Location Services Disabled': 'የአካባቢ አገልግሎት ጠፍቷል',
+    'Location services are turned off. Would you like to open settings to enable them?': 'የአካባቢ አገልግሎት ጠፍቷል። ቅንብሮችን ከፍተው ለማንቃት ይፈልጋሉ?',
+    'Open Settings': 'ቅንብሮችን ክፈት',
 };
 
   static const Map<String, String> _om = {
@@ -868,6 +874,9 @@ class AppTranslations extends Translations {
     'No pollution sources available': 'Maddi faalamaa hin jiru',
     'Please select a pollution source': 'Maaloo madda faalamaa filadhu',
     'Please select a pollution category first': 'Maaloo dura gosa faalamaa filadhu',
+    'Location Services Disabled': 'Tajaajilli bakka argannoo cufameera',
+    'Location services are turned off. Would you like to open settings to enable them?': 'Tajaajilli bakka argannoo cufameera. Qindaa\'ina banuu barbaaddaa?',
+    'Open Settings': 'Qindaa\'ina bani',
 };
 
   static const Map<String, String> _soLegacy = {
@@ -1111,6 +1120,9 @@ class AppTranslations extends Translations {
     'No pollution sources available': 'Ma jiraan ilo wasakhowga oo la heli karo',
     'Please select a pollution source': 'Fadlan dooro isha wasakhowga',
     'Please select a pollution category first': 'Fadlan horta dooro qaybta wasakhowga',
+    'Location Services Disabled': 'Adeegyada goobta waa la damiyay',
+    'Location services are turned off. Would you like to open settings to enable them?': 'Adeegyada goobta waa la damiyay. Ma rabtaa inaad furtid dejinta si aad u shiddo?',
+    'Open Settings': 'Fur Dejinta',
   };
 
   static const Map<String, String> _ti = {
@@ -1168,6 +1180,9 @@ class AppTranslations extends Translations {
     'No pollution sources available': 'ዝኾነ ምንጪ ብክለት የለን',
     'Please select a pollution source': 'በጃኹም ምንጪ ብክለት ምረጹ',
     'Please select a pollution category first': 'በጃኹም ቅድሚ ሕጂ ምድብ ብክለት ምረጹ',
+    'Location Services Disabled': 'ኣገልግሎት ቦታ ተዓጽዩ',
+    'Location services are turned off. Would you like to open settings to enable them?': 'ኣገልግሎት ቦታ ተዓጽዩ ኣሎ። ቅንብራት ክፊትካ ከተብርሆ ትደሊ?',
+    'Open Settings': 'ቅንብራት ክፈት',
   };
 
   static Future<AppTranslations> load() async {

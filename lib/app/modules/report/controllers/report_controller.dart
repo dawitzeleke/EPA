@@ -1684,16 +1684,6 @@ Future<void> pickTime(BuildContext context) async {
     if (v) {
       // When turning ON, request permission (this will show native dialog)
       try {
-        // Check if location services are enabled
-        bool enabled = await Geolocator.isLocationServiceEnabled();
-        if (!enabled) {
-          Get.snackbar(
-            'Location Services',
-            'Please enable location services in your device settings',
-            snackPosition: SnackPosition.BOTTOM,
-          );
-          return; // Don't turn on the toggle
-        }
 
         // Check current permission status
         LocationPermission permission = await Geolocator.checkPermission();
@@ -1730,6 +1720,7 @@ Future<void> pickTime(BuildContext context) async {
         detectionError.value = null;
         detectLocation();
       } catch (e) {
+        autoDetectLocation.value = false;
         Get.snackbar(
           'Error',
           'Failed to request location permission: ${e.toString()}',
@@ -1756,6 +1747,7 @@ Future<void> pickTime(BuildContext context) async {
       if (!allowed) {
         detectedAddress.value = 'Tap Search Location\nAddis Ababa | N.L | W-1';
         isDetecting.value = false;
+        autoDetectLocation.value = false;
         return;
       }
 
@@ -1800,6 +1792,7 @@ Future<void> pickTime(BuildContext context) async {
     } catch (_) {
       detectionError.value = 'Could not detect location';
       detectedAddress.value = 'Tap Search Location\nAddis Ababa | N.L | W-1';
+      autoDetectLocation.value = false;
     } finally {
       isDetecting.value = false;
     }
@@ -1807,11 +1800,8 @@ Future<void> pickTime(BuildContext context) async {
 
   Future<bool> _ensurePermission() async {
     try {
-      bool enabled = await Geolocator.isLocationServiceEnabled();
-      if (!enabled) {
-        detectionError.value = 'Location services are disabled.';
-        return false;
-      }
+      // We don't return early here if location service is disabled, 
+      // so the native permission popup can still show if needed.
 
       LocationPermission perm = await Geolocator.checkPermission();
       if (perm == LocationPermission.denied) {
@@ -2411,26 +2401,13 @@ Future<void> pickTime(BuildContext context) async {
       hasValidationErrors = true;
     }
 
-    // Validate "Are you in the spot" is selected
-    if (!hasSelectedLocationOption.value || isInTheSpot.value == null) {
-      locationError.value = 'Please select "Are you in the spot"'.tr;
-      hasValidationErrors = true;
-    }
+    // Validate location: requires at least one of GPS or Region
+    final hasGps = autoDetectLocation.value && detectedPosition.value != null;
+    final hasRegion = selectedRegion.value != 'Select Region / City Administration';
 
-    // Validate location based on selection
-    if (isInTheSpot.value == true) {
-      // If "Yes", location should be detected or manually entered
-      if (!autoDetectLocation.value && detectedPosition.value == null) {
-        locationError.value =
-            'Please enable location detection or provide location details'.tr;
-        hasValidationErrors = true;
-      }
-    } else {
-      // If "No", region/zone/woreda should be selected
-      if (selectedRegion.value == 'Select Region / City Administration') {
-        locationError.value = 'Please select a region/city'.tr;
-        hasValidationErrors = true;
-      }
+    if (!hasGps && !hasRegion) {
+      locationError.value = 'Please enable location detection or provide location details'.tr;
+      hasValidationErrors = true;
     }
 
     // Validate pollution category is selected

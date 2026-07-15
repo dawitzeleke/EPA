@@ -43,6 +43,12 @@ class LocationCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 18,
+                  color: Colors.black87,
+                ),
+                const SizedBox(width: 8),
                 Text(
                   'Location'.tr,
                   style: const TextStyle(
@@ -61,316 +67,176 @@ class LocationCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Obx(() {
-              final isInSpotValue = controller.isInTheSpot.value;
-              final isInSpot = isInSpotValue == true;
-              final isNotInSpot = isInSpotValue == false;
-              return Row(
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0FFF6),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 18,
+                    color: Colors.black54,
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        if (controller.locationError.value.isNotEmpty) {
-                          controller.locationError.value = '';
-                        }
-                        controller.hasSelectedLocationOption.value = true;
-                        controller.isInTheSpot.value = true;
-                        controller.selectedRegion.value =
-                            'Select Region / City Administration';
-                        controller.selectedZone.value = 'Select Zone / Sub-City';
-                        controller.selectedWoreda.value = 'Select Woreda';
-                        controller.zones.clear();
-                        controller.woredas.clear();
-
-                        if (!controller.autoDetectLocation.value) {
-                          await controller.toggleAutoDetect(true);
-                        }
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 14,
-                        ),
-                        side: BorderSide(
-                          color: isInSpot
-                              ? AppColors.primary
-                              : const Color.fromRGBO(212, 212, 212, 1),
-                          width: isInSpot ? 1.1 : 1,
-                        ),
-                        backgroundColor: isInSpot
-                          ? AppColors.primary.withValues(alpha: 0.08)
-                            : Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'Yes'.tr,
-                        style: TextStyle(
-                          color:
-                              isInSpot ? AppColors.primary : Colors.black87,
-                        ),
+                    child: Obx(
+                      () => Text(
+                        controller.autoDetectLocation.value
+                            ? controller.detectedAddress.value
+                            : 'Tap Search Location'.tr,
+                        style: const TextStyle(color: Colors.black54),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        if (controller.locationError.value.isNotEmpty) {
-                          controller.locationError.value = '';
-                        }
-                        controller.hasSelectedLocationOption.value = true;
-                        controller.isInTheSpot.value = false;
-                        controller.autoDetectLocation.value = false;
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 14,
-                        ),
-                        side: BorderSide(
-                          color: isNotInSpot
-                              ? AppColors.primary
-                              : const Color.fromRGBO(212, 212, 212, 1),
-                          width: isNotInSpot ? 1.1 : 1,
-                        ),
-                        backgroundColor: isNotInSpot
-                          ? AppColors.primary.withValues(alpha: 0.08)
-                            : Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'No'.tr,
-                        style: TextStyle(
-                          color:
-                              isNotInSpot ? AppColors.primary : Colors.black87,
-                        ),
+                  Column(children: [buildOnOffToggle()]),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Obx(() {
+              final items = controller.regionsAndCities;
+              final names =
+                  ['Select Region / City Administration'] +
+                      items.map((e) => e['name']!).toList();
+              if (items.isNotEmpty &&
+                  !names.contains(controller.selectedRegion.value)) {
+                controller.selectedRegion.value =
+                    'Select Region / City Administration';
+              }
+              return buildDropdown(
+                'Region / City Administration'.tr,
+                names,
+                value: controller.selectedRegion.value,
+                enabled: true,
+                onChanged: (v) {
+                  if (controller.locationError.value.isNotEmpty) {
+                    controller.locationError.value = '';
+                  }
+                  final selected =
+                      v ?? 'Select Region / City Administration';
+                  controller.selectedRegion.value = selected;
+                  controller.selectedZone.value =
+                      'Select Zone / Sub-City';
+                  controller.selectedWoreda.value = 'Select Woreda';
+                  controller.woredas.clear();
+
+                  final id = controller.findRegionIdByName(selected);
+                  controller.selectedRegionId.value = id;
+                  if (selected != 'Select Region / City Administration' &&
+                      id != null &&
+                      id.isNotEmpty) {
+                    controller.fetchZonesForRegion(id);
+                  } else {
+                    controller.zones.clear();
+                  }
+                },
+              );
+            }),
+            Obx(() {
+              final isRegionSelected = controller.selectedRegion.value !=
+                  'Select Region / City Administration';
+              if (!isRegionSelected) {
+                return const SizedBox.shrink();
+              }
+
+              final activeRegionId = controller.selectedRegionId.value;
+              final items = controller.zones
+                  .where((zone) => zone['region_id'] == activeRegionId)
+                  .toList();
+              final names =
+                  ['Select Zone / Sub-City'] +
+                      items.map((e) => e['name']!).toList();
+
+              if (controller.isLoadingZones.value) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    buildDropdown(
+                      'Zone / Sub-City'.tr,
+                      ['Select Zone / Sub-City'],
+                      value: 'Select Zone / Sub-City',
+                      enabled: false,
+                      onChanged: null,
+                    ),
+                    const SizedBox(height: 4),
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child:
+                            CircularProgressIndicator(strokeWidth: 2),
                       ),
                     ),
+                  ],
+                );
+              }
+
+              if (items.isNotEmpty &&
+                  !names.contains(controller.selectedZone.value)) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  controller.selectedZone.value = 'Select Zone / Sub-City';
+                });
+              }
+
+              return Column(
+                children: [
+                  const SizedBox(height: 8),
+                  buildDropdown(
+                    'Zone / Sub-City'.tr,
+                    names,
+                    value: controller.selectedZone.value,
+                    enabled: items.isNotEmpty,
+                    onChanged: items.isNotEmpty
+                        ? (v) {
+                            final selected = v ?? 'Select Zone / Sub-City';
+                            controller.selectedZone.value = selected;
+                            controller.selectedWoreda.value =
+                                'Select Woreda';
+
+                            final id = controller.findIdByName(
+                                controller.zones, selected);
+                            if (id != null) {
+                              controller.fetchWoredasForZone(id);
+                            } else {
+                              controller.woredas.clear();
+                            }
+                          }
+                        : null,
                   ),
                 ],
               );
             }),
             Obx(() {
-              if (!controller.hasSelectedLocationOption.value ||
-                  controller.isInTheSpot.value != true) {
+              if (controller.selectedZone.value ==
+                      'Select Zone / Sub-City' ||
+                  controller.woredas.isEmpty) {
                 return const SizedBox.shrink();
+              }
+              final items = controller.woredas;
+              final names =
+                  ['Select Woreda'] +
+                      items.map((e) => e['name']!).toList();
+              if (items.isNotEmpty &&
+                  !names.contains(controller.selectedWoreda.value)) {
+                controller.selectedWoreda.value = 'Select Woreda';
               }
               return Column(
                 children: [
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on_outlined,
-                        size: 18,
-                        color: Colors.black87,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Location'.tr,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      const Text(
-                        '*',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 8),
+                  buildDropdown(
+                    'Woreda'.tr,
+                    names,
+                    value: controller.selectedWoreda.value,
+                    enabled: true,
+                    onChanged: (v) => controller.selectedWoreda.value =
+                        v ?? 'Select Woreda',
                   ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0FFF6),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.location_on_outlined,
-                          size: 18,
-                          color: Colors.black54,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Obx(
-                            () => Text(
-                              controller.autoDetectLocation.value
-                                  ? controller.detectedAddress.value
-                                  : 'Tap Search Location'.tr,
-                              style: const TextStyle(color: Colors.black54),
-                            ),
-                          ),
-                        ),
-                        Column(children: [buildOnOffToggle()]),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }),
-            Obx(() {
-              if (!controller.hasSelectedLocationOption.value ||
-                  controller.isInTheSpot.value != false) {
-                return const SizedBox.shrink();
-              }
-              return Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Obx(() {
-                    final items = controller.regionsAndCities;
-                    final names =
-                        ['Select Region / City Administration'] +
-                            items.map((e) => e['name']!).toList();
-                    if (items.isNotEmpty &&
-                        !names.contains(controller.selectedRegion.value)) {
-                      controller.selectedRegion.value =
-                          'Select Region / City Administration';
-                    }
-                    return buildDropdown(
-                      'Region / City Administration'.tr,
-                      names,
-                      value: controller.selectedRegion.value,
-                      enabled: true,
-                      onChanged: (v) {
-                        if (controller.locationError.value.isNotEmpty) {
-                          controller.locationError.value = '';
-                        }
-                        final selected =
-                            v ?? 'Select Region / City Administration';
-                        controller.selectedRegion.value = selected;
-                        controller.selectedZone.value =
-                            'Select Zone / Sub-City';
-                        controller.selectedWoreda.value = 'Select Woreda';
-                        controller.woredas.clear();
-
-                        final id = controller.findRegionIdByName(selected);
-                        controller.selectedRegionId.value = id;
-                        if (selected != 'Select Region / City Administration' &&
-                            id != null &&
-                            id.isNotEmpty) {
-                          controller.fetchZonesForRegion(id);
-                        } else {
-                          controller.zones.clear();
-                        }
-                      },
-                    );
-                  }),
-                  Obx(() {
-                    final isRegionSelected = controller.selectedRegion.value !=
-                        'Select Region / City Administration';
-                    if (!isRegionSelected) {
-                      return const SizedBox.shrink();
-                    }
-
-                    final activeRegionId = controller.selectedRegionId.value;
-                    final items = controller.zones
-                      .where((zone) => zone['region_id'] == activeRegionId)
-                      .toList();
-                    final names =
-                        ['Select Zone / Sub-City'] +
-                            items.map((e) => e['name']!).toList();
-
-                    if (controller.isLoadingZones.value) {
-                      return Column(
-                        children: [
-                          const SizedBox(height: 8),
-                          buildDropdown(
-                            'Zone / Sub-City'.tr,
-                            ['Select Zone / Sub-City'],
-                            value: 'Select Zone / Sub-City',
-                            enabled: false,
-                            onChanged: null,
-                          ),
-                          const SizedBox(height: 4),
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child:
-                                  CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    if (items.isNotEmpty &&
-                        !names.contains(controller.selectedZone.value)) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        controller.selectedZone.value = 'Select Zone / Sub-City';
-                      });
-                    }
-
-                    return Column(
-                      children: [
-                        const SizedBox(height: 8),
-                        buildDropdown(
-                          'Zone / Sub-City'.tr,
-                          names,
-                          value: controller.selectedZone.value,
-                          enabled: items.isNotEmpty,
-                          onChanged: items.isNotEmpty
-                              ? (v) {
-                                  final selected = v ?? 'Select Zone / Sub-City';
-                                  controller.selectedZone.value = selected;
-                                  controller.selectedWoreda.value =
-                                      'Select Woreda';
-
-                                  final id = controller.findIdByName(
-                                      controller.zones, selected);
-                                  if (id != null) {
-                                    controller.fetchWoredasForZone(id);
-                                  } else {
-                                    controller.woredas.clear();
-                                  }
-                                }
-                              : null,
-                        ),
-                      ],
-                    );
-                  }),
-                  Obx(() {
-                    if (controller.selectedZone.value ==
-                            'Select Zone / Sub-City' ||
-                        controller.woredas.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
-                    final items = controller.woredas;
-                    final names =
-                        ['Select Woreda'] +
-                            items.map((e) => e['name']!).toList();
-                    if (items.isNotEmpty &&
-                        !names.contains(controller.selectedWoreda.value)) {
-                      controller.selectedWoreda.value = 'Select Woreda';
-                    }
-                    return Column(
-                      children: [
-                        const SizedBox(height: 8),
-                        buildDropdown(
-                          'Woreda'.tr,
-                          names,
-                          value: controller.selectedWoreda.value,
-                          enabled: true,
-                          onChanged: (v) => controller.selectedWoreda.value =
-                              v ?? 'Select Woreda',
-                        ),
-                      ],
-                    );
-                  }),
                 ],
               );
             }),
