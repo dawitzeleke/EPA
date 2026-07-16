@@ -37,8 +37,10 @@ class AuthRepositoryImpl implements AuthRepository {
       final resolvedPhoneNumber =
           response.phone_number ?? loginEntity.phone_number;
 
-      if (response.success && response.token != null) {
-        await localDataSource.saveToken(response.token!);
+      if (response.success) {
+        if (response.token != null) {
+          await localDataSource.saveToken(response.token!);
+        }
         if (response.userId != null) {
           await localDataSource.saveUserId(response.userId!);
         }
@@ -47,6 +49,9 @@ class AuthRepositoryImpl implements AuthRepository {
         }
         if (resolvedPhoneNumber != null && resolvedPhoneNumber.isNotEmpty) {
           await localDataSource.savePhoneNumber(resolvedPhoneNumber);
+        }
+        if (response.email.isNotEmpty) {
+          await localDataSource.saveEmail(response.email);
         }
       }
 

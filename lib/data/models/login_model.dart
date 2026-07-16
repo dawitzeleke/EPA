@@ -74,8 +74,9 @@ class LoginResponseModel extends LoginResponseEntity {
     }
 
     return LoginResponseModel(
-      // Treat presence of a token as success when no explicit `success` is provided
-      success: json['success'] ?? (token != null),
+      // Treat presence of a token OR customer payload as success when no
+      // explicit `success` is provided by the API.
+      success: json['success'] ?? (token != null || customer != null),
       token: token,
       userId: userId ?? json['user_id'] ?? json['userId'] ?? json['data']?['user_id'] ?? json['data']?['userId'],
       username: username ?? json['username'] ?? json['data']?['username'],

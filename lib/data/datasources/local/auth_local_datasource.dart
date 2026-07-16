@@ -95,16 +95,19 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<bool> isLoggedIn() async {
     final token = await getToken();
-    if (token == null || token.isEmpty) {
-      return false;
+    if (token != null && token.isNotEmpty) {
+      // If a JWT token exists, check whether it has expired.
+      if (_isTokenExpired(token)) {
+        await clearAll();
+        return false;
+      }
+      return true;
     }
 
-    if (_isTokenExpired(token)) {
-      await clearAll();
-      return false;
-    }
-
-    return true;
+    // Fallback: treat the presence of a stored userId as proof of an
+    // authenticated session (some APIs don't return a JWT token).
+    final userId = await getUserId();
+    return userId != null && userId.isNotEmpty;
   }
 
   bool _isTokenExpired(String token) {

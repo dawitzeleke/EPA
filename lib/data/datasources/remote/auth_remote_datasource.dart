@@ -71,6 +71,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     return data.toString().trim().isNotEmpty ? data.toString().trim() : fallback;
   }
+  String? _extractTokenFromCookies(Headers headers) {
+    // Dio stores headers in a map, usually lowercase 'set-cookie'
+    final cookies = headers.map['set-cookie'] ?? headers.map['Set-Cookie'];
+    if (cookies != null) {
+      for (final cookie in cookies) {
+        if (cookie.contains('accessTokens=')) {
+          final parts = cookie.split(';');
+          for (final part in parts) {
+            if (part.trim().startsWith('accessTokens=')) {
+              return part.trim().substring('accessTokens='.length);
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
 
   @override
   Future<LoginResponseModel> login(LoginModel loginModel) async {
@@ -86,6 +103,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         ),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // Extract token from response cookies
+        final token = _extractTokenFromCookies(response.headers);
+        
+        // Store token if found
+        if (token != null) {
+          await storage.write('token', token);
+          dio.options.headers['Authorization'] = 'Bearer $token';
+        }
+        
         return LoginResponseModel.fromJson(response.data);
       } else {
         throw Exception(
