@@ -46,9 +46,24 @@ class DioClient {
 
     _dio.interceptors.add(
       InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final storage = GetStorage();
+          final token = storage.read('auth_token');
+          if (token != null && token.toString().isNotEmpty) {
+            // Attach token to both Authorization and Cookie headers to support both formats
+            options.headers['Authorization'] = 'Bearer $token';
+            // Only add Cookie if it doesn't already exist or append to it
+            final existingCookie = options.headers['Cookie']?.toString() ?? '';
+            options.headers['Cookie'] = existingCookie.isEmpty 
+                ? 'accessToken=$token' 
+                : '$existingCookie; accessToken=$token';
+          }
+          return handler.next(options);
+        },
         onError: (error, handler) async {
           final statusCode = error.response?.statusCode;
           if (statusCode == 401 || statusCode == 403) {
+            debugPrint('API Error 401/403 on ${error.requestOptions.path}: Logging out.');
             await _handleAuthExpired();
           }
           return handler.next(error);

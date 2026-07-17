@@ -5,7 +5,7 @@ import '../../models/login_model.dart';
 import '../../models/signup_model.dart';
 import '../../models/update_profile_model.dart';
 import '../../../core/constants/api_constants.dart';
-
+import 'package:flutter/foundation.dart';
 /// Remote data source for authentication
 /// Handles all API calls related to authentication
 abstract class AuthRemoteDataSource {
@@ -74,18 +74,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   String? _extractTokenFromCookies(Headers headers) {
     // Dio stores headers in a map, usually lowercase 'set-cookie'
     final cookies = headers.map['set-cookie'] ?? headers.map['Set-Cookie'];
+    debugPrint('Raw Cookies from API: $cookies');
     if (cookies != null) {
       for (final cookie in cookies) {
-        if (cookie.contains('accessTokens=')) {
+        if (cookie.contains('accessToken=')) {
           final parts = cookie.split(';');
           for (final part in parts) {
-            if (part.trim().startsWith('accessTokens=')) {
-              return part.trim().substring('accessTokens='.length);
+            if (part.trim().startsWith('accessToken=')) {
+              final token = part.trim().substring('accessToken='.length);
+              debugPrint('Extracted Token: $token');
+              return token;
             }
           }
         }
       }
     }
+    debugPrint('Failed to extract token from cookies.');
     return null;
   }
 
@@ -103,16 +107,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         ),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // Convert response data to a modifiable map
+        final responseData = response.data is Map<String, dynamic> 
+            ? Map<String, dynamic>.from(response.data) 
+            : <String, dynamic>{};
+            
         // Extract token from response cookies
         final token = _extractTokenFromCookies(response.headers);
         
-        // Store token if found
+        // Inject token into response data if found
         if (token != null) {
-          await storage.write('token', token);
-          dio.options.headers['Authorization'] = 'Bearer $token';
+          responseData['token'] = token;
         }
         
-        return LoginResponseModel.fromJson(response.data);
+        return LoginResponseModel.fromJson(responseData);
       } else {
         throw Exception(
           response.data['message'] ?? 
