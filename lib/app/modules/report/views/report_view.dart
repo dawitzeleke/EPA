@@ -530,8 +530,8 @@ class _ReportViewState extends State<ReportView> {
                 ),
               ),
 
-
               const SizedBox(height: 12),
+              if(!isSoundReport)
               Card(
                   color: const Color(0xFFFFFFFF),
                   shape: RoundedRectangleBorder(
@@ -682,7 +682,7 @@ class _ReportViewState extends State<ReportView> {
                   ),
                 ),
 
-              
+               if(!isSoundReport)
               const SizedBox(height: 12),
 
               if (isSoundReport)
@@ -696,13 +696,24 @@ class _ReportViewState extends State<ReportView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        Row(children: [
+                          Text(
                           'Sound Area'.tr,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
+                         const SizedBox(width: 6),
+                          const Text(
+                            '*',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        
+                        ],),
                         const SizedBox(height: 12),
                         Obx(() {
                           if (controller.isLoadingSoundAreas.value) {
