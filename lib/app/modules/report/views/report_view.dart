@@ -204,6 +204,21 @@ class _ReportViewState extends State<ReportView> {
 
                         String? value =
                             controller.selectedPollutionCategoryId.value;
+
+                        // Auto-select for sound reports
+                        if (isSoundReport && relevantItems.isNotEmpty && value == null) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            final soundCat = relevantItems.first;
+                            controller.selectPollutionCategory(soundCat['id']);
+                            
+                            final subCats = controller.pollutionSubCategoriesMap[soundCat['id']] ?? [];
+                            if (subCats.isNotEmpty &&
+                                controller.selectedSubPollutionCategoryId.value == null) {
+                              controller.selectSubPollutionCategory(subCats.first['id']);
+                            }
+                          });
+                        }
+
                         final validValues = relevantItems
                             .map((entry) => entry['id'])
                             .whereType<String>()
