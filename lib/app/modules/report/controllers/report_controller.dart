@@ -151,7 +151,8 @@ Future<void> fetchPollutionSources() async {
       }
 
       final httpClient = _createLocationDio();
-      final res = await httpClient.get(ApiConstants.subCitiesEndpoint);
+      // Use city-specific endpoint: /api/subcities/city/{cityId}
+      final res = await httpClient.get('${ApiConstants.subCitiesByCityEndpoint}/$cityId');
       
       final data = res.data;
       List items = [];
@@ -163,10 +164,27 @@ Future<void> fetchPollutionSources() async {
 
       final apiSubCities = items
           .whereType<Map>()
-          .where((e) => e['city_id'] == cityId)
           .map<Map<String, String>>((e) {
             final id = e['subcity_id']?.toString() ?? e['id']?.toString() ?? '';
             final name = e['name']?.toString() ?? e['sub_city_name']?.toString() ?? '';
+
+            // Cache embedded woredas for this subcity so they load instantly
+            // when the user selects this subcity in the Zone/Sub-City dropdown.
+            if (e['woredas'] is List) {
+              final mappedWoredas = (e['woredas'] as List)
+                  .whereType<Map>()
+                  .map<Map<String, String>>((w) {
+                    final wId = w['woreda_id']?.toString() ?? w['id']?.toString() ?? '';
+                    final wName = w['woreda_name']?.toString() ?? w['name']?.toString() ?? '';
+                    return {'id': wId, 'name': wName};
+                  })
+                  .where((m) => m['id']!.isNotEmpty && m['name']!.isNotEmpty)
+                  .toList();
+              if (mappedWoredas.isNotEmpty) {
+                _zoneWoredasCache[id] = mappedWoredas;
+              }
+            }
+
             return {
               'id': id,
               'name': name,
@@ -185,6 +203,7 @@ Future<void> fetchPollutionSources() async {
       selectedWoreda.value = 'Select Woreda';
 
       zones.addAll(apiSubCities);
+      secureLog('🟢 Fetched ${apiSubCities.length} subcities for city $cityId');
     } catch (e) {
       secureLog('Error fetching subcities: $e');
       Get.snackbar(
