@@ -186,23 +186,13 @@ class ReportOtpController extends GetxController {
             );
             return;
           }
-        } catch (_) {
-          // fall through to default success navigation
-        }
+        } catch (_) {}
       }
 
-      final idToUse = (reportId != null && reportId!.isNotEmpty)
-          ? reportId!
-          : 'REP-${DateTime.now().millisecondsSinceEpoch}';
-      final dt = dateTime ?? DateTime.now();
-
-      Get.offNamed(
-        Routes.Report_Success,
-        arguments: {
-          'reportId': idToUse,
-          'dateTime': dt,
-          'region': region,
-        },
+      Get.snackbar(
+        'Error',
+        'No pending report found. Please go back and submit again.',
+        snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e) {
       Get.snackbar(

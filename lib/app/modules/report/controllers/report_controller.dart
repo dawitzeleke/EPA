@@ -241,7 +241,7 @@ Future<void> fetchPollutionSources() async {
     isSubmitting.value = true;
     try {
       await _submitFormData(
-        httpClient: Get.find<DioClient>().dio,
+        httpClient: GuestDioFactory.create(),
         formData: _pendingFormData!,
         token: token,
         regionToPass: _pendingRegionForSuccess ?? selectedRegion.value,
@@ -2734,7 +2734,10 @@ Future<void> pickTime(BuildContext context) async {
         data: formData,
         options: dio.Options(
           headers: {
-            if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+            if (token != null && token.isNotEmpty) ...{
+              'Authorization': 'Bearer $token',
+              'Cookie': 'accessToken=$token',
+            },
             // Don't set Content-Type for multipart/form-data - let Dio set it with boundary
           },
           sendTimeout: const Duration(seconds: 60),
