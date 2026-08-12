@@ -291,6 +291,8 @@ Future<void> fetchPollutionSources() async {
   final termsError = ''.obs;
   final locationError = ''.obs;
   final phoneController = TextEditingController();
+  final otherPollutionSourceController = TextEditingController();
+  final otherPollutionSourceError = RxString('');
   final obscurePhoneNumber = false.obs;
   final phoneError = ''.obs;
 
@@ -505,6 +507,8 @@ Future<void> fetchPollutionSources() async {
     termsError.value = '';
     locationError.value = '';
     phoneController.clear();
+    otherPollutionSourceController.clear();
+    otherPollutionSourceError.value = '';
     phoneError.value = '';
 
     // Clear selected values
@@ -2445,10 +2449,10 @@ Future<void> pickTime(BuildContext context) async {
       }
     }
 
-    // Validate pollution source is selected
-    if (selectedPollutionSource.value == null ||
-        selectedPollutionSource.value!.isEmpty) {
-      pollutionSourceError.value = 'Please select a pollution source'.tr;
+    // Validate pollution source if 'other' is selected
+    if (selectedPollutionSource.value == 'other' &&
+        otherPollutionSourceController.text.trim().isEmpty) {
+      otherPollutionSourceError.value = 'Please enter other pollution source'.tr;
       hasValidationErrors = true;
     }
 
@@ -2609,8 +2613,16 @@ Future<void> pickTime(BuildContext context) async {
       // Add pollution source ID
       final sourceId = selectedPollutionSource.value;
       if (sourceId != null && sourceId.isNotEmpty) {
-        formData.fields.add(MapEntry('pollution_source_id', sourceId));
-        secureLog('Using pollution source ID: $sourceId');
+        if (sourceId == 'other') {
+          final otherSource = otherPollutionSourceController.text.trim();
+          if (otherSource.isNotEmpty) {
+            formData.fields.add(MapEntry('pollution_source_other', otherSource));
+            secureLog('Using other pollution source: $otherSource');
+          }
+        } else {
+          formData.fields.add(MapEntry('pollution_source_id', sourceId));
+          secureLog('Using pollution source ID: $sourceId');
+        }
       }
 
       // Add phone number to form data for guests

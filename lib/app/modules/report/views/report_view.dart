@@ -550,15 +550,6 @@ class _ReportViewState extends State<ReportView> {
                             fontSize: 16,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                          const Text(
-                            '*',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
                         ],),
                        
                         const SizedBox(height: 12),
@@ -629,6 +620,14 @@ class _ReportViewState extends State<ReportView> {
                                   ),
                                 ),
                               ),
+                              DropdownMenuItem<String?>(
+                                value: 'other',
+                                child: Text(
+                                  'Other'.tr,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(color: Colors.black87),
+                                ),
+                              ),
                             ],
                             onChanged: (value) {
                               if ((controller.pollutionSourceError.value ?? '').isNotEmpty) {
@@ -676,6 +675,70 @@ class _ReportViewState extends State<ReportView> {
                               ),
                             ),
                           );
+                        }),
+                        Obx(() {
+                          if (controller.selectedPollutionSource.value == 'other') {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 16),
+                                Text(
+                                  'OTHER POLLUTION SOURCE'.tr,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color(0xFF334155),
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                TextFormField(
+                                  controller: controller.otherPollutionSourceController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter pollution source'.tr,
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey.shade400,
+                                      fontSize: 15,
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xFFF8FAFC),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 16,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFFE2E8F0),
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFFE2E8F0),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFF3B82F6),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    errorText: controller.otherPollutionSourceError.value.isNotEmpty
+                                        ? controller.otherPollutionSourceError.value
+                                        : null,
+                                  ),
+                                  onChanged: (val) {
+                                    if (controller.otherPollutionSourceError.value.isNotEmpty) {
+                                      controller.otherPollutionSourceError.value = '';
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          }
+                          return const SizedBox.shrink();
                         }),
                       ],
                     ),
