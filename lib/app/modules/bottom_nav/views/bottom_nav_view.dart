@@ -1,5 +1,6 @@
 import 'package:eprs/app/modules/awareness/views/awareness_view.dart';
 import 'package:eprs/app/modules/bottom_nav/widgets/bottom_nav_footer.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:eprs/app/modules/report/bindings/report_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,20 +84,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
       },
       child: Obx(() {
         final currentIndex = controller.currentIndex.value;
-        return Scaffold(
-          body: IndexedStack(
-            index: currentIndex,
-            children: List.generate(tabBuilders.length, (i) {
-              return Navigator(
-                key: controller.navigatorKeys[i],
-                onGenerateRoute: (settings) => MaterialPageRoute(
-                  builder: (_) => tabBuilders[i](),
-                  settings: settings,
-                ),
-              );
-            }),
+        return UpgradeAlert(
+          child: Scaffold(
+            body: IndexedStack(
+              index: currentIndex,
+              children: List.generate(tabBuilders.length, (i) {
+                return Navigator(
+                  key: controller.navigatorKeys[i],
+                  onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (_) => tabBuilders[i](),
+                    settings: settings,
+                  ),
+                );
+              }),
+            ),
+            bottomNavigationBar: const BottomNavBarFooter(),
           ),
-          bottomNavigationBar: const BottomNavBarFooter(),
         );
       }),
     );

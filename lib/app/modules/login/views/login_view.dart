@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:eprs/app/modules/status/controllers/status_controller.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:upgrader/upgrader.dart';
 import '../controllers/login_controller.dart';
 import 'package:eprs/core/theme/app_colors.dart';
 import 'package:eprs/domain/usecases/login_usecase.dart';
@@ -56,8 +57,9 @@ class _LoginOverlayState extends State<LoginOverlay> {
     const hintText = Color(0xFF9BA5B1);
     const borderColor = Color(0xFFE0E6ED);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return UpgradeAlert(
+      child: Scaffold(
+        backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Subtle radial gradient background
@@ -623,8 +625,9 @@ class _LoginOverlayState extends State<LoginOverlay> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _showStatusDialog(BuildContext context, ReportItem item) {
     final logs = List<ActivityLog>.from(item.activityLogs ?? []);

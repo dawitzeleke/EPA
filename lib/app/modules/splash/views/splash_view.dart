@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:upgrader/upgrader.dart';
 import '../controllers/splash_controller.dart';
 
 class SplashView extends StatefulWidget {
@@ -47,8 +46,7 @@ class _SplashViewState extends State<SplashView> {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBody: true,
-      body: UpgradeAlert(
-        child: SafeArea(
+      body: SafeArea(
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 700),
             opacity: showContent ? 1.0 : 0.0,
@@ -77,7 +75,6 @@ class _SplashViewState extends State<SplashView> {
             ),
           ),
         ),
-      ),
     );
   }
 }
