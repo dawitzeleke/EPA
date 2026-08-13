@@ -216,6 +216,10 @@ String _monthName(int month) {
       return;
     }
 
+    if(!reportId.startsWith("REP-")){
+      reportId = "REP-" + reportId;
+    }
+
     isSearchingReport.value = true;
 
     try {
