@@ -175,7 +175,7 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                   onPressed: _isSearching
                                       ? null
                                       : () async {
-                                          final id = _reportIdCtrl.text.trim();
+                                          var id = _reportIdCtrl.text.trim();
                                           if (id.isEmpty) {
                                             Get.snackbar(
                                               'Report ID'.tr,
@@ -183,6 +183,9 @@ class _LoginOverlayState extends State<LoginOverlay> {
                                               snackPosition: SnackPosition.BOTTOM,
                                             );
                                             return;
+                                          }
+                                          if (!id.startsWith("REP-")) {
+                                            id = "REP-" + id;
                                           }
                                           setState(() => _isSearching = true);
                                           final statusController =
