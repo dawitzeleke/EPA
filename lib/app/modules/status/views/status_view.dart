@@ -218,37 +218,7 @@ class StatusView extends GetView<StatusController> {
   // ─────────────────────────────────────────────
   // STRICT STATUS LOGIC
   // ─────────────────────────────────────────────
-  // Normalize helper
-  String normalize(String s) {
-    final n = s.toLowerCase().replaceAll('_', ' ').trim();
-    if (n.contains('under review') || n.contains('in review') || n.contains('progress')) return 'Under Review';
-    if (n.contains('investigation')) return 'Under Investigation'; // covers under_investigation, investigation_submitted
-    if (n.contains('verified')) return 'Verified';
-    if (n.contains('complete') || n.contains('closed')) return 'Closed';
-    if (n.contains('rejected')) return 'Rejected';
-    if (n.contains('pending')) return 'Pending';
-    return s;
-  }
-
-  final logs = report.activityLogs;
-  String statusLabel;
-  if (logs != null && logs.isNotEmpty) {
-    // Choose the newest log by createdAt; ignore unparsable dates
-    ActivityLog? newest;
-    int newestTs = -1;
-    for (final log in logs) {
-      final ts = DateTime.tryParse(log.createdAt ?? '')?.millisecondsSinceEpoch;
-      if (ts != null && ts > newestTs) {
-        newestTs = ts;
-        newest = log;
-      }
-    }
-    final chosen = newest ?? logs.last; // fallback to list order
-    statusLabel = normalize((chosen.newStatus ?? report.status).trim());
-  } else {
-    // No activity logs → fall back to report.status (normalize)
-    statusLabel = normalize(report.status.trim());
-  }
+  String statusLabel = report.status;
 
   // ─────────────────────────────────────────────
   // STATUS COLORS (unchanged)

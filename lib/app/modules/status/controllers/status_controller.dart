@@ -75,32 +75,6 @@ class ReportItem {
       timeStr = json['time']?.toString() ?? '';
     }
 
-    // Map status - handle different status formats
-    String status = 'Pending';
-    if (json['status'] != null) {
-      final statusStr = json['status'].toString();
-      final normalized = statusStr.toLowerCase().replaceAll('_', ' ');
-      if (normalized.contains('pending')) {
-        status = 'Pending';
-      } else if (normalized.contains('under review') || normalized.contains('progress')) {
-        status = 'Under Review';
-      } else if (normalized.contains('under investigation')) {
-        status = 'Under Investigation';
-      } else if (normalized.contains('verified')) {
-        status = 'Verified';
-      } else if (normalized.contains('closed by penality')) {
-        status = 'Closed by penality';
-      } else if (normalized.contains('closed by pollutant not found')) {
-        status = 'Closed by pollutant not found';
-      } else if (normalized.contains('completed') || normalized.contains('closed') || normalized.contains('complete')) {
-        status = 'Closed';
-      } else if (normalized.contains('rejected')) {
-        status = 'Rejected';
-      } else {
-        status = statusStr;
-      }
-    }
-
     // Extract pollution category - handle both string and object formats
     String pollutionCategory = 'Pollution';
     if (json['pollution_category'] != null) {
@@ -135,6 +109,39 @@ class ReportItem {
           logs.add(ActivityLog.fromJson(log));
         }
       }
+    }
+
+    // Map status - handle different status formats using logs if available
+    String rawStatus = json['status']?.toString() ?? 'Pending';
+    String status = 'Pending';
+    
+    String normalizeStatus(String s) {
+      final n = s.toLowerCase().replaceAll('_', ' ').trim();
+      if (n.contains('under review') || n.contains('in review') || n.contains('progress')) return 'Under Review';
+      if (n.contains('investigation')) return 'Under Investigation';
+      if (n.contains('verified')) return 'Verified';
+      if (n.contains('complete') || n.contains('closed')) return 'Closed';
+      if (n.contains('rejected')) return 'Rejected';
+      if (n.contains('pending')) return 'Pending';
+      // keep capitalized version for others
+      if (n.isEmpty) return 'Pending';
+      return s.trim();
+    }
+
+    if (logs.isNotEmpty) {
+      ActivityLog? newest;
+      int newestTs = -1;
+      for (final log in logs) {
+        final ts = DateTime.tryParse(log.createdAt ?? '')?.millisecondsSinceEpoch;
+        if (ts != null && ts > newestTs) {
+          newestTs = ts;
+          newest = log;
+        }
+      }
+      final chosen = newest ?? logs.last;
+      status = normalizeStatus((chosen.newStatus ?? rawStatus).trim());
+    } else {
+      status = normalizeStatus(rawStatus.trim());
     }
 
     // Parse attachments if present
@@ -455,31 +462,30 @@ class StatusController extends GetxController {
     applyFilter();
   }
 
-  /// Returns the list of filter labels based on actual report statuses.
-  /// Always starts with 'All', followed by only statuses present in reports.
+  /// Returns the list of filter labels. Always shows all standard statuses,
+  /// followed by any unexpected ones found in the reports.
   List<String> get availableFilters {
-    final statusSet = <String>{};
-    for (final r in allReports) {
-      statusSet.add(r.status);
-    }
-    // Preserve a logical display order for known statuses
     const orderedKnown = [
       'Pending',
       'Under Review',
       'Verified',
       'Under Investigation',
-      'Closed',
       'Rejected',
+      'Closed',
     ];
+    
     final result = <String>['All'];
-    for (final s in orderedKnown) {
-      if (statusSet.contains(s)) {
-        result.add(s);
-        statusSet.remove(s);
+    result.addAll(orderedKnown);
+
+    // Append any remaining unknown statuses that exist in the reports
+    final statusSet = <String>{};
+    for (final r in allReports) {
+      if (!orderedKnown.contains(r.status)) {
+        statusSet.add(r.status);
       }
     }
-    // Append any remaining unknown statuses
     result.addAll(statusSet);
+    
     return result;
   }
 
