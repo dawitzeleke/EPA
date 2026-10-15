@@ -510,6 +510,7 @@ Future<void> fetchPollutionSources() async {
     otherPollutionSourceController.clear();
     otherPollutionSourceError.value = '';
     phoneError.value = '';
+    selectedPollutionSource.value = null;
 
     // Clear selected values
     selectedRegion.value = 'Select Region / City Administration';
@@ -2503,10 +2504,22 @@ Future<void> pickTime(BuildContext context) async {
       final zoneId = findIdByName(zones, selectedZone.value) ?? '';
       final woredaId = findIdByName(woredas, selectedWoreda.value) ?? '';
 
+      // Check if the selected location is a city (e.g. Addis Ababa, Dire Dawa)
+      // Cities must be sent as city_id, not region_id, because the server's
+      // Complaint table has separate foreign keys for regions and cities.
+      final isCitySelected = regionsAndCities.any(
+        (e) => e['name'] == selectedRegion.value && e['type'] == 'city',
+      );
+
+      // Check if the selected zone is a subcity (for cities like Addis Ababa)
+      final isSubCitySelected = zones.any(
+        (e) => e['name'] == selectedZone.value && e['type'] == 'subcity',
+      );
+
       // Debug logging for location IDs
       secureLog('   Location IDs for submission:');
-      secureLog('   Selected Region: ${selectedRegion.value} → ID: $regionId');
-      secureLog('   Selected Zone: ${selectedZone.value} → ID: $zoneId');
+      secureLog('   Selected Region: ${selectedRegion.value} → ID: $regionId (isCity: $isCitySelected)');
+      secureLog('   Selected Zone: ${selectedZone.value} → ID: $zoneId (isSubCity: $isSubCitySelected)');
       secureLog('   Selected Woreda: ${selectedWoreda.value} → ID: $woredaId');
       secureLog('   Available zones: ${zones.map((z) => z['name']).toList()}');
       secureLog('   Available woredas: ${woredas.map((w) => w['name']).toList()}');
@@ -2521,20 +2534,30 @@ Future<void> pickTime(BuildContext context) async {
       // Create form data
       final formData = dio.FormData();
 
-      // Add text fields
+      // Add location fields — use city_id/subcity_id for cities, region_id/zone_id for regions
       if (regionId.isNotEmpty) {
-        formData.fields.add(MapEntry('region_id', regionId));
-        secureLog('Added region_id: $regionId');
+        if (isCitySelected) {
+          formData.fields.add(MapEntry('city_id', regionId));
+          secureLog('Added city_id: $regionId');
+        } else {
+          formData.fields.add(MapEntry('region_id', regionId));
+          secureLog('Added region_id: $regionId');
+        }
       } else {
-        secureLog('Region ID is empty');
+        secureLog('Region/City ID is empty');
       }
 
       if (zoneId.isNotEmpty) {
-        formData.fields.add(MapEntry('zone_id', zoneId));
-        secureLog('Added zone_id: $zoneId');
+        if (isSubCitySelected) {
+          formData.fields.add(MapEntry('subcity_id', zoneId));
+          secureLog('Added subcity_id: $zoneId');
+        } else {
+          formData.fields.add(MapEntry('zone_id', zoneId));
+          secureLog('Added zone_id: $zoneId');
+        }
       } else {
         secureLog(
-          'Zone ID is empty - selectedZone: ${selectedZone.value}, zones count: ${zones.length}',
+          'Zone/SubCity ID is empty - selectedZone: ${selectedZone.value}, zones count: ${zones.length}',
         );
       }
 
