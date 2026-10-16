@@ -148,8 +148,10 @@ class ReportItem {
     final List<ComplaintAttachment> complaintAttachments = [];
     if (json['attachments'] is List) {
       for (final attachment in json['attachments']) {
-        if (attachment is Map<String, dynamic>) {
-          complaintAttachments.add(ComplaintAttachment.fromJson(attachment));
+        if (attachment is Map) {
+          complaintAttachments.add(
+            ComplaintAttachment.fromJson(Map<String, dynamic>.from(attachment)),
+          );
         }
       }
     }
@@ -324,8 +326,12 @@ class ComplaintAttachment {
         final data = response.data;
         if (data is Map && data['signedUrl'] != null) {
           String url = data['signedUrl'].toString();
-          if (url.startsWith('https://')) {
-            url = url.replaceFirst('https://', 'http://');
+          final uri = Uri.tryParse(url);
+          if (uri != null) {
+            final host = (uri.host == 'compliant.ema.gov.et' || uri.host.isEmpty)
+                ? 'eprs.epa.gov.et'
+                : uri.host;
+            url = uri.replace(scheme: 'https', host: host).toString();
           }
           return url;
         }
@@ -342,8 +348,10 @@ class ComplaintAttachment {
   String getFileUrl(String baseUrl) => filePath;
 
   bool get isImage {
-    final extension = fileName.split('.').last.toLowerCase();
-    return const {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'heic'}.contains(extension);
+    final nameExt = fileName.contains('.') ? fileName.split('.').last.toLowerCase() : '';
+    final pathExt = filePath.contains('.') ? filePath.split('.').last.toLowerCase().split('?').first : '';
+    const imageExtensions = {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'heic'};
+    return imageExtensions.contains(nameExt) || imageExtensions.contains(pathExt);
   }
 }
 

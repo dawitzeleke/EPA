@@ -5,7 +5,9 @@ import '../controllers/status_controller.dart';
 import 'package:eprs/app/widgets/custom_app_bar.dart';
 import 'package:eprs/core/theme/app_fonts.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:eprs/core/network/dio_client.dart';
 
 class StatusDetailView extends StatefulWidget {
   final ReportItem report;
@@ -27,6 +29,16 @@ class _StatusDetailViewState extends State<StatusDetailView>
   final Map<String, String> _signedUrlCache = {};
   bool _isLoadingSignedUrls = false;
 
+  Map<String, String> _getImageHeaders() {
+    final token = GetStorage().read('auth_token')?.toString();
+    return <String, String>{
+      if (token != null && token.isNotEmpty) ...{
+        'Authorization': 'Bearer $token',
+        'Cookie': 'accessToken=$token',
+      },
+    };
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,15 +56,21 @@ class _StatusDetailViewState extends State<StatusDetailView>
   Future<void> _fetchSignedUrls(List<ComplaintAttachment> attachments) async {
     if (_isLoadingSignedUrls) return;
     // Skip if all URLs are already cached
-    final uncached = attachments.where((a) => a.filePath.trim().isNotEmpty && !_signedUrlCache.containsKey(a.filePath)).toList();
+    final uncached = attachments
+        .where((a) => a.filePath.trim().isNotEmpty && !_signedUrlCache.containsKey(a.filePath))
+        .toList();
     if (uncached.isEmpty) return;
 
-    setState(() => _isLoadingSignedUrls = true);
+    if (mounted) {
+      setState(() => _isLoadingSignedUrls = true);
+    }
 
     // Fetch all signed URLs in parallel
     final futures = uncached.map((a) async {
       final url = await ComplaintAttachment.fetchSignedUrl(a.filePath);
-      _signedUrlCache[a.filePath] = url;
+      if (url.isNotEmpty) {
+        _signedUrlCache[a.filePath] = url;
+      }
     });
     await Future.wait(futures);
 
@@ -72,8 +90,18 @@ class _StatusDetailViewState extends State<StatusDetailView>
 
     try {
       final controller = Get.find<StatusController>();
+      
+      // Clear cache before fetching so we get fresh attachment data
+      try {
+        Get.find<DioClient>().clearCache();
+      } catch (_) {}
+      
       final fullReport = await controller.fetchComplaintById(widget.report.id!);
       
+      secureLog('📎 Detail: fullReport attachments count: ${fullReport?.attachments?.length ?? 'null'}');
+      secureLog('📎 Detail: widget.report attachments count: ${widget.report.attachments?.length ?? 'null'}');
+      
+      if (!mounted) return;
       setState(() {
         if (fullReport != null) {
           _fullReport = fullReport.mergeWith(widget.report);
@@ -81,13 +109,26 @@ class _StatusDetailViewState extends State<StatusDetailView>
           // If fetch fails, use the original report
           _fullReport = widget.report;
         }
+        secureLog('📎 Detail: merged _fullReport attachments count: ${_fullReport?.attachments?.length ?? 'null'}');
         _isLoading = false;
       });
+
+      // Eagerly pre-fetch signed URLs so attachments are immediately ready
+      final atts = _fullReport?.attachments ?? widget.report.attachments ?? [];
+      if (atts.isNotEmpty) {
+        _fetchSignedUrls(atts);
+      }
     } catch (e) {
+      secureLog('📎 Detail: Error fetching full report: $e');
+      if (!mounted) return;
       setState(() {
         _fullReport = widget.report;
         _isLoading = false;
       });
+      final atts = widget.report.attachments ?? [];
+      if (atts.isNotEmpty) {
+        _fetchSignedUrls(atts);
+      }
     }
   }
 
@@ -313,8 +354,17 @@ class _StatusDetailViewState extends State<StatusDetailView>
       );
     }
 
-    // Trigger signed URL fetch if not already cached
-    _fetchSignedUrls(attachments);
+    // Trigger signed URL fetch if not already cached, safely scheduled after frame
+    final uncached = attachments
+        .where((a) => a.filePath.trim().isNotEmpty && !_signedUrlCache.containsKey(a.filePath))
+        .toList();
+    if (uncached.isNotEmpty && !_isLoadingSignedUrls) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _fetchSignedUrls(attachments);
+        }
+      });
+    }
 
     // Show a loading indicator while signed URLs are being fetched
     if (_isLoadingSignedUrls && _signedUrlCache.isEmpty) {
@@ -323,6 +373,8 @@ class _StatusDetailViewState extends State<StatusDetailView>
         child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
       );
     }
+
+    final imageHeaders = _getImageHeaders();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,14 +422,18 @@ class _StatusDetailViewState extends State<StatusDetailView>
                           child: canPreview
                               ? Image.network(
                                   signedUrl,
+                                  headers: imageHeaders,
                                   fit: BoxFit.cover,
                                   loadingBuilder: (context, child, progress) {
                                     if (progress == null) return child;
                                     return const Center(child: CircularProgressIndicator(strokeWidth: 2));
                                   },
-                                  errorBuilder: (_, __, ___) => const Center(
-                                    child: Icon(Icons.broken_image_outlined, color: Colors.grey, size: 34),
-                                  ),
+                                  errorBuilder: (_, error, ___) {
+                                    secureLog('Image.network load error for $signedUrl: $error');
+                                    return const Center(
+                                      child: Icon(Icons.broken_image_outlined, color: Colors.grey, size: 34),
+                                    );
+                                  },
                                 )
                               : Center(
                                   child: _isLoadingSignedUrls && !hasUrl
@@ -494,14 +550,18 @@ class _StatusDetailViewState extends State<StatusDetailView>
                   child: Center(
                     child: Image.network(
                       imageUrl,
+                      headers: _getImageHeaders(),
                       fit: BoxFit.contain,
                       loadingBuilder: (context, child, progress) {
                         if (progress == null) return child;
                         return const Center(child: CircularProgressIndicator());
                       },
-                      errorBuilder: (_, __, ___) => const Center(
-                        child: Icon(Icons.broken_image_outlined, size: 48, color: Colors.grey),
-                      ),
+                      errorBuilder: (_, error, ___) {
+                        secureLog('Preview image load error for $imageUrl: $error');
+                        return const Center(
+                          child: Icon(Icons.broken_image_outlined, size: 48, color: Colors.grey),
+                        );
+                      },
                     ),
                   ),
                 ),
