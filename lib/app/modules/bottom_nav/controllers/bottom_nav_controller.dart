@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eprs/app/routes/app_pages.dart';
+import 'package:eprs/app/modules/status/controllers/status_controller.dart';
 
 class BottomNavController extends GetxController {
   RxInt currentIndex = 0.obs;
@@ -13,6 +14,9 @@ class BottomNavController extends GetxController {
     (_) => GlobalKey<NavigatorState>(),
   );
 
+  /// Index of the Status tab in the bottom nav bar.
+  static const int _statusTabIndex = 2;
+
   void changePage(int index) {
     if (Get.currentRoute != Routes.HOME) {
       Get.until((route) {
@@ -21,6 +25,19 @@ class BottomNavController extends GetxController {
       });
     }
     currentIndex.value = index;
+
+    // Auto-refresh complaints when switching to the Status tab so that
+    // newly created reports appear without requiring a manual pull-to-refresh.
+    if (index == _statusTabIndex) {
+      _refreshStatusIfRegistered();
+    }
+  }
+
+  /// Safely refreshes the StatusController's complaints list.
+  void _refreshStatusIfRegistered() {
+    if (Get.isRegistered<StatusController>()) {
+      Get.find<StatusController>().refreshComplaints();
+    }
   }
 
   late final String username;

@@ -26,6 +26,7 @@ import 'package:eprs/domain/usecases/get_sound_areas_usecase.dart';
 import 'package:eprs/domain/usecases/get_cities_usecase.dart';
 import 'package:eprs/core/enums/report_type_enum.dart';
 import 'package:eprs/core/utils/secure_log.dart';
+import 'package:eprs/app/modules/status/controllers/status_controller.dart';
 
 class ReportController extends GetxController {
   final GetSoundAreasUseCase getSoundAreasUseCase;
@@ -2810,6 +2811,12 @@ Future<void> pickTime(BuildContext context) async {
 
         // Clear form data before navigating
         _resetForm();
+
+        // Eagerly refresh the StatusController so the new report is
+        // already visible when the user navigates to the Status tab.
+        if (Get.isRegistered<StatusController>()) {
+          Get.find<StatusController>().refreshComplaints();
+        }
 
         secureLog(
           'Navigating to success page with report ID: $reportId (logged in: $isLoggedIn)',

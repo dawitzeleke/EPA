@@ -450,8 +450,12 @@ class StatusController extends GetxController {
     }
   }
 
-  /// Refresh complaints
+  /// Refresh complaints (clears HTTP cache first so new reports appear)
   Future<void> refreshComplaints() async {
+    // Clear the in-memory Dio cache so we don't get a stale response
+    try {
+      Get.find<DioClient>().clearCache();
+    } catch (_) {}
     await fetchComplaints();
   }
 
