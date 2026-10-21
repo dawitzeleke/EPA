@@ -2563,8 +2563,8 @@ Future<void> pickTime(BuildContext context) async {
       }
 
       if (woredaId.isNotEmpty) {
-        formData.fields.add(MapEntry('Woreda_id', woredaId));
-        secureLog('Added Woreda_id: $woredaId');
+        formData.fields.add(MapEntry('woreda_id', woredaId));
+        secureLog('Added woreda_id: $woredaId');
       } else {
         secureLog('Woreda ID is empty');
       }
