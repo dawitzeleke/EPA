@@ -14,6 +14,8 @@ class ReportItem {
   final String? reportType;
   final String status;
   final String description;
+  final String? rejectionReason;
+  final String? rejectionReasonDescription;
   final String date; // date display (e.g., Sep 12, 2022)
   final String? time; // time display (e.g., 09:10:22 PM)
   final List<ActivityLog>? activityLogs;
@@ -28,6 +30,8 @@ class ReportItem {
     this.reportType,
     required this.status,
     required this.description,
+    this.rejectionReason,
+    this.rejectionReasonDescription,
     required this.date,
     this.time = '',
     this.activityLogs,
@@ -156,6 +160,29 @@ class ReportItem {
       }
     }
 
+    // Extract rejection reason and description
+    String? rejectionReason;
+    String? rejectionDesc;
+    if (json['rejection_reason'] is Map) {
+      final rr = json['rejection_reason'] as Map;
+      rejectionReason = rr['reason']?.toString().trim();
+      rejectionDesc = rr['description']?.toString().trim();
+    }
+    // Top-level rejection_reason_description overrides nested description
+    if (json['rejection_reason_description'] != null &&
+        json['rejection_reason_description'].toString().trim().isNotEmpty) {
+      rejectionDesc = json['rejection_reason_description'].toString().trim();
+    }
+    // Also check rejection_reason_id as a string (non-object) fallback
+    if (rejectionReason == null && json['rejection_reason_id'] != null && json['rejection_reason'] is String) {
+      rejectionReason = json['rejection_reason'].toString().trim();
+    }
+    secureLog('🔴 Rejection parsing: reason=$rejectionReason, desc=$rejectionDesc, '
+        'has_rejection_reason_key=${json.containsKey('rejection_reason')}, '
+        'rejection_reason_type=${json['rejection_reason']?.runtimeType}, '
+        'has_rejection_reason_description=${json.containsKey('rejection_reason_description')}, '
+        'rejection_reason_description_value=${json['rejection_reason_description']}');
+
     return ReportItem(
       id: json['complaint_id']?.toString() ?? 
           json['id']?.toString() ?? 
@@ -169,6 +196,8 @@ class ReportItem {
       reportType: pollutionCategory,
       status: status,
       description: descriptionText,
+      rejectionReason: rejectionReason,
+      rejectionReasonDescription: rejectionDesc,
       date: dateStr,
       time: timeStr,
       activityLogs: logs,
@@ -186,6 +215,8 @@ class ReportItem {
       reportType: reportType ?? fallback.reportType,
       status: status.isNotEmpty ? status : fallback.status,
       description: description.isNotEmpty ? description : fallback.description,
+      rejectionReason: rejectionReason ?? fallback.rejectionReason,
+      rejectionReasonDescription: rejectionReasonDescription ?? fallback.rejectionReasonDescription,
       date: date.isNotEmpty ? date : fallback.date,
       time: (time ?? '').isNotEmpty ? time : fallback.time,
       activityLogs: activityLogs != null && activityLogs!.isNotEmpty

@@ -903,22 +903,71 @@ class _StatusDetailViewState extends State<StatusDetailView>
                         ),
                       ),
                     ),
-                  if (showRejectionMessage) ...[
+                  if (showRejectionMessage && (
+                      (report.rejectionReason != null && report.rejectionReason!.trim().isNotEmpty) ||
+                      (report.rejectionReasonDescription != null && report.rejectionReasonDescription!.trim().isNotEmpty)
+                  )) ...[
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
+                        color: const Color(0xFFFFF0F0),
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFFFCDD2)),
                       ),
-                      child: Text(
-                        report.description,
-                        style: TextStyle(
-                          fontFamily: AppFonts.primaryFont,
-                          fontSize: 12,
-                          color: const Color(0xFF8A8F95),
-                          height: 1.4,
-                        ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.info_outline,
+                            size: 16,
+                            color: Color(0xFFE53935),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Rejection Reason'.tr,
+                                  style: TextStyle(
+                                    fontFamily: AppFonts.primaryFont,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFFE53935),
+                                  ),
+                                ),
+                                if (report.rejectionReason != null &&
+                                    report.rejectionReason!.trim().isNotEmpty) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    report.rejectionReason!,
+                                    style: TextStyle(
+                                      fontFamily: AppFonts.primaryFont,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xFF374151),
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ],
+                                if (report.rejectionReasonDescription != null &&
+                                    report.rejectionReasonDescription!.trim().isNotEmpty) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    report.rejectionReasonDescription!,
+                                    style: TextStyle(
+                                      fontFamily: AppFonts.primaryFont,
+                                      fontSize: 12,
+                                      color: const Color(0xFF6B7280),
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
